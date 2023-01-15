@@ -1,0 +1,14 @@
+{
+    "properties" : {
+        "status": {
+            "type": "string"
+        },
+        "result_value": {
+            "type": "string"
+        },
+        "ErrorReason": {
+            "type": "string"
+        }
+        
+    }
+}

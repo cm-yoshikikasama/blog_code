@@ -1,0 +1,125 @@
+service: redshift-select ## Cloudformationのstack nameを設定
+frameworkVersion: '3'
+provider: ## providorを指定
+  name: aws
+  runtime: python3.9
+  lambdaHashingVersion: 20201221
+  region: us-east-1
+  endpointType: REGIONAL
+  apiGateway:
+    resourcePolicy:
+      - Effect: Allow
+        Principal: '*'
+        Action: execute-api:Invoke
+        Resource:
+          - execute-api:/*/*/*
+    apiKeys:
+      - free: # 使用量プラン
+          - name: ${self:service}-key # key 名
+            value:  <30-128文字の任意の英数字>
+    usagePlan:
+      - free:
+          quota:
+            limit: 100 # API の呼び出しを行える最大回数
+            offset: 0 # API の呼び出し回数の初期値（通常は 0 回を指定する）
+            period: DAY # DAY or WEEK or MONTH
+          throttle:
+            rateLimit: 2 # 1 秒あたりに処理できる API リクエスト数
+            burstLimit: 3 # 同時に処理できる最大リクエスト数
+
+package: ## lambda上にデプロイする際に除外するファイルを!で指定
+  patterns:
+    - "!.vscode/**"
+    - "!.git/**"
+    - "!.gitignore"
+    - "!.serverless"
+    - "!.serverless/**"
+    - "!README.md"
+    - "!deploy-shell/**"
+    - "!package*.json"
+    - "!requirements.txt"
+    - "!node_modules/**"
+    - "!__pycache__"
+    - "!yarn.lock"
+functions:
+  redshift_select:
+    name: ${self:service}-handler  ## lambda関数名
+    handler: lambda_function.handler ## 実行される関数を指定
+    role: LambdaRole
+    memorySize: 128
+    timeout: 30
+    environment:
+      WORK_GROUP_NAME: kasama
+      DB_NAME: /cm/kasma/redshift/db-name ## パラメーターストアのデータベース名の格納パス
+    layers:
+      - Ref: PythonRequirementsLambdaLayer ## Layerを参照
+    events: ## lambda関数のトリガーを指定
+      - http:
+          path: /redshift_select
+          method: post
+          private: true # API Keyが必要か否かをセットしている
+          integration: lambda
+          request: ## リクエスト時のvalidationを指定
+            schemas:
+              application/json:
+                schema: ${file(models/redshift_select_input.json)}
+                name: RedshiftSelectInput
+                description: 'RedshiftSelectInput'
+          responseSchemas: ## レスポンス時のメソッドレスポンスを指定
+            200:
+              application/json: ${file(models/redshift_select_output.json)}
+            400:
+              application/json: ${file(models/redshift_select_output.json)}
+            500:
+              application/json: ${file(models/redshift_select_output.json)}
+          response: ## レスポンス時の統合レスポンスを指定
+            headers:
+              Content-Type: "'application/json'"
+            statusCodes:
+              200:
+                pattern: '' # JSON response
+                template: $input.path("$.body") # JSON return object
+                headers:
+                  Content-Type: "'application/json'"
+              400:
+                pattern: '.*"Status": 400,.*'
+                template: $input.path("$.errorMessage")
+                headers:
+                  Content-Type: "'application/json'"
+              500:
+                pattern: '.*"Status": 500,.*'
+                template: $input.path("$.errorMessage")
+                headers:
+                  Content-Type: "'application/json'"
+ # カスタム変数が定義可能
+custom:
+  accountid: ${AWS::AccountId}
+  pythonRequirements:
+    dockerizePip: false ## python以外で作られているライブラリを使用する時はtrueに
+    usePipenv: false ## Pipenvを使用する場合にtrueに
+    layer: true ## ライブラリからLambda Layerを作成するオプション
+    useDownloadCache: true ## pip がパッケージをコンパイルするために必要なダウンロードをキャッシュするダウンロード キャッシュ
+    useStaticCache: true ## requirements.txtのすべてをコンパイルした後に pip の出力をキャッシュする静的キャッシュ
+  # region: us-east-1
+plugins:
+  - serverless-python-requirements
+  - serverless-aws-response-schema-plugin
+resources:
+  Description: Redshift select internal API
+  Resources:
+    LambdaRole:
+      Type: AWS::IAM::Role
+      Properties:
+        AssumeRolePolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Action:
+                - sts:AssumeRole
+              Effect: Allow
+              Principal:
+                Service:
+                  - "lambda.amazonaws.com"
+        ManagedPolicyArns:
+          - arn:aws:iam::aws:policy/AmazonSSMReadOnlyAccess
+          - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+          - arn:aws:iam::aws:policy/AmazonRedshiftFullAccess
