@@ -50,7 +50,7 @@ functions:
     timeout: 30 ## lambdaのタイムアウト時間
     environment: ## 環境変数
       WORK_GROUP_NAME: kasama
-      DB_NAME: <30-128文字の任意の英数字>
+      DB_NAME: <パラメーターストアのデータベース名の格納パス>
     layers: ## lambdaに紐づくレイヤーを指定
       - Ref: PythonRequirementsLambdaLayer ## Layerを参照
     events: ## lambda関数のトリガーを指定
