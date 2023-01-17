@@ -45,13 +45,13 @@ functions:
   redshift_select:
     name: ${self:service}-handler  ## lambda関数名
     handler: lambda_function.handler ## 実行される関数を指定
-    role: LambdaRole
-    memorySize: 128
-    timeout: 30
-    environment:
+    role: LambdaRole ## lambdaに紐づけられるロール
+    memorySize: 128 ## lambdaのメモリサイズ
+    timeout: 30 ## lambdaのタイムアウト時間
+    environment: ## 環境変数
       WORK_GROUP_NAME: kasama
-      DB_NAME: /cm/kasma/redshift/db-name ## パラメーターストアのデータベース名の格納パス
-    layers:
+      DB_NAME: <30-128文字の任意の英数字>
+    layers: ## lambdaに紐づくレイヤーを指定
       - Ref: PythonRequirementsLambdaLayer ## Layerを参照
     events: ## lambda関数のトリガーを指定
       - http:
@@ -65,13 +65,6 @@ functions:
                 schema: ${file(models/redshift_select_input.json)}
                 name: RedshiftSelectInput
                 description: 'RedshiftSelectInput'
-          responseSchemas: ## レスポンス時のメソッドレスポンスを指定
-            200:
-              application/json: ${file(models/redshift_select_output.json)}
-            400:
-              application/json: ${file(models/redshift_select_output.json)}
-            500:
-              application/json: ${file(models/redshift_select_output.json)}
           response: ## レスポンス時の統合レスポンスを指定
             headers:
               Content-Type: "'application/json'"
@@ -91,6 +84,13 @@ functions:
                 template: $input.path("$.errorMessage")
                 headers:
                   Content-Type: "'application/json'"
+          responseSchemas: ## レスポンス時のメソッドレスポンスを指定
+            200:
+              application/json: ${file(models/redshift_select_output.json)}
+            400:
+              application/json: ${file(models/redshift_select_output.json)}
+            500:
+              application/json: ${file(models/redshift_select_output.json)}
  # カスタム変数が定義可能
 custom:
   accountid: ${AWS::AccountId}
