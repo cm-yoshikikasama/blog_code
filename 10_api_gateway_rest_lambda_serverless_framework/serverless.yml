@@ -49,7 +49,7 @@ functions:
     memorySize: 128 ## lambdaのメモリサイズ
     timeout: 30 ## lambdaのタイムアウト時間
     environment: ## 環境変数
-      WORK_GROUP_NAME: kasama
+      WORK_GROUP_NAME: <Redshift Serverlessのワークグループネーム>
       DB_NAME: <パラメーターストアのデータベース名の格納パス>
     layers: ## lambdaに紐づくレイヤーを指定
       - Ref: PythonRequirementsLambdaLayer ## Layerを参照
