@@ -1,0 +1,59 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: S3 Bucket
+Parameters:
+  Env:
+    Type: String
+    AllowedValues: 
+      - dev
+    Default: dev
+Resources:
+  LogBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub kasama-${Env}-log
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+        - ServerSideEncryptionByDefault:
+            SSEAlgorithm: aws:kms
+      LifecycleConfiguration:
+          Rules:
+          - Id: LogsExpirationRule
+            Status: Enabled
+            ExpirationInDays: 120
+      VersioningConfiguration:
+        Status: Enabled
+      ReplicationConfiguration: 
+        Role:
+          Fn::ImportValue: !Join ["-", [Assume, !Ref Env, Replicate, Role]]
+        Rules: 
+          - Destination:
+              Bucket: !Sub 'arn:aws:s3:::${LogReplicateBucket}'
+              EncryptionConfiguration:
+                ReplicaKmsKeyID:  "arn:aws:kms:us-east-1:414416470668:key/06f2bac1-377d-4495-9092-bcdc54daf0d8"
+            Status: Enabled
+            SourceSelectionCriteria:
+              SseKmsEncryptedObjects:
+                Status: Enabled
+
+   
+  LogReplicateBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub kasama-${Env}-log-replicate
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+        - ServerSideEncryptionByDefault:
+            SSEAlgorithm: aws:kms
+      VersioningConfiguration:
+        Status: Enabled
+      LifecycleConfiguration:
+          Rules:
+          - Id: LogsExpirationRule
+            Status: Enabled
+            ExpirationInDays: 120
+Outputs:
+  LogBucket:
+    Value: !Ref LogBucket
+  LogReplicateBucket:
+    Value: !Ref LogReplicateBucket
