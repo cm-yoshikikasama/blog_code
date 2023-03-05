@@ -1,0 +1,76 @@
+service: s3-object-existence ## Cloudformationのstack nameを設定
+frameworkVersion: '3'
+provider: ## providorを指定
+  name: aws
+  runtime: python3.9
+  stage: ${env:STAGE, 'dev'}
+  lambdaHashingVersion: 20201221
+  region: us-east-1
+package: ## lambda上にデプロイする際に除外するファイルを!で指定
+  patterns:
+    - "!.vscode/**"
+    - "!.git/**"
+    - "!.gitignore"
+    - "!.serverless"
+    - "!.serverless/**"
+    - "!README.md"
+    - "!deploy-shell/**"
+    - "!package*.json"
+    - "!requirements.txt"
+    - "!node_modules/**"
+    - "!__pycache__"
+    - "!yarn.lock"
+    - "!tests"
+functions:
+  s3_object_existence:
+    name: ${self:service}-${self:provider.stage}-handler  ## lambda関数名
+    handler: lambda_function.handler ## 実行される関数を指定
+    role: LambdaRole ## lambdaに紐づけられるロール
+    memorySize: 128 ## lambdaのメモリサイズ
+    timeout: 30 ## lambdaのタイムアウト時間
+    layers: ## lambdaに紐づくレイヤーを指定
+      - Ref: PythonRequirementsLambdaLayer ## Layerを参照
+ # カスタム変数が定義可能
+custom:
+  accountid: ${AWS::AccountId}
+  pythonRequirements:
+    dockerizePip: false ## python以外で作られているライブラリを使用する時はtrueに
+    usePipenv: false ## Pipenvを使用する場合にtrueに
+    layer: true ## ライブラリからLambda Layerを作成するオプション
+    useDownloadCache: true ## pip がパッケージをコンパイルするために必要なダウンロードをキャッシュするダウンロード キャッシュ
+    useStaticCache: true ## requirements.txtのすべてをコンパイルした後に pip の出力をキャッシュする静的キャッシュ
+  # region: us-east-1
+plugins:
+  - serverless-python-requirements
+resources:
+  Description: S3 File Check Lambda
+  Resources:
+    LambdaRole:
+      Type: AWS::IAM::Role
+      Properties:
+        RoleName: ${self:service}-${self:provider.stage}-Role
+        AssumeRolePolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Action:
+                - sts:AssumeRole
+              Effect: Allow
+              Principal:
+                Service:
+                  - "lambda.amazonaws.com"
+        ManagedPolicyArns:
+          - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        Policies:
+          - PolicyName: ${self:service}-${self:provider.stage}
+            PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - s3:GetObject
+                    - s3:ListBucket
+                  Resource:
+                    - arn:aws:s3:::<source-bucket>
+                    - arn:aws:s3:::<source-bucket>/*
+                    - arn:aws:s3:::<target-bucket>
+                    - arn:aws:s3:::<target-bucket>/*
