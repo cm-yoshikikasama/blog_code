@@ -8,3 +8,4 @@ def test():
     logger.debug("debug")
     logger.info("info")
     logger.error("error")
+    logger.critical("critical")
