@@ -4,6 +4,6 @@ derby.log
 __pycache__
 .pytest_cache
 .serverless
-nodemodules
+node_modules
 package-lock.json
 package.json
