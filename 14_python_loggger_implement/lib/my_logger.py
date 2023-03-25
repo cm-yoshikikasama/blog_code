@@ -23,7 +23,6 @@ class MyLogger:
         )
 
         debug_file_path = "log/debug.log"
-
         debug_handler = logging.handlers.RotatingFileHandler(
             filename=debug_file_path, encoding="utf-8", maxBytes=100, backupCount=5
         )
