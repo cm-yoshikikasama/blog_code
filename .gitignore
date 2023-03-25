@@ -1,3 +1,9 @@
 metastore_db
 derby.log
 .DS_Store
+__pycache__
+.pytest_cache
+.serverless
+nodemodules
+package-lock.json
+package.json
