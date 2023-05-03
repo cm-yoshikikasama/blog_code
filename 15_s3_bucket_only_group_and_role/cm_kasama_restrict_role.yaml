@@ -1,0 +1,57 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Creating Role
+
+Parameters:
+  Env:
+    Type: String
+    AllowedValues: 
+      - dev
+      - prod
+    Default: dev
+
+Resources:
+  RestrictIamRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: "cm-kasama-restrict-role"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          # for IAM User Group
+          - Effect: Allow
+            Principal:
+              AWS:
+                - !Sub arn:aws:iam::${AWS::AccountId}:root
+            Action: "sts:AssumeRole"
+            Condition:
+              Bool:
+                "aws:MultiFactorAuthPresent": "true"
+          # for CM IAM Role
+          - Effect: Allow
+            Principal:
+              AWS:
+                - !Sub arn:aws:iam::${AWS::AccountId}:root
+            Action: "sts:AssumeRole"
+            Condition:
+              ArnLike:
+                "aws:PrincipalArn": !Sub arn:aws:iam::${AWS::AccountId}:role/cm-*
+      Policies:
+        - PolicyName: "S3Access4AssumeRole"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:ListAllMyBuckets
+                Resource: "*"
+              - Effect: Allow
+                Action:
+                  - s3:*
+                Resource:
+                  - !Sub "arn:aws:s3:::cm-kasama-${Env}-restrict"
+                  - !Sub "arn:aws:s3:::cm-kasama-${Env}-restrict/*"
+Outputs:
+  RoleId:
+    Value: !GetAtt RestrictIamRole.RoleId
+    Export:
+      Name: Restrict-dev-Iam-Role-Id
