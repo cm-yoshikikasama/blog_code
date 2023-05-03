@@ -1,0 +1,48 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description:  S3 Bucket
+Parameters:
+  Env:
+    Type: String
+    AllowedValues: 
+      - dev
+      - prod
+    Default: dev
+Resources:
+  CmKasamaRestrictBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub cm-kasama-${Env}-restrict
+      AccessControl: Private
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+        - ServerSideEncryptionByDefault:
+            SSEAlgorithm: aws:kms
+      VersioningConfiguration:
+        Status: Enabled
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+  CmKasamaRestrictBucketPolicy:
+    Type: "AWS::S3::BucketPolicy"
+    Properties:
+      Bucket: !Ref CmKasamaRestrictBucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Deny
+            Principal: '*'
+            Action: "s3:*"
+            Resource:
+              - !Sub 'arn:aws:s3:::${CmKasamaRestrictBucket}'
+              - !Sub 'arn:aws:s3:::${CmKasamaRestrictBucket}/*'
+            Condition:
+              StringNotLike:
+                'aws:userId':
+                  # from Restrict-Iam-Role-Id
+                  - !Sub ['${importRoleId}:*', importRoleId: !ImportValue Restrict-dev-Iam-Role-Id]
+              StringNotEquals:
+                "aws:CalledVia":
+                  - "cloudformation.amazonaws.com" 

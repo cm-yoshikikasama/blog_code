@@ -1,0 +1,27 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  KasamaRestrictGroup:
+    Type: "AWS::IAM::Group"
+    Properties:
+      GroupName: "cm-kasama-groups"
+  KasamaRestrictPolicy:
+    Type: "AWS::IAM::Policy"
+    Properties:
+      PolicyName: "cm-kasama-restrict-policy"
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Action:
+              - "sts:AssumeRole"
+            Resource:
+              - !Sub "arn:aws:iam::${AWS::AccountId}:role/cm-kasama-restrict-role"
+      Groups:
+        - Ref: "KasamaRestrictGroup"
+  IAMUser:
+    Type: "AWS::IAM::User"
+    Properties:
+      UserName: "cm-kasama-user"
+      Groups:
+        - Ref: "KasamaRestrictGroup"
