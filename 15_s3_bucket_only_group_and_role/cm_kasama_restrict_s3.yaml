@@ -34,8 +34,7 @@ Resources:
         Statement:
           - Effect: Deny
             Principal: '*'
-            Action: "s3:GetObject"
-            # Action: "s3:*"
+            Action: "s3:*"
             Resource:
               - !Sub 'arn:aws:s3:::${CmKasamaRestrictBucket}'
               - !Sub 'arn:aws:s3:::${CmKasamaRestrictBucket}/*'
