@@ -34,7 +34,8 @@ Resources:
         Statement:
           - Effect: Deny
             Principal: '*'
-            Action: "s3:*"
+            Action: "s3:GetObject"
+            # Action: "s3:*"
             Resource:
               - !Sub 'arn:aws:s3:::${CmKasamaRestrictBucket}'
               - !Sub 'arn:aws:s3:::${CmKasamaRestrictBucket}/*'
@@ -42,7 +43,7 @@ Resources:
               StringNotLike:
                 'aws:userId':
                   # from Restrict-Iam-Role-Id
-                  - !Sub ['${importRoleId}:*', importRoleId: !ImportValue Restrict-dev-Iam-Role-Id]
+                  - {'Fn::ImportValue': !Sub 'Restrict-Iam-Role-Id-${Env}'}
               StringNotEquals:
                 "aws:CalledVia":
                   - "cloudformation.amazonaws.com" 
