@@ -26,6 +26,8 @@ Resources:
             Condition:
               Bool:
                 "aws:MultiFactorAuthPresent": "true"
+              ArnLike:
+                "aws:PrincipalArn": !Sub arn:aws:iam::${AWS::AccountId}:user/*
           # for CM IAM Role
           - Effect: Allow
             Principal:
