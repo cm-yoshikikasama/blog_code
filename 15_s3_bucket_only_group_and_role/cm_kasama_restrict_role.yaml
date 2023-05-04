@@ -56,4 +56,5 @@ Outputs:
   RoleId:
     Value: !GetAtt RestrictIamRole.RoleId
     Export:
+      # Name: Restrict-Iam-Role-Id
       Name: !Sub Restrict-Iam-Role-Id-${Env}
