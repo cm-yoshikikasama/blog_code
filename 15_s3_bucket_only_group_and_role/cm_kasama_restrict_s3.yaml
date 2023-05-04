@@ -34,15 +34,20 @@ Resources:
         Statement:
           - Effect: Deny
             Principal: '*'
+            # Action: "s3:DeleteObject"
             Action: "s3:*"
             Resource:
               - !Sub 'arn:aws:s3:::${CmKasamaRestrictBucket}'
               - !Sub 'arn:aws:s3:::${CmKasamaRestrictBucket}/*'
             Condition:
               StringNotLike:
-                'aws:userId':
+                # 'aws:userId':
                   # from Restrict-Iam-Role-Id
-                  - {'Fn::ImportValue': !Sub 'Restrict-Iam-Role-Id-${Env}'}
+                  # - !Sub ['${importRoleId}:*', importRoleId: !ImportValue SFTP-dev-RoleId]
+                  # - !Sub ['${importRoleId}:*', importRoleId: !ImportValue Restrict-Iam-Role-Id]
+                  # - {'Fn::ImportValue': !Sub 'Restrict-Iam-Role-Id-${Env}'}
+                'aws:userId': !Join ['', [{'Fn::ImportValue': !Sub 'Restrict-Iam-Role-Id-${Env}'}, ':*']]
+
               StringNotEquals:
                 "aws:CalledVia":
                   - "cloudformation.amazonaws.com" 
