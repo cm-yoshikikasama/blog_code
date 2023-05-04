@@ -24,7 +24,7 @@ class MyLogger:
 
         debug_file_path = "log/debug.log"
         debug_handler = logging.handlers.RotatingFileHandler(
-            filename=debug_file_path, encoding="utf-8", maxBytes=100, backupCount=5
+            filename=debug_file_path, encoding="utf-8", maxBytes=10000, backupCount=5
         )
         debug_handler.setLevel(logging.DEBUG)
         debug_handler.setFormatter(formatter)
@@ -34,7 +34,7 @@ class MyLogger:
 
         info_file_path = "log/info.log"
         info_handler = logging.handlers.RotatingFileHandler(
-            filename=info_file_path, encoding="utf-8", maxBytes=100, backupCount=5
+            filename=info_file_path, encoding="utf-8", maxBytes=10000, backupCount=5
         )
         info_handler.setLevel(logging.INFO)
         info_handler.setFormatter(formatter)
@@ -44,7 +44,7 @@ class MyLogger:
 
         error_file_path = "log/error.log"
         error_handler = logging.handlers.RotatingFileHandler(
-            filename=error_file_path, encoding="utf-8", maxBytes=100, backupCount=5
+            filename=error_file_path, encoding="utf-8", maxBytes=10000, backupCount=5
         )
         error_handler.setLevel(logging.WARNING)
         error_handler.setFormatter(formatter)
