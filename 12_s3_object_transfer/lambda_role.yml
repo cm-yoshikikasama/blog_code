@@ -1,0 +1,51 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Parameters:
+  Env:
+    Description: Environment
+    Type: String
+    Default: dev
+    AllowedValues:
+      - dev
+      - prod
+
+
+Description: S3 File Check Lambda
+Resources:
+  CmKasamaLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub cm-kasama-lambda-${Env}-Role
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Action:
+              - sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service:
+                - "lambda.amazonaws.com"
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: s3-object-existence-dev
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:*
+                Resource:
+                  - !Sub arn:aws:s3:::cm-kasama-${Env}-restrict
+                  - !Sub arn:aws:s3:::cm-kasama-${Env}-restrict/*
+                  - arn:aws:s3:::cm-kasama-infa
+                  - arn:aws:s3:::cm-kasama-infa/*
+Outputs:
+  CmKasamaLambdaRole:
+    Value: !GetAtt CmKasamaLambdaRole.Arn
+    Export:
+      Name: !Join ["-", [cm-kasama-lambda, !Ref Env, role-arn]]
+  RoleId:
+    Value: !GetAtt CmKasamaLambdaRole.RoleId
+    Export:
+      Name: !Sub Cm-Kasama-Lambda-Role-Id-${Env}

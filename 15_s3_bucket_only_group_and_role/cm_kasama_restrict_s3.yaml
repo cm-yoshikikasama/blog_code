@@ -41,7 +41,9 @@ Resources:
             Condition:
               StringNotLike:
                 'aws:userId': !Join ['', [{'Fn::ImportValue': !Sub 'Restrict-Iam-Role-Id-${Env}'}, ':*']]
-
               StringNotEquals:
                 "aws:CalledVia":
                   - "cloudformation.amazonaws.com" 
+                "aws:PrincipalArn": 
+                  - !Sub arn:aws:iam::${AWS::AccountId}:role/cm-kasama-lambda-${Env}-Role
+                  # - !Sub arn:aws:iam::414416470668:role/service-role/kasama-tmp-role-wfhpo91f
