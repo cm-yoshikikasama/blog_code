@@ -1,24 +1,20 @@
 ## image_to_excel.py
 import os
-import math
+import argparse
 import openpyxl
 from openpyxl.drawing.image import Image
 from openpyxl.utils import get_column_letter
 
-def main(): 
-    # Ask user for the desired Excel file name
-    excel_file_name = input("使用する既存のExcelファイル名を入力してください（拡張子 .xlsx を含めない）： ")
-    excel_file_name = excel_file_name + '.xlsx'
+
+def main(excel_file_name, sheet_name): 
     # Check if the input file exists in the current directory
+    print(excel_file_name)
     if not os.path.isfile(excel_file_name):
         print(f"エラー： '{excel_file_name}' は存在しません。")
         exit()
 
     # Load the selected excel file
     workbook = openpyxl.load_workbook(excel_file_name)
-
-    # Get sheet name from user
-    sheet_name = input("作成するシート名を教えてください。> ")
 
     # Add a new sheet with the given name
     sheet = workbook.create_sheet(sheet_name)
@@ -71,7 +67,11 @@ def main():
     # Save the workbook
     workbook.save(excel_file_name)
 
-    print("スクリーンショットを乗せました。")
+    print("Insert Images to Excel")
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("excel_file_name", help="使用する既存のExcelファイル名")
+    parser.add_argument("sheet_name", help="作成するシート名")
+    args = parser.parse_args()
+    main(args.excel_file_name, args.sheet_name)

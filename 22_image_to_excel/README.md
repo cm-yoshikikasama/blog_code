@@ -38,9 +38,26 @@ pip install openpyxl
 2 directories, 8 files
 ```
 
+実行例
+
 ```text
-(blog_env) kasama.yoshiki@22_image_to_excel % python image_to_excel.py
-使用する既存のExcelファイル名を入力してください（拡張子 .xlsx を含めない）： test_evidence
-作成するシート名を教えてください。> No.2
-スクリーンショットを乗せました。
+(blog_env) kasama.yoshiki@ 22_image_to_excel % python image_to_excel.py test_evidence.xlsx No.2
+test_evidence.xlsx
+Insert Images to Excel
+(blog_env) kasama.yoshiki@ 22_image_to_excel % 
+```
+
+help
+
+```text
+(blog_env) kasama.yoshiki@ 22_image_to_excel % python image_to_excel.py --help
+usage: image_to_excel.py [-h] excel_file_name sheet_name
+
+positional arguments:
+  excel_file_name  使用する既存のExcelファイル名
+  sheet_name       作成するシート名
+
+options:
+  -h, --help       show this help message and exit
+(blog_env) kasama.yoshiki@ 22_image_to_excel % 
 ```
