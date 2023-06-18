@@ -8,7 +8,6 @@ from openpyxl.utils import get_column_letter
 
 def main(excel_file_name, sheet_name): 
     # Check if the input file exists in the current directory
-    print(excel_file_name)
     if not os.path.isfile(excel_file_name):
         print(f"エラー： '{excel_file_name}' は存在しません。")
         exit()
