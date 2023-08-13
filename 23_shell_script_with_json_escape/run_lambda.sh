@@ -18,6 +18,7 @@ echo "**********START**********"
 
 output="ほげoutput: python Error: Expecting value: line 1 column 1 (char 0)
 
+
 "
 
 output_with_newline=$(echo "$output" | sed 's/$/\\n/' | tr -d '\n')
