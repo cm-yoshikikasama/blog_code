@@ -1,0 +1,57 @@
+service: shell-script-with-json-escape ## Cloudformationのstack nameを設定
+frameworkVersion: '3'
+provider: ## providorを指定
+  name: aws
+  runtime: python3.9
+  lambdaHashingVersion: 20201221
+  region: <lambda-region>
+package: ## lambda上にデプロイする際に除外するファイルを!で指定
+  patterns:
+    - "!.vscode/**"
+    - "!.git/**"
+    - "!.gitignore"
+    - "!.serverless"
+    - "!.serverless/**"
+    - "!README.md"
+    - "!deploy-shell/**"
+    - "!package*.json"
+    - "!requirements.txt"
+    - "!node_modules/**"
+    - "!__pycache__"
+    - "!yarn.lock"
+    - "!run_lambda.sh"
+functions:
+  shell_script_with_json_escape:
+    name: ${self:service}-handler  ## lambda関数名
+    handler: handler.handler ## 実行される関数を指定
+    memorySize: 128 ## lambdaのメモリサイズ
+    timeout: 300 ## lambdaのタイムアウト時間
+    layers: ## lambdaに紐づくレイヤーを指定
+      - Ref: PythonRequirementsLambdaLayer ## Layerを参照
+ # カスタム変数が定義可能
+custom:
+  pythonRequirements:
+    dockerizePip: false ## python以外で作られているライブラリを使用する時はtrueに
+    usePipenv: false ## Pipenvを使用する場合にtrueに
+    layer: true ## ライブラリからLambda Layerを作成するオプション
+    useDownloadCache: true ## pip がパッケージをコンパイルするために必要なダウンロードをキャッシュするダウンロード キャッシュ
+    useStaticCache: true ## requirements.txtのすべてをコンパイルした後に pip の出力をキャッシュする静的キャッシュ
+plugins:
+  - serverless-python-requirements
+resources:
+  Description: lambda Basic IAM Roles
+  Resources:
+    LambdaRole:
+      Type: AWS::IAM::Role
+      Properties:
+        AssumeRolePolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Action:
+                - sts:AssumeRole
+              Effect: Allow
+              Principal:
+                Service:
+                  - "lambda.amazonaws.com"
+        ManagedPolicyArns:
+          - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
