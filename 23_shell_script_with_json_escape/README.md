@@ -1,8 +1,4 @@
-# S3 file checkを実行
-
-## 主な機能
-
-- S3に格納されたcsvのpdfファイル名が格納されたカラムとS3の特定のpathにpdfが存在するかチェック
+# シェルスクリプトからlambdaを実行する処理テスト
 
 ## Deploy方法
 
@@ -29,19 +25,4 @@ sls plugin install -n serverless-python-requirements
 
 ```text
 AWS_SDK_LOAD_CONFIG=true AWS_PROFILE={AWS環境にアクセスするProfile}  sls deploy
-```
-
-## Pytest実行手順
-
-```
-cd 12_5_lambda_s3_file_check
-export PYTHONPATH=$(pwd)
-pytest
-
-```
-
-
-```
-aws cloudformation deploy --stack-name cm-kasama-lambda-dev-role --template-file ./lambda_role.yml --no-execute-changeset --profile <roleを作成するアカウントのprofile> --parameter-overrides Env=dev --capabilities CAPABILITY_NAMED_IAM
-
 ```
