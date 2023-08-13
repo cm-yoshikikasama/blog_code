@@ -16,16 +16,17 @@ function run_lambda () {
 
 echo "**********START**********"
 
-output="output: python Error: Expecting value: line 1 column 1 (char 0)
+output="ほげoutput: python Error: Expecting value: line 1 column 1 (char 0)
 
 "
 
-escaped_output=$(printf "%q" "$output")
-# output_without_newline="${output//$'\n'/}"
+output_with_newline=$(echo "$output" | sed 's/$/\\n/' | tr -d '\n')
 
-echo "$escaped_output"
+echo "$output_with_newline"
 
-run_lambda "AAA" "$escaped_output"
+run_lambda "AAA" "$output_with_newline"
+
+
 # 実行結果の表示
 cat response.json
 
