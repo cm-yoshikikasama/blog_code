@@ -4,10 +4,10 @@
 
 function run_lambda () {
   aws lambda invoke \
-  --region "hoge" \
+  --region "<lambda-region>" \
   --function-name shell-script-with-json-escape-handler \
   --payload '{"param_1": "'"$1"'", "params": {"param_2": "'"$2"'"}}' \
-  --profile "hoge" \
+  --profile "<iam-role>" \
   --cli-binary-format raw-in-base64-out response.json
   if [ $? -ne 0 ]; then
     echo "shell-script-with-json-escape-handlerの実行に失敗しました。"
