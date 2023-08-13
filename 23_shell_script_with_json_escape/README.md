@@ -7,6 +7,13 @@
 - Node.js 14系 のインストール
 - AWS CLIでAWS環境にアクセスできるようになっていること
 
+### 修正点
+
+- run_lambda.sh:
+  - regionとprofileはそれぞれ任意の設定が必要です。
+- serverless.yml:
+  - region任意の地域の設定が必要です。
+
 ### Serverless インストール
 
 ```text
