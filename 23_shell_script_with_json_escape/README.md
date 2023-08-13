@@ -24,5 +24,6 @@ sls plugin install -n serverless-python-requirements
 ### デプロイ
 
 ```text
+cd 23_shell_script_with_json_escape
 AWS_SDK_LOAD_CONFIG=true AWS_PROFILE={AWS環境にアクセスするProfile}  sls deploy
 ```
