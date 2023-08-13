@@ -4,7 +4,7 @@
 
 function run_lambda () {
   aws lambda invoke \
-  --region "<lambda-region>" \
+  --region "hoge" \
   --function-name shell-script-with-json-escape-handler \
   --payload '{"param_1": "'"$1"'", "params": {"param_2": "'"$2"'"}}' \
   --profile "hoge" \
