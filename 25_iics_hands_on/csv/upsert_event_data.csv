@@ -1,0 +1,4 @@
+eventid,venueid,catid,dateid,eventname,starttime
+6442,309,9,1834,Upsert event1,2008-01-08 19:30:00
+4849,60,9,1836,Upsert event2,2008-01-10 19:00:00
+6719,237,7,1839,Non Upsert event3,2008-01-13 14:00:00
