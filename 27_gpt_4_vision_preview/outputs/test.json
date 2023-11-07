@@ -1,0 +1,37 @@
+{
+  "person": {
+    "gender": "ambiguous",
+    "clothing": [
+      {
+        "type": "hoodie",
+        "color": "light brown"
+      },
+      {
+        "type": "pants",
+        "color": "dark"
+      },
+      {
+        "type": "backpack",
+        "color": "light brown"
+      }
+    ],
+    "posture": "standing",
+    "activity": "looking at map"
+  },
+  "environment": {
+    "weather": "foggy",
+    "location": "outdoors",
+    "terrain": "rocky"
+  },
+  "structures": [
+    {
+      "type": "stone wall",
+      "condition": "intact"
+    }
+  ],
+  "background": {
+    "landscape": "coastal",
+    "visibility": "low",
+    "terrain": "rocky"
+  }
+}
