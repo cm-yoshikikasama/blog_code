@@ -1,4 +1,4 @@
-class FileInfo:
+class TableInfo:
     def __init__(self, ddl, max_column_length):
         self.__ddl = ddl
         self.__data_type = ""
