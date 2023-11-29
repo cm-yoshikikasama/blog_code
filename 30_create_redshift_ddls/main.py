@@ -3,7 +3,7 @@ import warnings
 import traceback
 from lib.table_info import TableInfo
 from lib.enviroments import get_env
-from lib.excel_processing import extract_from_excel
+from lib.excel_processing import extract_schema_table_name_from_excel, extract_table_data_from_excel
 from lib.sql_processing import make_column_definition
 
 # Excelファイルにデータ検証(Data Validation)の拡張が含まれているけど、
@@ -26,12 +26,13 @@ def main():
             raise ValueError("file did not exist.")
         print("files:", files)
         for file in files:
-            table_name, schema_name, table = extract_from_excel(file, env)
-            column_lengths = table[env["COLUMN_NAME"]].apply(lambda x: len(str(x)))
+            schema_name, table_name = extract_schema_table_name_from_excel(file, env)
+            extract_table_data = extract_table_data_from_excel(file, env)
+            column_lengths = extract_table_data[env["COLUMN_NAME"]].apply(lambda x: len(str(x)))
             max_column_length = max(column_lengths)
             ddl = f"CREATE TABLE IF NOT EXISTS {schema_name}.{table_name}(\n"
             table_info = TableInfo(ddl, max_column_length)
-            for _, row in table.iterrows():
+            for _, row in extract_table_data.iterrows():
                 table_info.column_name = row[env["COLUMN_NAME"]]
                 table_info.data_type = row[env["DATA_TYPE"]]
                 table_info.digits = row[env["DIGITS"]]
