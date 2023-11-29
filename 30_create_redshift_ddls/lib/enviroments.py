@@ -22,10 +22,6 @@ def get_env():
     os.environ["TABLE_NAME_LOCATION"] = os.environ.get("TABLE_NAME_LOCATION", "1")
     # schema nameが格納されている列番号
     os.environ["SCHEMA_NAME_LOCATION"] = os.environ.get("SCHEMA_NAME_LOCATION", "5")
-    # header行番号
-    os.environ["HEADER_ROW_NUMBER"] = os.environ.get("HEADER_ROW_NUMBER", "1")
-    # 削除対象の上からcountしてheader行数
-    os.environ["DELETE_HEADER_ROW_NUMBER"] = os.environ.get("DELETE_HEADER_ROW_NUMBER", "2")
 
     os.environ["REDSHIFT_DATA_TYPES"] = ",".join(
         [
