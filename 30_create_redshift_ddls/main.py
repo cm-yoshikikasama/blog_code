@@ -2,7 +2,7 @@ import glob
 import warnings
 import traceback
 from lib.table_info import TableInfo
-from lib.enviroments import get_env
+from lib.environments import get_env
 from lib.excel_processing import extract_schema_table_name_from_excel, extract_table_data_from_excel
 from lib.sql_processing import make_column_definition
 
