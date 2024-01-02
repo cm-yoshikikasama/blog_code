@@ -30,15 +30,14 @@ mosquitto_pub -h localhost -t "drone/001" -m '{"status": "stopped"}'
 ## python library install
 
 ```shell
-pip install paho-mqtt pytest pytest-mock coverage
+pip install paho-mqtt pytest pytest-mock pytest-cov
 ```
 
-## python get  test coverage
+## pytest-cov
 
 ```
-coverage run -m pytest
-coverage report
-coverage html
+pytest --cov
+pytest --cov --cov-report=html
 ```
 index.htmlを開く
 
