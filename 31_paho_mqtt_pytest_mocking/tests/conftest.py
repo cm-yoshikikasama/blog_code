@@ -3,11 +3,11 @@ import paho.mqtt.client as mqtt
 
 
 def pytest_runtest_setup(item):
-    print(f"--------Start----{item.name}---")
+    print(f"\n--------Start----{item.name}---")
 
 
 def pytest_runtest_teardown(item):
-    print(f"--------End----{item.name}-----")
+    print(f"\n--------End----{item.name}-----")
 
 
 # MQTTクライアントのモックを提供するフィクスチャ

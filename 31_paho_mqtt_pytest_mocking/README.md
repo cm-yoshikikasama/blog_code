@@ -21,6 +21,8 @@ test用のpublishコマンドをmosquittoが立ち上がった状態で実行
 
 ```shell
 mosquitto_pub -h localhost -t "drone/001" -m '{"status": "running"}'
+mosquitto_pub -h localhost -t "drone/002" -m '{"status": "running"}'
+mosquitto_pub -h localhost -t "drone/001" -m '{"status": "stopped"}'
 ```
 
 
