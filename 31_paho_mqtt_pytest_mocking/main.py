@@ -1,6 +1,3 @@
-#!usr/bin/env python
-# -*- coding: utf-8 -*-
-
 import json
 import paho.mqtt.client as mqtt  # MQTTのライブラリをインポート
 import logging
