@@ -6,7 +6,7 @@ def pytest_runtest_setup(item):
     print(f"--------Start----{item.name}---")
 
 
-def pytest_runtest_teardown(item, nextitem):
+def pytest_runtest_teardown(item):
     print(f"--------End----{item.name}-----")
 
 
