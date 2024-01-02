@@ -9,3 +9,5 @@ package-lock.json
 package.json
 .python-version
 poetry.lock
+htmlcov
+.coverage
