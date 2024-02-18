@@ -1,0 +1,39 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Creating Role
+
+Resources:
+  PracticeIamRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: "cm-kasama-practice-role-b"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS:
+                - !Sub arn:aws:iam::<AWS_Account_A_ID>:role/cm-kasama-practice-role-a
+            Action: "sts:AssumeRole"
+      Policies:
+        - PolicyName: "AllowBucketListAction"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action:
+                  - "s3:ListBucket"
+                Condition:
+                  StringLike:
+                    s3:prefix:
+                      - "src/*"
+                Resource: "arn:aws:s3:::cm-kasama-practice"
+        - PolicyName: "AllowObjectAction"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action:
+                  - "s3:GetObject"
+                  - "s3:PutObject"
+                  - "s3:DeleteObject"
+                Resource: "arn:aws:s3:::cm-kasama-practice/src/*"
