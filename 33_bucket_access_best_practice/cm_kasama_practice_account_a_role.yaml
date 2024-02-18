@@ -1,0 +1,28 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Creating Role
+
+Resources:
+  PracticeIamRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: "cm-kasama-practice-role-a"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS:
+                - !Sub arn:aws:iam::<AWS Account ID>:user/<IAM User Name>
+            Action: "sts:AssumeRole"
+            Condition:
+              Bool:
+                "aws:MultiFactorAuthPresent": "true"
+      Policies:
+        - PolicyName: "AsuumeInAccountBRole"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "sts:AssumeRole"
+                Resource: "arn:aws:iam::<AWS Account ID B>:role/cm-kasama-practice-role-b"
