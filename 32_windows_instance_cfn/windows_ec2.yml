@@ -125,7 +125,7 @@ Resources:
           </script>
       Tags:
         - Key: Name
-          Value: !Sub "${Prefix}-Windows-Instance"
+          Value: !Sub "${Prefix}-windows-instance"
   #-----------------------------------------------------------------------------
   # IAM
   #-----------------------------------------------------------------------------
