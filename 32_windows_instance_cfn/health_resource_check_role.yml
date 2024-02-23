@@ -1,0 +1,47 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Template for Creating Statemachine SNS Publish Role
+
+Resources:
+  StateMachineSNSPublishRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      RoleName: !Sub "SNSPublishFromStateMachineRole"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Principal:
+              Service:
+                - states.amazonaws.com
+            Action: "sts:AssumeRole"
+      Path: "/"
+      Policies:
+        - PolicyName: StateMachineSNSPublishPolicy
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Resource: "*"
+                Action:
+                  - sns:Publish
+              
+  EventBridgeStateMachineExecuteRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      RoleName: !Sub "EventBridgeToStateMachineExecutionRole"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Principal:
+              Service:
+                - events.amazonaws.com
+            Action: "sts:AssumeRole"
+      Path: "/"
+      Policies:
+        - PolicyName: EventBridgeStateMachineExecutePolicy
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Resource: "*"
+                Action:
+                  - states:StartExecution

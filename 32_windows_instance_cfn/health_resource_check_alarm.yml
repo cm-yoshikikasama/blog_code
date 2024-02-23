@@ -1,0 +1,257 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: CWAlarm & SNS notification
+
+Parameters:
+  StatemachineExecRoleARN:
+    Description: State Machine Execute Role ARN
+    Type: String
+  SNSPublishRoleARN:
+    Description: SNS Publish Role ARN
+    Type: String
+  InstanceId:
+    Description: InstanceId which is watched for CPUUtilization
+    Type: String
+  InstanceType:
+    Description: InstanceType which is watched for Memory
+    Type: String
+  CloudWatchAlarmResourceNotificationTopicARN:
+    Description: ARN of CloudWatchAlarmResourceNotificationTopic
+    Type: String
+
+Resources:
+  ######################## 監視対象ごとに作成するりソース ########################
+
+  ######################
+  # CloudWatch アラーム #
+  ######################
+
+  CPUAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: cpu-check-alarm
+      ComparisonOperator: GreaterThanThreshold
+      DatapointsToAlarm: 6
+      EvaluationPeriods: 6
+      Threshold: 80
+      Namespace: AWS/EC2
+      Dimensions:
+          - Name: InstanceId
+            Value: !Ref InstanceId
+      MetricName: CPUUtilization
+      Period: 300
+      Statistic: Maximum
+      TreatMissingData: notBreaching
+
+  MemoryAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: memory-check-alarm
+      ComparisonOperator: GreaterThanThreshold
+      DatapointsToAlarm: 2
+      EvaluationPeriods: 3
+      Threshold: 75
+      MetricName: "Memory % Committed Bytes In Use"
+      Namespace: CWAgent
+      Dimensions:
+          - Name: InstanceId
+            Value: !Ref InstanceId
+          - Name: objectname
+            Value: Memory
+          - Name: InstanceType
+            Value: !Ref InstanceType
+      Period: 300
+      Statistic: Maximum
+      TreatMissingData: notBreaching
+
+  CDiskAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: c-disk-free-space-alarm
+      ComparisonOperator: LessThanThreshold
+      DatapointsToAlarm: 2
+      EvaluationPeriods: 3
+      Threshold: 20
+      MetricName: "LogicalDisk % Free Space"
+      Namespace: CWAgent
+      Dimensions:
+        - Name: instance
+          Value: "C:"
+        - Name: InstanceId
+          Value: !Ref InstanceId
+        - Name: objectname
+          Value: "LogicalDisk"
+        - Name: InstanceType
+          Value: !Ref InstanceType
+      Period: 300
+      Statistic: Minimum
+      TreatMissingData: notBreaching
+
+  DDiskAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: d-disk-free-space-alarm
+      ComparisonOperator: LessThanThreshold
+      DatapointsToAlarm: 2
+      EvaluationPeriods: 3
+      Threshold: 20
+      MetricName: "LogicalDisk % Free Space"
+      Namespace: CWAgent
+      Dimensions:
+        - Name: instance
+          Value: "D:"
+        - Name: InstanceId
+          Value: !Ref InstanceId
+        - Name: objectname
+          Value: "LogicalDisk"
+        - Name: InstanceType
+          Value: !Ref InstanceType
+      Period: 300
+      Statistic: Minimum
+      TreatMissingData: notBreaching
+
+  ######################
+  #     EventBridge    #
+  ######################
+  CPUAlarmEvent:
+    Type: AWS::Events::Rule
+    Properties: 
+      Description: String
+      Name: cpu-check-event
+      EventPattern: !Sub |
+        {
+          "source": ["aws.cloudwatch"],
+          "detail-type": ["CloudWatch Alarm State Change"],
+          "resources": [{"prefix": "arn:aws:cloudwatch:${AWS::Region}:${AWS::AccountId}:alarm:cpu-check-alarm"}],
+          "detail": {"state": {"value": ["ALARM"]}}
+        }
+      Targets: 
+        - Arn: !Ref SNSResourceStateMachine
+          Id: step-function
+          RoleArn: !Ref StatemachineExecRoleARN
+          InputTransformer:
+            InputPathsMap:
+              "Account": "$.account"
+              "AlarmName": "$.detail.alarmName"
+              "MetricsName": "$.detail.configuration.metrics[0].metricStat.metric.name"
+              "Reason": "$.detail.state.reason"
+              "Time": "$.time"
+            InputTemplate: |
+              {
+                "subject": "CPU使用率超過通知",
+                "message": "CPU使用率超過通知 \n AWSアカウントID: \"<Account>\" \n 時間: \"<Time>\" \n アラーム名: \"<AlarmName>\" \n メトリック: \"<MetricsName>\" \n 理由: \"<Reason>\""
+              }
+
+  MemoryAlarmEvent:
+    Type: AWS::Events::Rule
+    Properties: 
+      Description: String
+      Name: memory-check-event
+      EventPattern: !Sub |
+        {
+          "source": ["aws.cloudwatch"],
+          "detail-type": ["CloudWatch Alarm State Change"],
+          "resources": [{"prefix": "arn:aws:cloudwatch:${AWS::Region}:${AWS::AccountId}:alarm:memory-check-alarm"}],
+          "detail": {"state": {"value": ["ALARM"]}}
+        }
+      Targets: 
+        - Arn: !Ref SNSResourceStateMachine
+          Id: step-function
+          RoleArn: !Ref StatemachineExecRoleARN
+          InputTransformer:
+            InputPathsMap:
+              "Account": "$.account"
+              "AlarmName": "$.detail.alarmName"
+              "MetricsName": "$.detail.configuration.metrics[0].metricStat.metric.name"
+              "Reason": "$.detail.state.reason"
+              "Time": "$.time"
+            InputTemplate: |
+              {
+                "subject": "メモリ使用率超過通知",
+                "message": "メモリ使用率超過通知 \n AWSアカウントID: \"<Account>\" \n 時間: \"<Time>\" \n アラーム名: \"<AlarmName>\" \n メトリック: \"<MetricsName>\" \n 理由: \"<Reason>\""
+              }
+
+  CDiskAlarmEvent:
+    Type: AWS::Events::Rule
+    Properties: 
+      Description: String
+      Name: c-disk-check-event
+      EventPattern: !Sub |
+        {
+          "source": ["aws.cloudwatch"],
+          "detail-type": ["CloudWatch Alarm State Change"],
+          "resources": [{"prefix": "arn:aws:cloudwatch:${AWS::Region}:${AWS::AccountId}:alarm:c-disk-free-space-alarm"}],
+          "detail": {"state": {"value": ["ALARM"]}}
+        }
+      Targets: 
+        - Arn: !Ref SNSResourceStateMachine
+          Id: step-function
+          RoleArn: !Ref StatemachineExecRoleARN
+          InputTransformer:
+            InputPathsMap:
+              "Account": "$.account"
+              "AlarmName": "$.detail.alarmName"
+              "MetricsName": "$.detail.configuration.metrics[0].metricStat.metric.name"
+              "Reason": "$.detail.state.reason"
+              "Time": "$.time"
+            InputTemplate: |
+              {
+                "subject": "Cドライブディスク使用率超過通知",
+                "message": "Cドライブディスク使用率超過通知 \n AWSアカウントID: \"<Account>\" \n 時間: \"<Time>\" \n アラーム名: \"<AlarmName>\" \n メトリック: \"<MetricsName>\" \n 理由: \"<Reason>\""
+              }
+  DDiskAlarmEvent:
+    Type: AWS::Events::Rule
+    Properties: 
+      Description: String
+      Name: !Sub "d-disk-check-event"
+      EventPattern: !Sub |
+        {
+          "source": ["aws.cloudwatch"],
+          "detail-type": ["CloudWatch Alarm State Change"],
+          "resources": [{"prefix": "arn:aws:cloudwatch:${AWS::Region}:${AWS::AccountId}:alarm:d-disk-free-space-alarm"}],
+          "detail": {"state": {"value": ["ALARM"]}}
+        }
+      Targets: 
+        - Arn: !Ref SNSResourceStateMachine
+          Id: step-function
+          RoleArn: !Ref StatemachineExecRoleARN
+          InputTransformer:
+            InputPathsMap:
+              "Account": "$.account"
+              "AlarmName": "$.detail.alarmName"
+              "MetricsName": "$.detail.configuration.metrics[0].metricStat.metric.name"
+              "Reason": "$.detail.state.reason"
+              "Time": "$.time"
+            InputTemplate: |
+              {
+                "subject": "Dドライブディスク使用率超過通知",
+                "message": "Dドライブディスク使用率超過通知 \n AWSアカウントID: \"<Account>\" \n 時間: \"<Time>\" \n アラーム名: \"<AlarmName>\" \n メトリック: \"<MetricsName>\" \n 理由: \"<Reason>\""
+              }
+
+  ######################## 共通りソース ########################
+
+  ######################
+  #     ステートマシン   #
+  ######################
+  ## 件名カスタマイズ用
+
+  SNSResourceStateMachine:
+    Type: "AWS::StepFunctions::StateMachine"
+    Properties:
+      StateMachineName: windows-ec2-resource-check-state-machine
+      DefinitionString: !Sub |-
+            {
+              "StartAt": "PublishSns",
+              "States": {
+                "PublishSns": {
+                  "Type": "Task",
+                  "Resource": "arn:aws:states:::sns:publish",
+                  "Parameters": {
+                    "TopicArn": "${CloudWatchAlarmResourceNotificationTopicARN}",
+                    "Message.$": "$.message",
+                    "Subject.$": "$.subject"
+                  },
+                  "End": true
+                }
+              }
+            }
+      RoleArn: !Ref SNSPublishRoleARN
