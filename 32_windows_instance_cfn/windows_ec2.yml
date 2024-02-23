@@ -1,0 +1,173 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Windows Server for IICS Secure Agent
+Parameters:
+  Prefix:
+    Description: Prefix
+    Type: String
+  AZ1:
+    Description: AZ1
+    Type: String
+    Default: a
+  LatestWindowsAmiId :
+    Type : 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
+    AllowedValues: 
+      - '/aws/service/ami-windows-latest/Windows_Server-2016-Japanese-Full-Base'
+      - '/aws/service/ami-windows-latest/Windows_Server-2016-English-Full-Base'
+      - '/aws/service/ami-windows-latest/Windows_Server-2019-Japanese-Full-Base'
+    Default: '/aws/service/ami-windows-latest/Windows_Server-2019-Japanese-Full-Base'
+  KeyName:
+    Description: Name of an existing EC2 KeyPair to enable SSH access to the instances
+    Type: String
+    MinLength: '1'
+    MaxLength: '64'
+    AllowedPattern: '[-_ a-zA-Z0-9]*'
+    ConstraintDescription: can contain only alphanumeric characters, spaces, dashes
+      and underscores.
+
+Resources:
+  #-----------------------------------------------------------------------------
+  # VPC
+  #-----------------------------------------------------------------------------
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 192.168.0.0/24
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+        - Key: Name
+          Value: !Sub "${Prefix}-vpc"
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: !Sub "${Prefix}-Public-rtb"
+  PublicSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Sub "${AWS::Region}${AZ1}"
+      VpcId: !Ref VPC
+      CidrBlock: 192.168.0.0/28
+      Tags:
+        - Key: Name
+          Value: !Sub "${Prefix}-Public-subnet"
+  PublicSubnetAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnet
+      RouteTableId: !Ref PublicRouteTable
+  PublicRoute:
+    Type: AWS::EC2::Route
+    DependsOn: AttachGateway
+    Properties:
+      RouteTableId:
+        Ref: PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId:
+        Ref: InternetGateway
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+      - Key: Application
+        Value:
+          Ref: AWS::StackId
+      - Key: Network
+        Value: Public
+  AttachGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId:
+        Ref: VPC
+      InternetGatewayId:
+        Ref: InternetGateway
+
+  #-----------------------------------------------------------------------------
+  # EC2 Instance
+  #-----------------------------------------------------------------------------
+  InstanceWindows:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      IamInstanceProfile: !Ref ServerProfile
+      ImageId: !Ref LatestWindowsAmiId
+      InstanceType: m5a.xlarge
+      KeyName:
+        Ref: KeyName
+      BlockDeviceMappings:
+      - DeviceName: "/dev/sda1" # C ドライブ
+        Ebs:
+          VolumeType: 'gp2'
+          VolumeSize: 150
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: true
+          DeviceIndex: "0"
+          SubnetId: !Ref PublicSubnet
+      UserData:
+        Fn::Base64: |
+          <script>
+          @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command " [System.Net.ServicePointManager]::SecurityProtocol = 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
+          tzutil.exe /s "Tokyo Standard Time"
+          Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -name "HideFileExt" -Value 0
+          Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -name "Hidden" -Value 1
+          Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
+          choco install awscli -y
+          choco install GoogleChrome -y
+          choco install vscode -y
+          @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "
+          $installerUrl = 'https://aka.ms/vs/17/release/vc_redist.x64.exe'
+          $installerPath = '$env:TEMP\vc_redist.x64.exe'
+          Invoke-WebRequest -Uri $installerUrl -OutFile $installerPath
+          Start-Process -FilePath $installerPath -ArgumentList '/install', '/quiet', '/norestart' -Wait
+          Remove-Item $installerPath
+          " && echo VC++ 2015 Redistributable installed
+          </script>
+      Tags:
+        - Key: Name
+          Value: !Sub "${Prefix}-Windows-Instance"
+  #-----------------------------------------------------------------------------
+  # IAM
+  #-----------------------------------------------------------------------------
+  ServerRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          -
+            Effect: "Allow"
+            Principal:
+              Service:
+                - "ec2.amazonaws.com"
+            Action:
+                - "sts:AssumeRole"
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+        - "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+  S3BucketPolicyForSSM:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: S3BucketPolicyForSSM
+      Roles:
+        - !Ref ServerRole
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          -
+            Effect: "Allow"
+            Action: "s3:GetObject"
+            Resource:
+              - !Sub "arn:aws:s3:::aws-ssm-${AWS::Region}/*"
+              - !Sub "arn:aws:s3:::aws-windows-downloads-${AWS::Region}/*"
+              - !Sub "arn:aws:s3:::amazon-ssm-${AWS::Region}/*"
+              - !Sub "arn:aws:s3:::amazon-ssm-packages-${AWS::Region}/*"
+              - !Sub "arn:aws:s3:::${AWS::Region}-birdwatcher-prod/*"
+              - !Sub "arn:aws:s3:::patch-baseline-snapshot-${AWS::Region}/*"
+  ServerProfile:
+    Type: "AWS::IAM::InstanceProfile"
+    Properties:
+      Path: "/"
+      Roles:
+        - Ref: ServerRole
+      InstanceProfileName: !Sub "${Prefix}-Server"

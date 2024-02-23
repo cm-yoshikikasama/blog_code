@@ -1,0 +1,23 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: SNS for CloudWatch Alarm notification for dev
+
+Parameters:
+  NotificateDestinationEmail:
+    Description: Destination Email of for SNS
+    Type: String
+
+Resources:
+  ######################## 共通りソース ########################
+
+  ######################
+  #     SNSトピック     #
+  ######################
+  # 通知先設定
+
+  ResourceSnsTopic:
+    Type: AWS::SNS::Topic
+    Properties: 
+      TopicName: CloudWatchAlarmResourceNotificationTopic
+      Subscription:
+        - Endpoint: !Sub ${NotificateDestinationEmail}
+          Protocol: email
