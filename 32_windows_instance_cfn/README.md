@@ -64,8 +64,8 @@ CloudFormationから作成します。
 - health_resource_check_alarm.yml
 
 - Parameters:
-  - StatemachineExecRoleARN: arn:aws:iam::<AWS_ACCOUNT_ID>:role/EventBridgeToStateMachineExecutionRole
-  - SNSPublishRoleARN	arn:aws:iam::<AWS_ACCOUNT_ID>:role/SNSPublishFromStateMachineRole
+  - CloudWatchAlarmResourceNotificationTopicARN arn:aws:sns:ap-northeast-1:<AWS_ACCOUNT_ID>:CloudWatchAlarmResourceNotificationTopic
   - InstanceId	<INSTANCE_ID>
   - InstanceType <INSTANCE_TYPE>
-  - CloudWatchAlarmResourceNotificationTopicARN arn:aws:sns:ap-northeast-1:<AWS_ACCOUNT_ID>:CloudWatchAlarmResourceNotificationTopic
+  - SNSPublishRoleARN	arn:aws:iam::<AWS_ACCOUNT_ID>:role/SNSPublishFromStateMachineRole
+  - StatemachineExecRoleARN: arn:aws:iam::<AWS_ACCOUNT_ID>:role/EventBridgeToStateMachineExecutionRole
