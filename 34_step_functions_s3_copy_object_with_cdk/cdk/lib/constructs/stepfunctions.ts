@@ -86,7 +86,7 @@ export class StepFunctionsConstruct extends Construct {
       listObjectsV2.next(filterObjects).next(copyObjectMap)
     );
     this.stateMachine = new sfn.StateMachine(this, "StateMachine", {
-      stateMachineName: `${props.projectName}-${props.envName}-CSVProcessorStateMachine-`,
+      stateMachineName: `${props.projectName}-${props.envName}-CSVProcessorStateMachine`,
       definitionBody: definitionBody,
       role: stepFunctionsRole,
     });

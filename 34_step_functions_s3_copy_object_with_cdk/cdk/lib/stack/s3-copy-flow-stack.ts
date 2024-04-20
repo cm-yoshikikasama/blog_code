@@ -1,14 +1,14 @@
 import { Construct } from "constructs";
 import * as cdk from "aws-cdk-lib";
-import { S3Construct } from "./constructs/s3";
+import { S3Construct } from "../constructs/s3";
 import {
   StepFunctionsConstruct,
   StepFunctionsConstructProps,
-} from "./constructs/stepfunctions";
+} from "../constructs/stepfunctions";
 import {
   EventBridgeConstruct,
   EventBridgeConstructProps,
-} from "./constructs/eventbridge";
+} from "../constructs/eventbridge";
 
 export interface S3CopyFlowStackProps extends cdk.StackProps {
   envName: string;
