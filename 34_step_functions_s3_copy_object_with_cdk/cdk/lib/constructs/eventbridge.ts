@@ -16,23 +16,19 @@ export class EventBridgeConstruct extends Construct {
   constructor(scope: Construct, id: string, props: EventBridgeConstructProps) {
     super(scope, id);
 
-    // EventBridgeのルールを定義（ここでは、S3 Put イベント）
-    const s3PutRule = new events.Rule(
+    // 日次で09:00 (JST) に発火するEventBridgeのルールを追加
+    const dailyRule = new events.Rule(
       this,
-      `${props.projectName}-${props.envName}-s3-put-rule`,
+      `etl2-${props.envName}-daily-rule`,
       {
-        eventPattern: {
-          source: ["aws.s3"],
-          detailType: ["Object Created"],
-          detail: {
-            bucket: {
-              name: [props.dataInputBucketName],
-            },
-            object: {
-              key: [{ prefix: "input/" }],
-            },
-          },
-        },
+        schedule: events.Schedule.cron({
+          // 日本時間の09:00はUTCの00:00に相当
+          minute: "0",
+          hour: "11",
+          day: "*",
+          month: "*",
+          year: "*",
+        }),
       }
     );
     // EventBridge が Step Functions を起動するための IAM ロールを作成
@@ -59,7 +55,7 @@ export class EventBridgeConstruct extends Construct {
       "ImportedStateMachine",
       props.stateMachineArn
     );
-    s3PutRule.addTarget(
+    dailyRule.addTarget(
       new eventsTargets.SfnStateMachine(stateMachine, {
         role: eventBridgeExecutionRole,
       })

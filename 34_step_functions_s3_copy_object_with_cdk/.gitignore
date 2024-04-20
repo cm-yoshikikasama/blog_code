@@ -57,3 +57,4 @@ read*lock
 
 *.js
 *.d.ts
+__snapshots__

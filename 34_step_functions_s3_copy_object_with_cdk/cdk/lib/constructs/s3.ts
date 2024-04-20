@@ -18,7 +18,7 @@ export class S3Construct extends Construct {
     super(scope, id);
 
     this.dataInputBucket = new Bucket(this, "DataInputBucket", {
-      bucketName: `${props.projectName}-${props.envName}-datainput`,
+      bucketName: `${props.projectName}-${props.envName}-data-source`,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
       encryption: BucketEncryption.KMS_MANAGED,
@@ -26,7 +26,7 @@ export class S3Construct extends Construct {
       eventBridgeEnabled: true,
     });
     this.dataOutputBucket = new Bucket(this, "DataOutputBucket", {
-      bucketName: `${props.projectName}-${props.envName}-dataoutput`,
+      bucketName: `${props.projectName}-${props.envName}-data-store`,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
       encryption: BucketEncryption.KMS_MANAGED,
