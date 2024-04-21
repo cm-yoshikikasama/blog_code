@@ -16,20 +16,17 @@ export class EventBridgeConstruct extends Construct {
     super(scope, id);
 
     // 日次で09:00 (JST) に発火するEventBridgeのルールを追加
-    const dailyRule = new events.Rule(
-      this,
-      `etl2-${props.envName}-daily-rule`,
-      {
-        schedule: events.Schedule.cron({
-          // 日本時間の09:00はUTCの00:00に相当
-          minute: "0",
-          hour: "11",
-          day: "*",
-          month: "*",
-          year: "*",
-        }),
-      }
-    );
+    const dailyRule = new events.Rule(this, `DailyRule`, {
+      schedule: events.Schedule.cron({
+        // 日本時間の09:00はUTCの00:00に相当
+        minute: "0",
+        hour: "11",
+        day: "*",
+        month: "*",
+        year: "*",
+      }),
+      ruleName: `${props.projectName}-${props.envName}-daily-rule`,
+    });
     // EventBridge が Step Functions を起動するための IAM ロールを作成
     const eventBridgeExecutionRole = new iam.Role(
       this,
