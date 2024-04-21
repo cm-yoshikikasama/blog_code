@@ -4,7 +4,7 @@ import { S3Construct } from "../constructs/s3";
 import {
   StepFunctionsConstruct,
   StepFunctionsConstructProps,
-} from "../constructs/stepfunctions";
+} from "../constructs/step-functions";
 import {
   EventBridgeConstruct,
   EventBridgeConstructProps,
