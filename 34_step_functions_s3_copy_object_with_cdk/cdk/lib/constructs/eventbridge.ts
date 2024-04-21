@@ -15,10 +15,9 @@ export class EventBridgeConstruct extends Construct {
   constructor(scope: Construct, id: string, props: EventBridgeConstructProps) {
     super(scope, id);
 
-    // 日次で09:00 (JST) に発火するEventBridgeのルールを追加
+    // 日次で20:00 (JST) に発火するEventBridgeのルールを追加
     const dailyRule = new events.Rule(this, `DailyRule`, {
       schedule: events.Schedule.cron({
-        // 日本時間の09:00はUTCの00:00に相当
         minute: "0",
         hour: "11",
         day: "*",
