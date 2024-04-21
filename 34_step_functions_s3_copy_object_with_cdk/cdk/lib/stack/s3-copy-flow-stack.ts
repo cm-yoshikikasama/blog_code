@@ -30,8 +30,8 @@ export class S3CopyFlowStack extends cdk.Stack {
       {
         envName: props.envName,
         projectName: props.projectName,
-        dataInputBucketName: s3Construct.dataInputBucket.bucketName,
-        dataOutputBucketName: s3Construct.dataOutputBucket.bucketName,
+        dataSourceBucketName: s3Construct.dataSourceBucket.bucketName,
+        dataStoreBucketName: s3Construct.dataStoreBucket.bucketName,
       } as StepFunctionsConstructProps
     );
     // EventBridgeStack のインスタンス化
@@ -39,7 +39,6 @@ export class S3CopyFlowStack extends cdk.Stack {
       envName: props.envName,
       projectName: props.projectName,
       stateMachineArn: stepFunctionsConstruct.stateMachine.stateMachineArn,
-      dataInputBucketName: s3Construct.dataInputBucket.bucketName,
     } as EventBridgeConstructProps);
   }
 }
