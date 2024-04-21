@@ -11,5 +11,5 @@ export interface AppParameter {
 export const devParameter: AppParameter = {
   envName: "dev",
   projectName: "kasama",
-  env: { account: "672842958462", region: "ap-northeast-1" },
+  env: { account: "xxxxxx", region: "ap-northeast-1" },
 };
