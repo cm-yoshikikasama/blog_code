@@ -58,3 +58,5 @@ read*lock
 *.js
 *.d.ts
 __snapshots__
+
+!jest.config.js
