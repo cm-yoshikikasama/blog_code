@@ -9,7 +9,6 @@ export interface EventBridgeConstructProps {
   envName: string;
   projectName: string;
   stateMachineArn: string;
-  dataInputBucketName: string;
 }
 
 export class EventBridgeConstruct extends Construct {

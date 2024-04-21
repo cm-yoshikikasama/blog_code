@@ -12,12 +12,12 @@ export interface S3ConstructProps {
 }
 
 export class S3Construct extends Construct {
-  public readonly dataInputBucket: Bucket;
-  public readonly dataOutputBucket: Bucket;
+  public readonly dataSourceBucket: Bucket;
+  public readonly dataStoreBucket: Bucket;
   constructor(scope: Construct, id: string, props: S3ConstructProps) {
     super(scope, id);
 
-    this.dataInputBucket = new Bucket(this, "DataInputBucket", {
+    this.dataSourceBucket = new Bucket(this, "DataSourceBucket", {
       bucketName: `${props.projectName}-${props.envName}-data-source`,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
@@ -25,7 +25,7 @@ export class S3Construct extends Construct {
       versioned: true,
       eventBridgeEnabled: true,
     });
-    this.dataOutputBucket = new Bucket(this, "DataOutputBucket", {
+    this.dataStoreBucket = new Bucket(this, "DataStoreBucket", {
       bucketName: `${props.projectName}-${props.envName}-data-store`,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL,

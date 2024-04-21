@@ -7,8 +7,8 @@ import * as iam from "aws-cdk-lib/aws-iam";
 export interface StepFunctionsConstructProps {
   envName: string;
   projectName: string;
-  dataInputBucketName: string;
-  dataOutputBucketName: string;
+  dataSourceBucketName: string;
+  dataStoreBucketName: string;
 }
 
 export class StepFunctionsConstruct extends Construct {
@@ -35,10 +35,10 @@ export class StepFunctionsConstruct extends Construct {
           "s3:CopyObject",
         ],
         resources: [
-          `arn:aws:s3:::${props.dataInputBucketName}`,
-          `arn:aws:s3:::${props.dataInputBucketName}/*`,
-          `arn:aws:s3:::${props.dataOutputBucketName}`,
-          `arn:aws:s3:::${props.dataOutputBucketName}/*`,
+          `arn:aws:s3:::${props.dataSourceBucketName}`,
+          `arn:aws:s3:::${props.dataSourceBucketName}/*`,
+          `arn:aws:s3:::${props.dataStoreBucketName}`,
+          `arn:aws:s3:::${props.dataStoreBucketName}/*`,
         ],
       })
     );
@@ -46,8 +46,8 @@ export class StepFunctionsConstruct extends Construct {
     const listObjectsV2 = new sfn_tasks.CallAwsService(this, "ListObjectsV2", {
       service: "s3",
       action: "listObjectsV2",
-      parameters: { Bucket: props.dataInputBucketName, Prefix: "src/" },
-      iamResources: [`arn:aws:s3:::${props.dataInputBucketName}/src/*`],
+      parameters: { Bucket: props.dataSourceBucketName, Prefix: "src/" },
+      iamResources: [`arn:aws:s3:::${props.dataSourceBucketName}/src/*`],
       resultPath: "$.listResult",
     });
 
@@ -71,13 +71,13 @@ export class StepFunctionsConstruct extends Construct {
       service: "s3",
       action: "copyObject",
       parameters: {
-        Bucket: props.dataOutputBucketName,
+        Bucket: props.dataStoreBucketName,
         CopySource: sfn.JsonPath.stringAt(
-          `States.Format('${props.dataInputBucketName}/{}', $.Key)`
+          `States.Format('${props.dataSourceBucketName}/{}', $.Key)`
         ),
         Key: sfn.JsonPath.stringAt("States.Format('target/{}', $.FileName)"),
       },
-      iamResources: [`arn:aws:s3:::${props.dataOutputBucketName}/target/*`],
+      iamResources: [`arn:aws:s3:::${props.dataStoreBucketName}/target/*`],
       resultPath: sfn.JsonPath.DISCARD,
     });
     copyObjectMap.itemProcessor(copyObject);
