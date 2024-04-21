@@ -17,7 +17,7 @@ npx cdk synth --profile <YOUR_AWS_PROFILE>
 ```
 
 ```txt
-npx cdk deploy --profile <YOUR_AWS_PROFILE>
+npx cdk deploy --all --require-approval never --profile <YOUR_AWS_PROFILE>
 ```
 
 ## TEST Command
