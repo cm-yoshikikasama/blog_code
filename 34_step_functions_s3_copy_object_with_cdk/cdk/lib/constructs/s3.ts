@@ -31,7 +31,6 @@ export class S3Construct extends Construct {
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
       encryption: BucketEncryption.KMS_MANAGED,
       versioned: true,
-      eventBridgeEnabled: true,
     });
   }
 }
