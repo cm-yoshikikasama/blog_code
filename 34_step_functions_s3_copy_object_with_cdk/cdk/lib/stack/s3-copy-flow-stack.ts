@@ -18,12 +18,10 @@ export interface S3CopyFlowStackProps extends cdk.StackProps {
 export class S3CopyFlowStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: S3CopyFlowStackProps) {
     super(scope, id, props);
-    // S3Construct のインスタンス化
     const s3Construct = new S3Construct(this, "S3", {
       envName: props.envName,
       projectName: props.projectName,
     });
-    // StepFunctionsConstruct
     const stepFunctionsConstruct = new StepFunctionsConstruct(
       this,
       "StepFunctions",
@@ -34,7 +32,6 @@ export class S3CopyFlowStack extends cdk.Stack {
         dataStoreBucketName: s3Construct.dataStoreBucket.bucketName,
       } as StepFunctionsConstructProps
     );
-    // EventBridgeStack のインスタンス化
     new EventBridgeConstruct(this, "EventBridge", {
       envName: props.envName,
       projectName: props.projectName,
