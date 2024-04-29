@@ -1,4 +1,3 @@
-// import * as cdk from "aws-cdk-lib";
 import { Construct } from "constructs";
 import * as glue from "aws-cdk-lib/aws-glue";
 import * as iam from "aws-cdk-lib/aws-iam";
