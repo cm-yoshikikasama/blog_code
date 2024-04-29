@@ -15,25 +15,22 @@ export class EventBridgeConstruct extends Construct {
   constructor(scope: Construct, id: string, props: EventBridgeConstructProps) {
     super(scope, id);
 
-    const s3PutRule = new events.Rule(
-      this,
-      `${props.projectName}-${props.envName}-etl-s3-put-rule`,
-      {
-        eventPattern: {
-          source: ["aws.s3"],
-          detailType: ["Object Created"],
-          detail: {
-            bucket: {
-              name: [props.dataSourceBucketName],
-            },
-            object: {
-              key: [{ prefix: "input/" }],
-              size: [{ numeric: [">", 0] }],
-            },
+    const s3PutRule = new events.Rule(this, "S3PutRule", {
+      eventPattern: {
+        source: ["aws.s3"],
+        detailType: ["Object Created"],
+        detail: {
+          bucket: {
+            name: [props.dataSourceBucketName],
+          },
+          object: {
+            key: [{ prefix: "input/" }],
+            size: [{ numeric: [">", 0] }],
           },
         },
-      }
-    );
+      },
+      ruleName: `${props.projectName}-${props.envName}-etl-s3-put-rule`,
+    });
     // EventBridge が Step Functions を起動するための IAM ロールを作成
     const eventBridgeExecutionRole = new iam.Role(
       this,
