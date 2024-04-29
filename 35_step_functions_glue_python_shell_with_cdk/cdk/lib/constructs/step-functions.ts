@@ -1,4 +1,3 @@
-// import * as cdk from "aws-cdk-lib";
 import { Construct } from "constructs";
 import * as sfn from "aws-cdk-lib/aws-stepfunctions";
 import * as sfn_tasks from "aws-cdk-lib/aws-stepfunctions-tasks";

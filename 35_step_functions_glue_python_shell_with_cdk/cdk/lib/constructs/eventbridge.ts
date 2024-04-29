@@ -1,4 +1,3 @@
-// import * as cdk from "aws-cdk-lib";
 import { Construct } from "constructs";
 import * as events from "aws-cdk-lib/aws-events";
 import * as eventsTargets from "aws-cdk-lib/aws-events-targets";
