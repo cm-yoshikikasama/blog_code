@@ -45,7 +45,8 @@ def main(event, context):
             Key=output_filename,
             Body=output_file.getvalue(),
         )
-        logger.info(f"Successful put {s3_output_bucket}/{output_filename} ")
+        logger.info(f"Successful put {s3_output_bucket}/{output_filename}")
+        return {"statusCode": 200, "body": f"Successful put {s3_output_bucket}/{output_filename}"}
     except Exception as e:
         tb = traceback.format_exc()
         logger.error(f"Unexpected error: {str(e)}\nTraceback: {tb}")
