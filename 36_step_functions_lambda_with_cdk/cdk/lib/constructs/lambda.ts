@@ -14,8 +14,6 @@ export class LambdaConstruct extends Construct {
   public readonly LambdaName: string;
   constructor(scope: Construct, id: string, props: LambdaConstructProps) {
     super(scope, id);
-    // this defines an AWS Lambda resource
-    // IAMロールの定義 (Lambda関数で使用する場合)
     const lambdaRole = new iam.Role(this, "LambdaExecutionRole", {
       assumedBy: new iam.ServicePrincipal("lambda.amazonaws.com"),
       managedPolicies: [
