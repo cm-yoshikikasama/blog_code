@@ -7,11 +7,16 @@ const app = new cdk.App();
 
 // This context need to be specified in args
 const argContext = "environment";
-const envKey = app.node.tryGetContext(argContext);
-if (envKey == undefined)
-  throw new Error(
-    `Please specify environment with context option. ex) cdk deploy -c ${argContext}=dev`
+let envKey = app.node.tryGetContext(argContext);
+if (envKey == undefined) {
+  console.warn(
+    `Warning: Environment key not specified, defaulting to 'dev'. For specifying environment, use context option. ex) cdk deploy -c ${argContext}=dev/prod`
   );
+  // throw new Error(
+  //   `Please specify environment with context option. ex) cdk deploy -c ${argContext}=dev`
+  // );
+  envKey = "dev";
+}
 
 let parameter;
 
