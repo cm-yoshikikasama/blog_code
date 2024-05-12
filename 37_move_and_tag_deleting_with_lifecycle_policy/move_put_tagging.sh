@@ -20,7 +20,7 @@ function tag_object() {
 echo "**********START $0 **********"
 if [ $# -ne 3 ]; then
   echo "引数が不正です。実行するには3個の引数が必要です。" >&2
-  echo "ex) sh move_put_tagging.sh s3://cm-kasama-life-cycle-test/src flight_date_header.csv iam-role" >&2
+  echo "ex) sh move_put_tagging.sh s3://cm-kasama-life-cycle-test/src test_header.csv iam-role" >&2
   err "スクリプトの実行に失敗しました。"
   exit 1
 fi

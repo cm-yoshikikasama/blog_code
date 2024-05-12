@@ -4,7 +4,7 @@
 ## 実行例
 
 ```txt
-sh move_put_tagging.sh s3://cm-kasama-life-cycle-test/src flight_date_header.csv iam-role
+sh move_put_tagging.sh s3://cm-kasama-life-cycle-test/src test_header.csv iam-role
 ```
 
 ## 参考実装
