@@ -20,7 +20,7 @@ export class LambdaConstruct extends Construct {
         ),
       ],
     });
-    const lambdaName = `${props.projectName}-${props.envName}-event-trigger-test-handler`;
+    const lambdaName = `${props.projectName}-${props.envName}-event-trigger-check-handler`;
     const lambdaFunction = new lambda.Function(this, "EtlHandler", {
       functionName: lambdaName,
       runtime: lambda.Runtime.PYTHON_3_12,
