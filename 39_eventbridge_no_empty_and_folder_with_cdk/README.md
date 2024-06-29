@@ -1,4 +1,4 @@
-# 36_step_functions_lambda_with_cdk
+# 39_eventbridge_no_empty_and_folder_with_cdk
 
 ## Install
 
