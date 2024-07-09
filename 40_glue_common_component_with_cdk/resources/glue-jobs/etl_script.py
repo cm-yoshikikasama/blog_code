@@ -1,9 +1,29 @@
 import sys
-import traceback
+import pkgutil
+import glob
 import boto3
+import traceback
+
+# 動的にZIPファイルを検索し、sys.pathに追加
+zip_files = glob.glob("/tmp/glue-python-libs-*/*.zip")
+for zip_file in zip_files:
+    sys.path.append(zip_file)
+    print(f"Added {zip_file} to sys.path")
+
+print("Updated sys.path:", sys.path)
+
+
+def print_importable_modules():
+    print("--- Importable Python Modules ---")
+    for module in pkgutil.iter_modules():
+        print(module.name)
+
+
+print_importable_modules()
+
+from data_processing import process_data, get_current_time, read_csv_from_s3, write_csv_to_s3
+from get_logger import setup_logging
 from awsglue.utils import getResolvedOptions
-from common.data_processing import process_data, get_current_time, read_csv_from_s3, write_csv_to_s3
-from common.get_logger import setup_logging
 
 logger = setup_logging()
 
