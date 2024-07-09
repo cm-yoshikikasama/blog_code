@@ -1,7 +1,6 @@
 import { Construct } from "constructs";
 import * as glue from "aws-cdk-lib/aws-glue";
 import * as iam from "aws-cdk-lib/aws-iam";
-import * as s3 from "aws-cdk-lib/aws-s3";
 
 export interface GlueConstructProps {
   envName: string;
@@ -70,7 +69,7 @@ export class GlueConstruct extends Construct {
         "--TempDir": `s3://${props.sysBucketName}/tmp`,
         "--job-language": "python",
         "--extra-py-files": `s3://${props.sysBucketName}/common/${props.commonZipkey}`,
-        // "--extra-py-files": `s3://${props.sysBucketName}/glue-jobs/common/data_processing.py,s3://${props.sysBucketName}/glue-jobs/common/get_logger.py`,
+        // "--extra-py-files": `s3://${props.sysBucketName}/common/data_processing.py,s3://${props.sysBucketName}/common/get_logger.py`,
         "--S3_OUTPUT_BUCKET": props.dataStoreBucketName,
         "--S3_OUTPUT_KEY": `output/`,
       },
