@@ -1,4 +1,6 @@
 import * as cdk from "aws-cdk-lib";
+import { Asset } from "aws-cdk-lib/aws-s3-assets";
+import * as path from "path";
 import {
   Bucket,
   BlockPublicAccess,
@@ -15,6 +17,8 @@ export class S3Construct extends Construct {
   public readonly dataSourceBucket: Bucket;
   public readonly dataStoreBucket: Bucket;
   public readonly sysBucket: Bucket;
+  public readonly commonZipAsset: Asset;
+
   constructor(scope: Construct, id: string, props: S3ConstructProps) {
     super(scope, id);
 
@@ -43,8 +47,28 @@ export class S3Construct extends Construct {
     });
     // Glue スクリプトを S3 バケットにデプロイ
     new cdk.aws_s3_deployment.BucketDeployment(this, "DeployGlueScript", {
-      sources: [cdk.aws_s3_deployment.Source.asset("../resources")],
+      sources: [cdk.aws_s3_deployment.Source.asset("../resources/glue-jobs")],
+      // sources: [cdk.aws_s3_deployment.Source.asset("../resources")],
       destinationBucket: this.sysBucket,
+      destinationKeyPrefix: "glue-jobs/",
+    });
+
+    // common ディレクトリを zip として Asset にデプロイ
+    this.commonZipAsset = new Asset(this, "CommonZipAsset", {
+      path: path.join(__dirname, "..", "..", "..", "resources", "common"),
+    });
+
+    // common.zip を sysBucket にコピー
+    new cdk.aws_s3_deployment.BucketDeployment(this, "DeployCommonZip", {
+      sources: [
+        cdk.aws_s3_deployment.Source.bucket(
+          this.commonZipAsset.bucket,
+          this.commonZipAsset.s3ObjectKey
+        ),
+      ],
+      destinationBucket: this.sysBucket,
+      destinationKeyPrefix: "common/",
+      extract: false,
     });
   }
 }
