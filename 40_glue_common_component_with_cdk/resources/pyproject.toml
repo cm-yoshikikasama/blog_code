@@ -1,0 +1,12 @@
+[build-system]
+requires = ["setuptools>=45", "wheel", "build"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "common"
+version = "0.1"
+dependencies = ["pendulum"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["common*"]
