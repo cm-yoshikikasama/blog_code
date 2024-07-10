@@ -60,3 +60,5 @@ read*lock
 __snapshots__
 
 !jest.config.js
+common.egg-info
+build

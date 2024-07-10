@@ -29,7 +29,6 @@ export class ETLStack extends cdk.Stack {
       dataSourceBucketName: s3Construct.dataSourceBucket.bucketName,
       dataStoreBucketName: s3Construct.dataStoreBucket.bucketName,
       sysBucketName: s3Construct.sysBucket.bucketName,
-      commonZipkey: s3Construct.commonZipAsset.s3ObjectKey,
     } as GlueConstructProps);
 
     const stepFunctionsConstruct = new StepFunctionsConstruct(
