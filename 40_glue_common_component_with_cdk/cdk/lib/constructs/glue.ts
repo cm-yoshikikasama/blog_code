@@ -8,7 +8,6 @@ export interface GlueConstructProps {
   dataSourceBucketName: string;
   dataStoreBucketName: string;
   sysBucketName: string;
-  commonZipkey: string;
 }
 
 export class GlueConstruct extends Construct {
@@ -68,7 +67,7 @@ export class GlueConstruct extends Construct {
       defaultArguments: {
         "--TempDir": `s3://${props.sysBucketName}/tmp`,
         "--job-language": "python",
-        "--extra-py-files": `s3://${props.sysBucketName}/common/${props.commonZipkey}`,
+        "--extra-py-files": `s3://${props.sysBucketName}/common/common-0.1-py3-none-any.whl`,
         // "--extra-py-files": `s3://${props.sysBucketName}/common/data_processing.py,s3://${props.sysBucketName}/common/get_logger.py`,
         "--S3_OUTPUT_BUCKET": props.dataStoreBucketName,
         "--S3_OUTPUT_KEY": `output/`,

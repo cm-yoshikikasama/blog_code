@@ -1,16 +1,7 @@
 import sys
 import pkgutil
-import glob
 import boto3
 import traceback
-
-# 動的にZIPファイルを検索し、sys.pathに追加
-zip_files = glob.glob("/tmp/glue-python-libs-*/*.zip")
-for zip_file in zip_files:
-    sys.path.append(zip_file)
-    print(f"Added {zip_file} to sys.path")
-
-print("Updated sys.path:", sys.path)
 
 
 def print_importable_modules():

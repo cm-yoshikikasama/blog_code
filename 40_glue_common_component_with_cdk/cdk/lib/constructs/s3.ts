@@ -17,7 +17,6 @@ export class S3Construct extends Construct {
   public readonly dataSourceBucket: Bucket;
   public readonly dataStoreBucket: Bucket;
   public readonly sysBucket: Bucket;
-  public readonly commonZipAsset: Asset;
 
   constructor(scope: Construct, id: string, props: S3ConstructProps) {
     super(scope, id);
@@ -53,22 +52,27 @@ export class S3Construct extends Construct {
       destinationKeyPrefix: "glue-jobs/",
     });
 
-    // common ディレクトリを zip として Asset にデプロイ
-    this.commonZipAsset = new Asset(this, "CommonZipAsset", {
-      path: path.join(__dirname, "..", "..", "..", "resources", "common"),
-    });
-
-    // common.zip を sysBucket にコピー
-    new cdk.aws_s3_deployment.BucketDeployment(this, "DeployCommonZip", {
+    // commonディレクトリをwhlファイルに変換してS3にアップロード
+    new cdk.aws_s3_deployment.BucketDeployment(this, "DeployWheel", {
       sources: [
-        cdk.aws_s3_deployment.Source.bucket(
-          this.commonZipAsset.bucket,
-          this.commonZipAsset.s3ObjectKey
+        cdk.aws_s3_deployment.Source.asset(
+          path.join(__dirname, "..", "..", "..", "resources"),
+          {
+            bundling: {
+              image: cdk.DockerImage.fromRegistry("python:3.10"),
+              command: [
+                "bash",
+                "-c",
+                "pip install wheel && " +
+                  "python setup.py bdist_wheel && " +
+                  "cp dist/*.whl /asset-output/common-0.1-py3-none-any.whl",
+              ],
+            },
+          }
         ),
       ],
       destinationBucket: this.sysBucket,
       destinationKeyPrefix: "common/",
-      extract: false,
     });
   }
 }
