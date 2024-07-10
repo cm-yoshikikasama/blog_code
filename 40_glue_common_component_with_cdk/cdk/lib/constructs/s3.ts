@@ -66,7 +66,7 @@ export class S3Construct extends Construct {
                 "pip install --user --upgrade pip && " +
                   "pip install --user --no-cache-dir build wheel && " +
                   "python -m build --wheel && " +
-                  "cp dist/*.whl /asset-output/ && " +
+                  "cp dist/*.whl /asset-output/common-0.1-py3-none-any.whl && " +
                   "rm -rf dist build *.egg-info",
               ],
               user: "root",
