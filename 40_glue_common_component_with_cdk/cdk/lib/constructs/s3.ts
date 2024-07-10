@@ -63,10 +63,13 @@ export class S3Construct extends Construct {
               command: [
                 "bash",
                 "-c",
-                "pip install wheel && " +
-                  "python setup.py bdist_wheel && " +
-                  "cp dist/*.whl /asset-output/common-0.1-py3-none-any.whl",
+                "pip install --user --upgrade pip && " +
+                  "pip install --user --no-cache-dir build wheel && " +
+                  "python -m build --wheel && " +
+                  "cp dist/*.whl /asset-output/ && " +
+                  "rm -rf dist build *.egg-info",
               ],
+              user: "root",
             },
           }
         ),
