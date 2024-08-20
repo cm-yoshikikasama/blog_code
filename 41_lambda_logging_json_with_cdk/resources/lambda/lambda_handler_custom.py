@@ -1,7 +1,8 @@
 import json
-from lib.get_logger import get_logger
+from lib.get_logger import setup_logger
+from lib.check_log import check_log_test
 
-logger = get_logger()
+logger = setup_logger()
 
 
 def lambda_handler(event, context):
@@ -17,6 +18,8 @@ def lambda_handler(event, context):
         1 / 0
     except ZeroDivisionError:
         logger.exception("An exception occurred")
+
+    check_log_test()
 
     return {
         "statusCode": 200,
