@@ -28,9 +28,7 @@ class CustomJsonFormatter(logging.Formatter):
 
 def setup_logger():
     logger = logging.getLogger()
-
-    # 既存のハンドラーにカスタムフォーマッターを適用
-    for handler in logger.handlers:
-        handler.setFormatter(CustomJsonFormatter())
-
+    # Lambdaのデフォルトハンドラーを取得し、カスタムフォーマッターを適用
+    handler = logger.handlers[0]
+    handler.setFormatter(CustomJsonFormatter())
     return logger
