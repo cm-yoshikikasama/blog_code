@@ -1,6 +1,6 @@
 import logging
 import json
-from lib.check_log import check_log_test
+from lib.check_log_default import check_log_test
 
 logger = logging.getLogger()
 
