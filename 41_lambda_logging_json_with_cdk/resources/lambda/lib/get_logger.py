@@ -26,11 +26,11 @@ class CustomJsonFormatter(logging.Formatter):
         return json.dumps(log_entry)
 
 
-def get_logger():
+def setup_logger():
     logger = logging.getLogger()
-    if not logger.handlers:
-        handler = logging.StreamHandler()
-        formatter = CustomJsonFormatter()
-        handler.setFormatter(formatter)
-        logger.addHandler(handler)
+
+    # 既存のハンドラーにカスタムフォーマッターを適用
+    for handler in logger.handlers:
+        handler.setFormatter(CustomJsonFormatter())
+
     return logger
