@@ -6,7 +6,7 @@ import traceback
 class CustomJsonFormatter(logging.Formatter):
     def format(self, record):
         log_entry = {
-            "timestamp": self.formatTime(record, self.datefmt),
+            "timestamp": self.formatTime(record),
             "level": record.levelname,
             "message": record.getMessage(),
             "logger": record.name,
@@ -30,8 +30,7 @@ def get_logger():
     logger = logging.getLogger()
     if not logger.handlers:
         handler = logging.StreamHandler()
-        formatter = CustomJsonFormatter("%(asctime)s")
+        formatter = CustomJsonFormatter()
         handler.setFormatter(formatter)
         logger.addHandler(handler)
-    logger.setLevel(logging.DEBUG)
     return logger
