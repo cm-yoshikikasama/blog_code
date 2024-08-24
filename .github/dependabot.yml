@@ -2,7 +2,7 @@ version: 2
 updates:
   # npm パッケージ（JavaScript, Node.js）
   - package-ecosystem: "npm"
-    directory: "/41_lambda_logging_json_with_cdk/cdk/"
+    directory: "/blog_code/41_lambda_logging_json_with_cdk/cdk"
     schedule:
       interval: "weekly"
     groups:
