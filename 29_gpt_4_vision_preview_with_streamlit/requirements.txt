@@ -51,7 +51,7 @@ joblib==1.2.0
 jsonpatch==1.33
 jsonpointer==2.4
 jsonschema==4.17.3
-langchain==0.0.321
+langchain==0.2.3
 langsmith==0.0.49
 lz4==4.3.2
 markdown-it-py==2.2.0
