@@ -52,6 +52,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     && apt-get install --no-install-recommends -y nodejs=${NODEJS_VERSION}-1nodesource1 \
     && npm install -g npm@latest
 
+RUN pip3 install sqlfluff cfn-lint
 # AWS CLIのインストール
 RUN case ${TARGETARCH} in \
         "amd64") \
