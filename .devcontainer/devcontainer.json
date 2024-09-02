@@ -1,0 +1,152 @@
+{
+    "name": "My DevContainer", 
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+    "workspaceFolder": "/workspace", 
+    "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
+    "mounts": [
+        // AWSのプロファイルディレクトリをマウント
+        "source=${localEnv:HOME}/.aws,target=/root/.aws,type=bind,consistency=cached"
+    ],
+    "customizations": {
+      "vscode": {
+        "extensions": [
+          "amazonwebservices.aws-toolkit-vscode",
+          "charliermarsh.ruff",
+          "csholmq.excel-to-markdown-table",
+          "davidanson.vscode-markdownlint",
+          "dbaeumer.vscode-eslint",
+          "donjayamanne.githistory",
+          "dorzey.vscode-sqlfluff",
+          "eamodio.gitlens",
+          "esbenp.prettier-vscode",
+          "foxundermoon.shell-format",
+          "hediet.vscode-drawio",
+          "janisdd.vscode-edit-csv",
+          "kddejong.vscode-cfn-lint",
+          "marp-team.marp-vscode",
+          "mechatroner.rainbow-csv",
+          "ms-azuretools.vscode-docker",
+          "ms-ceintl.vscode-language-pack-ja",
+          "ms-python.debugpy",
+          "ms-python.python",
+          "ms-python.vscode-pylance",
+          "redhat.vscode-yaml",
+          "renesaarsoo.sql-formatter-vsc",
+          "streetsidesoftware.code-spell-checker",
+          "teamsdevapp.ms-teams-vscode-extension",
+          "timonwong.shellcheck",
+          "vscode-icons-team.vscode-icons",
+          "yzhang.markdown-all-in-one"
+        ],
+        "settings": {
+          "workbench.colorTheme": "Visual Studio Dark",
+          "hediet.vscode-drawio.resizeImages": null,
+          "editor.semanticTokenColorCustomizations": {},
+          "editor.formatOnSave": false,
+          "[python]": {
+              "editor.defaultFormatter": "charliermarsh.ruff",
+              "editor.formatOnType": true,
+              // ファイルの保存時にフォーマットを自動実行する場合
+              "editor.formatOnSave": true,
+          },
+          "[markdown]": {
+              "editor.defaultFormatter": "yzhang.markdown-all-in-one"
+          },
+          
+          "[sql]": {
+              "editor.formatOnSave": false,
+              "editor.defaultFormatter": "ReneSaarsoo.sql-formatter-vsc"
+          },
+          "[jinja-sql]": {
+              "editor.defaultFormatter": "dorzey.vscode-sqlfluff",
+              "editor.formatOnSave": true
+          },
+          "[javascript]": {
+              "editor.defaultFormatter": "esbenp.prettier-vscode",
+              "editor.formatOnSave": true
+          },
+          "[typescript]": {
+              "editor.defaultFormatter": "esbenp.prettier-vscode",
+              "editor.formatOnSave": true
+          },
+          "[shellscript]": {
+              "editor.defaultFormatter": "foxundermoon.shell-format",
+              "editor.formatOnSave": true
+          },
+          "[yaml]": {
+              "editor.defaultFormatter": "redhat.vscode-yaml",
+              "editor.insertSpaces": true,
+              "editor.tabSize": 2     
+          },
+          
+          "settingsSync.ignoredSettings": [],
+          "settingsSync.ignoredExtensions": [],
+          "editor.fontLigatures": false,
+          "cfnLint.path": "/Library/Frameworks/Python.framework/Versions/3.10/bin/cfn-lint",
+          "security.workspace.trust.enabled": false,
+          "yaml.customTags": [
+              "!And",
+              "!And sequence",
+              "!If",
+              "!If sequence",
+              "!Not",
+              "!Not sequence",
+              "!Equals",
+              "!Equals sequence",
+              "!Or",
+              "!Or sequence",
+              "!FindInMap",
+              "!FindInMap sequence",
+              "!Base64",
+              "!Join",
+              "!Join sequence",
+              "!Cidr",
+              "!Ref",
+              "!Sub",
+              "!Sub sequence",
+              "!GetAtt",
+              "!GetAZs",
+              "!ImportValue",
+              "!ImportValue sequence",
+              "!Select",
+              "!Select sequence",
+              "!Split",
+              "!Split sequence"
+          ],
+          "aws.suppressPrompts": {
+              "regionAddAutomatically": true
+          },
+          "files.insertFinalNewline": true,
+          "workbench.iconTheme": "vscode-icons",
+          "typescript.updateImportsOnFileMove.enabled": "always",
+          "sqlfluff.dialect": "mysql",
+          "sqlfluff.excludeRules": ["L009"],
+          "sqlfluff.executablePath": "sqlfluff",
+          "sqlfluff.ignoreLocalConfig": true,
+          "sqlfluff.ignoreParsing": false,
+          "sqlfluff.rules": [],
+          "sqlfluff.suppressNotifications": false,
+          "sqlfluff.workingDirectory": "",
+          /* Linter */
+          "sqlfluff.linter.arguments": [],
+          "sqlfluff.linter.run": "off",
+          "sqlfluff.linter.diagnosticSeverity": "error",
+          "sqlfluff.linter.diagnosticSeverityByRule": [
+              {
+              "rule": "L010",
+              "severity": "warning"
+              }
+          ],
+          "sqlfluff.linter.lintEntireProject": true,
+          /* Formatter */
+          "sqlfluff.format.arguments": ["--FIX-EVEN-UNPARSABLE"],
+          "sqlfluff.format.enabled": true,
+          "sqlfluff.experimental.format.executeInTerminal": true,
+          "gitlens.ai.experimental.model": "openai:gpt-4o",
+            }
+      }
+    }
+  }
+  
