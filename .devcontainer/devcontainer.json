@@ -35,7 +35,6 @@
           "redhat.vscode-yaml",
           "renesaarsoo.sql-formatter-vsc",
           "streetsidesoftware.code-spell-checker",
-          "teamsdevapp.ms-teams-vscode-extension",
           "timonwong.shellcheck",
           "vscode-icons-team.vscode-icons",
           "yzhang.markdown-all-in-one"
@@ -81,10 +80,8 @@
               "editor.tabSize": 2     
           },
           
-          "settingsSync.ignoredSettings": [],
-          "settingsSync.ignoredExtensions": [],
           "editor.fontLigatures": false,
-          "cfnLint.path": "/Library/Frameworks/Python.framework/Versions/3.10/bin/cfn-lint",
+          "cfnLint.path": "/opt/venv/bin/cfn-lint",
           "security.workspace.trust.enabled": false,
           "yaml.customTags": [
               "!And",
@@ -123,7 +120,7 @@
           "typescript.updateImportsOnFileMove.enabled": "always",
           "sqlfluff.dialect": "mysql",
           "sqlfluff.excludeRules": ["L009"],
-          "sqlfluff.executablePath": "sqlfluff",
+          "sqlfluff.executablePath": "/opt/venv/bin/sqlfluff",
           "sqlfluff.ignoreLocalConfig": true,
           "sqlfluff.ignoreParsing": false,
           "sqlfluff.rules": [],
@@ -143,9 +140,8 @@
           /* Formatter */
           "sqlfluff.format.arguments": ["--FIX-EVEN-UNPARSABLE"],
           "sqlfluff.format.enabled": true,
-          "sqlfluff.experimental.format.executeInTerminal": true,
-          "gitlens.ai.experimental.model": "openai:gpt-4o",
-            }
+          "sqlfluff.experimental.format.executeInTerminal": true
+        }
       }
     }
   }
