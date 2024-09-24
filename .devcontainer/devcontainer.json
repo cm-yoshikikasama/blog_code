@@ -7,16 +7,13 @@
     "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
     "mounts": [
         // AWSのプロファイルディレクトリをマウント
-        "source=${localEnv:HOME}/.aws,target=/root/.aws,type=bind,consistency=cached"
+        "source=${localEnv:HOME}/.aws,target=/root/.aws,type=bind,consistency=cached",
     ],
-    "remoteEnv": {
-        "GIT_USER_EMAIL": "${localEnv:GIT_USER_EMAIL}",
-        "GIT_USER_NAME": "${localEnv:GIT_USER_NAME}"
-    },
    "postCreateCommand": [
         "bash",
         "-c",
-        "git config --global user.email \"${GIT_USER_EMAIL:-noreply@example.com}\" && git config --global user.name \"${GIT_USER_NAME:-DevContainer User}\" && git config --global --add safe.directory /workspace && pip install -r requirements.txt && npm install && npm install -g aws-cdk"
+        // "git config --global user.email \"$(git config user.email)\"  && git config --global user.name \"$(git config user.name)\" && git config --global --add safe.directory /workspace && pip install -r requirements.txt && npm install && npm install -g aws-cdk"
+        "pip install -r requirements.txt && npm install && npm install -g aws-cdk"
     ],
     "customizations": {
       "vscode": {

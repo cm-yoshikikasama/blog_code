@@ -89,6 +89,7 @@ WORKDIR /workspace
 # デフォルトのシェルをbashに設定
 SHELL ["/bin/bash", "-c"]
 
+RUN git config --global --add safe.directory /workspace
 
 # コンテナ起動時のデフォルトコマンド
 CMD ["/bin/bash"]
