@@ -12,7 +12,6 @@
    "postCreateCommand": [
         "bash",
         "-c",
-        // "git config --global user.email \"$(git config user.email)\"  && git config --global user.name \"$(git config user.name)\" && git config --global --add safe.directory /workspace && pip install -r requirements.txt && npm install && npm install -g aws-cdk"
         "pip install -r requirements.txt && npm install && npm install -g aws-cdk"
     ],
     "customizations": {
