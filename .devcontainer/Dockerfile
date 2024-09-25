@@ -84,7 +84,7 @@ RUN case ${TARGETARCH} in \
     ./aws/install && \
     rm -rf aws awscliv2.zip
 
-# AWS CDK, Typescript, AWS SAM, Serverless Frameworkのインストール
+# AWS CDKのインストール
 RUN --mount=type=cache,target=/root/.npm,sharing=locked \
     npm install -g aws-cdk@${AWS_CDK_VERSION}
 
