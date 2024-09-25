@@ -4,6 +4,7 @@ FROM debian:bookworm-slim
 # バージョンの指定
 ARG PYTHON_VERSION=3.12.0
 ARG NODE_VERSION=20.17.0
+ARG AWS_CDK_VERSION=2.160.0
 ARG TARGETARCH
 
 
@@ -82,6 +83,11 @@ RUN case ${TARGETARCH} in \
     unzip awscliv2.zip && \
     ./aws/install && \
     rm -rf aws awscliv2.zip
+
+# AWS CDK, Typescript, AWS SAM, Serverless Frameworkのインストール
+RUN --mount=type=cache,target=/root/.npm,sharing=locked \
+    npm install -g aws-cdk@${AWS_CDK_VERSION}
+
 
 # 作業ディレクトリの設定
 WORKDIR /workspace
