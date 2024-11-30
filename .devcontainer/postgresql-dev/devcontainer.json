@@ -1,0 +1,82 @@
+{
+    "name": "postgresql-dev container",
+    "dockerComposeFile": "docker-compose.yml",
+    "service": "app",
+    "workspaceFolder": "/workspaces",
+    "remoteEnv": {
+      "PATH": "${containerEnv:PATH}:/home/vscode/.local/bin"
+    },
+    "postCreateCommand": "pip install --upgrade pip && pip install sqlfluff",
+    "customizations": {
+      "vscode": {
+        "extensions": [
+          "ms-azuretools.vscode-docker",
+          "mtxr.sqltools",
+          "mtxr.sqltools-driver-pg",
+          "dorzey.vscode-sqlfluff",
+          // Markdownのリンター
+          "davidanson.vscode-markdownlint",
+          // Gitの履歴を視覚化
+          "donjayamanne.githistory",
+          // Gitの機能拡張
+          "eamodio.gitlens",
+          // CSVファイルの編集
+          "janisdd.vscode-edit-csv",
+          // Markdownプレゼンテーションツール
+          "marp-team.marp-vscode",
+          // CSVファイルの表示改善
+          "mechatroner.rainbow-csv",
+          // 日本語言語パック
+          "ms-ceintl.vscode-language-pack-ja",
+          // スペルチェッカー
+          "streetsidesoftware.code-spell-checker",
+          // ファイルアイコンテーマ
+          "vscode-icons-team.vscode-icons",
+          // Markdown機能拡張
+          "yzhang.markdown-all-in-one"
+        ],
+        "settings": {
+          // Gitの自動更新を有効化
+          "git.autorefresh": true,
+          // VSCodeのカラーテーマ設定
+          "workbench.colorTheme": "Visual Studio Dark",
+          // セマンティックトークンの色のカスタマイズ
+          "editor.semanticTokenColorCustomizations": {},
+          // Markdown固有の設定
+          "[markdown]": {
+            "editor.defaultFormatter": "yzhang.markdown-all-in-one"
+          },
+          // フォントリガチャを無効化
+          "editor.fontLigatures": false,
+          // ワークスペースの信頼設定を無効化
+          "security.workspace.trust.enabled": false,
+          // ファイル末尾に改行を挿入
+          "files.insertFinalNewline": true,
+          // ファイルアイコンテーマの設定
+          "workbench.iconTheme": "vscode-icons",
+          "sqltools.connections": [
+            {
+              "name": "DevContainer PostgreSQL",
+              "driver": "PostgreSQL",
+              "previewLimit": 50,
+              "server": "localhost",
+              "port": 5432,
+              "database": "devcontainer_db",
+              "username": "postgres",
+              "password": "postgres"
+            }
+          ],
+          "[sql]": {
+            "editor.defaultFormatter": "dorzey.vscode-sqlfluff",
+            "editor.formatOnSave": false
+          },
+          "sqlfluff.config": "/workspaces/.devcontainer/postgresql-dev/.sqlfluff",
+          "sqlfluff.executablePath": "/home/vscode/.local/bin/sqlfluff",
+          "sqlfluff.linter.run": "onSave", // ファイル保存時に自動実行
+          "sqlfluff.formatter.lineLength": 80, // SQLコードの整形ルール
+          "sqlfluff.experimental.format.executeInTerminal": true,
+          "sqlfluff.format.enabled": true
+        }
+      }
+    }
+  }
