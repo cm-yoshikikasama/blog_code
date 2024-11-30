@@ -48,7 +48,3 @@ capitalisation_policy = upper
 [sqlfluff:rules:capitalisation.types]
 # データ型の大文字小文字
 extended_capitalisation_policy = upper
-
-# [sqlfluff:rules:capitalisation.identifiers]
-# 特定の識別子の大文字小文字を無視する設定
-# ignore_words = NFD,NFC,NFKD,NFKC
