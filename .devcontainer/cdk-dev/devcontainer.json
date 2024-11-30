@@ -1,5 +1,5 @@
 {
-    "name": "My DevContainer", 
+    "name": "cdk-dev container", 
     "build": {
         "dockerfile": "Dockerfile"
     },

@@ -1,0 +1,54 @@
+[sqlfluff]
+templater = raw
+dialect = postgres
+max_line_length = 200
+output_line_length = 200
+sql_file_exts = .sql
+# バイト制限解除
+large_file_skip_byte_limit = 0
+
+# ルールの中から取り除くものを選ぶ
+exclude_rules = 
+    # sqlfluff fixでカラムの順序を変えないようにするための設定
+    structure.column_order
+    ,ambiguous.column_count
+    ,structure.using
+    # Salesforceはキャメルケースでlowerにすると読みにくくなるため追加
+    ,capitalisation.identifiers
+
+[sqlfluff:indentation]
+indent_unit = space
+tab_space_size = 4
+
+[sqlfluff:rules:layout.long_lines]
+# コメント行は長くても可とする。URLなどが入るため
+# 行の長さに関してコメント行は無視する
+ignore_comment_lines = True 
+# 行の長さに関してコメント句は無視する
+ignore_comment_clauses = True 
+
+[sqlfluff:layout:type:comma]
+# 先頭のカンマの強制
+line_position = leading
+# 前カンマの場合スペース入れない
+spacing_after = touch
+
+[sqlfluff:rules:capitalisation.keywords]
+# 予約語の大文字小文字
+capitalisation_policy = upper
+
+[sqlfluff:rules:capitalisation.functions]
+# 関数名の大文字小文字
+extended_capitalisation_policy = upper
+
+[sqlfluff:rules:capitalisation.literals]
+# リテラル値 (null・true・false) の大文字小文字
+capitalisation_policy = upper
+
+[sqlfluff:rules:capitalisation.types]
+# データ型の大文字小文字
+extended_capitalisation_policy = upper
+
+# [sqlfluff:rules:capitalisation.identifiers]
+# 特定の識別子の大文字小文字を無視する設定
+# ignore_words = NFD,NFC,NFKD,NFKC
