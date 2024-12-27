@@ -8,7 +8,7 @@ PARTITIONED BY (
     day string
 )
 STORED AS PARQUET
-LOCATION 's3://cm-kasama-sf-test/test_table/'
+LOCATION 's3://<your-s3-bucket>/test_table/'
 TBLPROPERTIES (
     'projection.enabled' = 'true',
     'projection.year.type' = 'date',
@@ -20,5 +20,5 @@ TBLPROPERTIES (
     'projection.day.type' = 'integer',
     'projection.day.range' = '1,31',
     'projection.day.digits' = '2',
-    'storage.location.template' = 's3://cm-kasama-sf-test/test_table/${year}/${month}/${day}'
+    'storage.location.template' = 's3://<your-s3-bucket>/test_table/${year}/${month}/${day}'
 );
