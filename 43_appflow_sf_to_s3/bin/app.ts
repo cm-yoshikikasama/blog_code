@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import * as cdk from "aws-cdk-lib";
-import { AppFlowStack } from "../lib/appflow-salesforce-account";
+import { AppFlowStack } from "../lib/salesforce-appflow-stack";
 import { devParameter, prodParameter } from "../parameter";
 
 const app = new cdk.App();
