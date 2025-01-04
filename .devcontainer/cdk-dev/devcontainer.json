@@ -1,148 +1,170 @@
 {
-    "name": "cdk-dev container", 
-    "build": {
-        "dockerfile": "Dockerfile"
-    },
-    "workspaceFolder": "/workspace", 
-    "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
-    "mounts": [
-        // AWSのプロファイルディレクトリをマウント
-        "source=${localEnv:HOME}/.aws,target=/root/.aws,type=bind,consistency=cached",
-    ],
-   "postCreateCommand": [
-        "bash",
-        "-c",
-        "pip install -r requirements.txt && npm install"
-    ],
-    "customizations": {
-      "vscode": {
-        "extensions": [
-          // CloudFormationテンプレートの構文チェック
-          "kddejong.vscode-cfn-lint",
-          // AWSの開発ツールキット
-          "amazonwebservices.aws-toolkit-vscode",
-          // Pythonコードのリンターとフォーマッター
-          "charliermarsh.ruff",
-          // Markdownのリンター
-          "davidanson.vscode-markdownlint",
-          // JavaScriptとTypeScriptのリンター
-          "dbaeumer.vscode-eslint",
-          // Gitの履歴を視覚化
-          "donjayamanne.githistory",
-          // Gitの機能拡張
-          "eamodio.gitlens",
-          // コードフォーマッター
-          "esbenp.prettier-vscode",
-          // シェルスクリプトのフォーマッター
-          "foxundermoon.shell-format",
-          // 図表作成ツール
-          "hediet.vscode-drawio",
-          // CSVファイルの編集
-          "janisdd.vscode-edit-csv",
-          // Markdownプレゼンテーションツール
-          "marp-team.marp-vscode",
-          // CSVファイルの表示改善
-          "mechatroner.rainbow-csv",
-          // Dockerサポート
-          "ms-azuretools.vscode-docker",
-          // 日本語言語パック
-          "ms-ceintl.vscode-language-pack-ja",
-          // Pythonデバッガー
-          "ms-python.debugpy",
-          // Python言語サポート
-          "ms-python.python",
-          // Python言語サーバー
-          "ms-python.vscode-pylance",
-          // YAML言語サポート
-          "redhat.vscode-yaml",
-          // SQLフォーマッター
-          "renesaarsoo.sql-formatter-vsc",
-          // スペルチェッカー
-          "streetsidesoftware.code-spell-checker",
-          // シェルスクリプトの静的解析ツール
-          "timonwong.shellcheck",
-          // ファイルアイコンテーマ
-          "vscode-icons-team.vscode-icons",
-          // Markdown機能拡張
-          "yzhang.markdown-all-in-one"
-        ],
-        "settings": {
-          // Gitの自動更新を有効化
-          "git.autorefresh": true,
-          // VSCodeのカラーテーマ設定
-          "workbench.colorTheme": "Visual Studio Dark",
-          // Draw.io拡張の設定
-          "hediet.vscode-drawio.resizeImages": null,
-          // セマンティックトークンの色のカスタマイズ
-          "editor.semanticTokenColorCustomizations": {},
-          // 保存時の自動フォーマットを無効化（言語ごとに設定）
-          "editor.formatOnSave": false,
-          // Pythonのデフォルトインタープリターパス
-          "python.defaultInterpreterPath": "/opt/venv/bin/python",
-          "python.pythonPath": "/opt/venv/bin/python",
-          // Python固有の設定
-          "[python]": {
-              "editor.defaultFormatter": "charliermarsh.ruff",
-              "editor.formatOnType": true,
-              "editor.formatOnSave": true
-          },
-          // Markdown固有の設定
-          "[markdown]": {
-              "editor.defaultFormatter": "yzhang.markdown-all-in-one"
-          },
-          // SQL固有の設定
-          "[sql]": {
-              "editor.formatOnSave": false,
-              "editor.defaultFormatter": "ReneSaarsoo.sql-formatter-vsc"
-          },
-          // JavaScript固有の設定
-          "[javascript]": {
-              "editor.defaultFormatter": "esbenp.prettier-vscode",
-              "editor.formatOnSave": true
-          },
-          // TypeScript固有の設定
-          "[typescript]": {
-              "editor.defaultFormatter": "esbenp.prettier-vscode",
-              "editor.formatOnSave": true
-          },
-          // シェルスクリプト固有の設定
-          "[shellscript]": {
-              "editor.defaultFormatter": "foxundermoon.shell-format",
-              "editor.formatOnSave": true
-          },
-          // YAML固有の設定
-          "[yaml]": {
-              "editor.defaultFormatter": "redhat.vscode-yaml",
-              "editor.insertSpaces": true,
-              "editor.tabSize": 2,
-              "cfnLint.validate": true,
-              "cfnLint.path": "/opt/venv/bin/cfn-lint"    
-          },
-          // フォントリガチャを無効化
-          "editor.fontLigatures": false,
-          // ワークスペースの信頼設定を無効化
-          "security.workspace.trust.enabled": false,
-          // YAMLのカスタムタグ設定（CloudFormation用）
-          "yaml.customTags": [
-              "!And", "!And sequence", "!If", "!If sequence",
-              "!Not", "!Not sequence", "!Equals", "!Equals sequence",
-              "!Or", "!Or sequence", "!FindInMap", "!FindInMap sequence",
-              "!Base64", "!Join", "!Join sequence", "!Cidr",
-              "!Ref", "!Sub", "!Sub sequence", "!GetAtt",
-              "!GetAZs", "!ImportValue", "!ImportValue sequence",
-              "!Select", "!Select sequence", "!Split", "!Split sequence"
-          ],
-          // AWSツールキットのプロンプト抑制設定
-          "aws.suppressPrompts": {
-              "regionAddAutomatically": true
-          },
-          // ファイル末尾に改行を挿入
-          "files.insertFinalNewline": true,
-          // ファイルアイコンテーマの設定
-          "workbench.iconTheme": "vscode-icons",
-          // TypeScriptのファイル移動時のインポート更新設定
-          "typescript.updateImportsOnFileMove.enabled": "always"
-        }
-      }
-    }
+	"name": "cdk-dev container",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	"workspaceFolder": "/workspace",
+	"workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
+	"mounts": [
+		// AWSのプロファイルディレクトリをマウント
+		"source=${localEnv:HOME}/.aws,target=/root/.aws,type=bind,consistency=cached"
+	],
+	"postCreateCommand": [
+		"bash",
+		"-c",
+		"pip install -r requirements.txt && npm install"
+	],
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				// CloudFormationテンプレートの構文チェック
+				"kddejong.vscode-cfn-lint",
+				// AWSの開発ツールキット
+				"amazonwebservices.aws-toolkit-vscode",
+				// Pythonコードのリンターとフォーマッター
+				"charliermarsh.ruff",
+				// JavaScriptとTypeScriptのリンター
+				"dbaeumer.vscode-eslint",
+				// Gitの履歴を視覚化
+				"donjayamanne.githistory",
+				// Gitの機能拡張
+				"eamodio.gitlens",
+				// コードフォーマッター
+				"esbenp.prettier-vscode",
+				// シェルスクリプトのフォーマッター
+				"foxundermoon.shell-format",
+				// 図表作成ツール
+				"hediet.vscode-drawio",
+				// CSVファイルの編集
+				"janisdd.vscode-edit-csv",
+				// Markdownプレゼンテーションツール
+				"marp-team.marp-vscode",
+				// CSVファイルの表示改善
+				"mechatroner.rainbow-csv",
+				// Dockerサポート
+				"ms-azuretools.vscode-docker",
+				// 日本語言語パック
+				"ms-ceintl.vscode-language-pack-ja",
+				// Pythonデバッガー
+				"ms-python.debugpy",
+				// Python言語サポート
+				"ms-python.python",
+				// Python言語サーバー
+				"ms-python.vscode-pylance",
+				// YAML言語サポート
+				"redhat.vscode-yaml",
+				// SQLフォーマッター
+				"renesaarsoo.sql-formatter-vsc",
+				// スペルチェッカー
+				"streetsidesoftware.code-spell-checker",
+				// シェルスクリプトの静的解析ツール
+				"timonwong.shellcheck",
+				// ファイルアイコンテーマ
+				"vscode-icons-team.vscode-icons",
+				// Markdown機能拡張
+				"yzhang.markdown-all-in-one",
+				// Markdownのリンター
+				"davidanson.vscode-markdownlint",
+				// Markdownテーブル作成ツール
+				"csholmq.excel-to-markdown-table"
+			],
+			"settings": {
+				// Gitの自動更新を有効化
+				"git.autorefresh": true,
+				// VSCodeのカラーテーマ設定
+				"workbench.colorTheme": "Visual Studio Dark",
+				// Draw.io拡張の設定
+				"hediet.vscode-drawio.resizeImages": null,
+				// セマンティックトークンの色のカスタマイズ
+				"editor.semanticTokenColorCustomizations": {},
+				// 保存時の自動フォーマットを無効化（言語ごとに設定）
+				"editor.formatOnSave": false,
+				// Pythonのデフォルトインタープリターパス
+				"python.defaultInterpreterPath": "/opt/venv/bin/python",
+				"python.pythonPath": "/opt/venv/bin/python",
+				// Python固有の設定
+				"[python]": {
+					"editor.defaultFormatter": "charliermarsh.ruff",
+					"editor.formatOnType": true,
+					"editor.formatOnSave": true
+				},
+				// Markdown固有の設定
+				"[markdown]": {
+					"editor.defaultFormatter": "yzhang.markdown-all-in-one"
+				},
+				// SQL固有の設定
+				"[sql]": {
+					"editor.formatOnSave": false,
+					"editor.defaultFormatter": "ReneSaarsoo.sql-formatter-vsc"
+				},
+				// JavaScript固有の設定
+				"[javascript]": {
+					"editor.defaultFormatter": "esbenp.prettier-vscode",
+					"editor.formatOnSave": true
+				},
+				// TypeScript固有の設定
+				"[typescript]": {
+					"editor.defaultFormatter": "esbenp.prettier-vscode",
+					"editor.formatOnSave": true
+				},
+				// シェルスクリプト固有の設定
+				"[shellscript]": {
+					"editor.defaultFormatter": "foxundermoon.shell-format",
+					"editor.formatOnSave": true
+				},
+				// YAML固有の設定
+				"[yaml]": {
+					"editor.defaultFormatter": "redhat.vscode-yaml",
+					"editor.insertSpaces": true,
+					"editor.tabSize": 2,
+					"cfnLint.validate": true,
+					"cfnLint.path": "/opt/venv/bin/cfn-lint"
+				},
+				// フォントリガチャを無効化
+				"editor.fontLigatures": false,
+				// ワークスペースの信頼設定を無効化
+				"security.workspace.trust.enabled": false,
+				// YAMLのカスタムタグ設定（CloudFormation用）
+				"yaml.customTags": [
+					"!And",
+					"!And sequence",
+					"!If",
+					"!If sequence",
+					"!Not",
+					"!Not sequence",
+					"!Equals",
+					"!Equals sequence",
+					"!Or",
+					"!Or sequence",
+					"!FindInMap",
+					"!FindInMap sequence",
+					"!Base64",
+					"!Join",
+					"!Join sequence",
+					"!Cidr",
+					"!Ref",
+					"!Sub",
+					"!Sub sequence",
+					"!GetAtt",
+					"!GetAZs",
+					"!ImportValue",
+					"!ImportValue sequence",
+					"!Select",
+					"!Select sequence",
+					"!Split",
+					"!Split sequence"
+				],
+				// AWSツールキットのプロンプト抑制設定
+				"aws.suppressPrompts": {
+					"regionAddAutomatically": true
+				},
+				// ファイル末尾に改行を挿入
+				"files.insertFinalNewline": true,
+				// ファイルアイコンテーマの設定
+				"workbench.iconTheme": "vscode-icons",
+				// TypeScriptのファイル移動時のインポート更新設定
+				"typescript.updateImportsOnFileMove.enabled": "always"
+			}
+		}
+	}
 }
