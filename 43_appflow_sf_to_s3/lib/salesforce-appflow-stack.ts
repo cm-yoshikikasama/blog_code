@@ -35,7 +35,11 @@ export class AppFlowStack extends cdk.Stack {
   }
 
   private createS3Bucket(props: AppFlowStackProps): s3.IBucket {
-    return s3.Bucket.fromBucketName(this, "OutDataBucket", `your-s3-bucket`);
+    return s3.Bucket.fromBucketName(
+      this,
+      "OutDataBucket",
+      `${props.projectName}-${props.envName}-sf-test`
+    );
   }
 
   private createErrorNotificationTopic(props: AppFlowStackProps): sns.Topic {
