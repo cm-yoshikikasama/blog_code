@@ -5,7 +5,7 @@ Resources:
   S3SalesforceRawDataBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName:  cm-kasama-dev-sf-test
+      BucketName:  <your-s3-bucket-name>
       BucketEncryption:
         ServerSideEncryptionConfiguration:
           - ServerSideEncryptionByDefault:
@@ -43,5 +43,5 @@ Outputs:
   S3SalesforceRawDataBucketName:
     Value: !Ref S3SalesforceRawDataBucket
     Export:
-      Name: cm-kasama-dev-sf-test
+      Name: <your-s3-bucket-name>
 
