@@ -72,7 +72,7 @@ PARTITIONED BY (
     day string
 )
 STORED AS PARQUET
-LOCATION 's3://cm-kasama-dev-sf-test/cm-kasama-dev-sf-account-flow/'
+LOCATION 's3://<your-s3-bucket>/cm-kasama-dev-sf-account-flow/'
 TBLPROPERTIES (
     'projection.enabled' = 'true',
     'projection.year.type' = 'date',
@@ -84,5 +84,5 @@ TBLPROPERTIES (
     'projection.day.type' = 'integer',
     'projection.day.range' = '1,31',
     'projection.day.digits' = '2',
-    'storage.location.template' = 's3://cm-kasama-dev-sf-test/cm-kasama-dev-sf-account-flow/${year}/${month}/${day}'
+    'storage.location.template' = 's3://<your-s3-bucket>/cm-kasama-dev-sf-account-flow/${year}/${month}/${day}'
 );
