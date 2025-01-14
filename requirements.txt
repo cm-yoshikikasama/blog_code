@@ -4,3 +4,4 @@ pytz
 six
 tzdata
 cfn-lint
+pyarrow
