@@ -10,3 +10,7 @@ package-lock.json
 poetry.lock
 htmlcov
 .coverage
+.aws-sam
+.env
+bsーdataengineering-foundamental.mp4
+bsーdataengineering-foundamental_minutes_org.md

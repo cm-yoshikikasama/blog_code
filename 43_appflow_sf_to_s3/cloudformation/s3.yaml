@@ -1,0 +1,47 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'S3 bucket for AppFlow with necessary permissions'
+
+Resources:
+  S3SalesforceRawDataBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName:  <your-s3-bucket-name>
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+
+  S3SalesforceRawDataBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref S3SalesforceRawDataBucket
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: appflow.amazonaws.com
+            Action:
+              - s3:PutObject
+              - s3:GetBucketAcl
+              - s3:PutObjectAcl
+              - s3:AbortMultipartUpload
+              - s3:ListMultipartUploadParts
+              - s3:ListBucketMultipartUploads
+            Resource:
+              - !Sub arn:aws:s3:::${S3SalesforceRawDataBucket}
+              - !Sub arn:aws:s3:::${S3SalesforceRawDataBucket}/*
+            Condition:
+              StringEquals:
+                aws:SourceAccount: !Ref AWS::AccountId
+Outputs:
+  S3SalesforceRawDataBucketName:
+    Value: !Ref S3SalesforceRawDataBucket
+    Export:
+      Name: <your-s3-bucket-name>
+
