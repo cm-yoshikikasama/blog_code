@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "42-create-minutes-app"
+version = "0.1.0"
+description = ""
+authors = ["cm-yoshikikasama"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "3.12.1"
+pydub = "^0.25.1"
+google-generativeai = "^0.8.3"
+vertexai = "^1.71.1"
+google-cloud-speech = "^2.30.0"
+python-dotenv = "^1.0.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
