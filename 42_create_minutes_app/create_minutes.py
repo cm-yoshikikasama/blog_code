@@ -21,7 +21,7 @@ REGION = os.getenv("REGION")
 FILE_NAME = os.getenv("FILE_NAME")
 INPUT_MP4_FILE_PATH = os.path.join("input", f"{FILE_NAME}.mp4")
 PROMPT_TEMPLATE_FILE = os.getenv("PROMPT_TEMPLATE_FILE")
-AI_MODEL = "gemini-1.5-pro-001"
+AI_MODEL = "gemini-1.5-pro-002"
 
 # Vertex AI の初期化
 GOOGLE_APPLICATION_CREDENTIALS = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
