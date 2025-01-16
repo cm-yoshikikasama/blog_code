@@ -17,66 +17,59 @@
 
 ### 1. Google Cloud Consoleでの初期設定
 
-1. **Google Cloud Console**にアクセス
+まずは、 Vertex AI APIの有効化を行います。
 
-   ```text
-   https://console.cloud.google.com/
-   ```
+1. Google Cloud Consoleにアクセス
+2. 左側メニュー→「APIとサービス」→「APIライブラリ」を選択
+3. 検索バーに "Vertex AI API" と入力
+4. Vertex AI APIを選択し、「有効にする」をクリック
+5. `APIが有効です`とチェックマークが付いたらOK
 
-2. **プロジェクトの作成**
-   - 画面上部の「プロジェクトの選択」→「新しいプロジェクト」
-   - プロジェクト名を入力して「作成」
-
-### 2. Vertex AI APIの有効化
-
-1. 左側メニュー→「APIとサービス」→「APIライブラリ」を選択
-2. 検索バーに "Vertex AI API" と入力
-3. Vertex AI APIを選択し、「有効にする」をクリック
-
-### 3. サービスアカウントの設定
+次にサービスアカウントの設定を行います。
 
 1. 左側メニュー→「IAMと管理」→「サービスアカウント」を選択
 2. 「サービスアカウントを作成」をクリック
 3. 基本情報の入力：
-   - サービスアカウント名: `vertex-ai-account`
-   - 説明: 「Vertex AI用のサービスアカウント」
-4. 権限の付与：
+   - サービスアカウント名: `<任意のアカウント名>`
+4. 「このサービス アカウントにプロジェクトへのアクセスを許可する」で以下を選択し完了：
    - `Vertex AI User`
-   - `Vertex AI Service Agent`
 
-### 4. 認証キーの作成
+続いて認証キーを作成します。
 
 1. 作成したサービスアカウントを選択
-2. 「キー」タブ→「鍵を追加」→「新しい鍵を作成」
+2. 「鍵」タブ→「キーを追加」→「新しい鍵を作成」
 3. JSONを選択して作成
-4. ダウンロードされたJSONファイルを`vertex-ai-key.json`として保存
+4. ダウンロードされたJSONファイルを任意の場所に保存
 
-### 5. 環境構築
+以上でGoogle Cloud上でのセットアップは完了です！
+
+### 2. 環境構築
+
+Pythonは3.13で試しています。必要なライブラリはpoetryでinstallしていただくか、`pyproject.toml`の`tool.poetry.dependencies`から個別にinstallしていただければと思います。
 
 ```bash
-# Python 3.12のインストール
-pyenv install 3.12
-pyenv local 3.12
+# Python 3.13のインストール
+pyenv install 3.13
+pyenv local 3.13
 
 # Poetry環境のセットアップ
-poetry env use python3.12
+poetry env use python3.13
 poetry install
 poetry shell
 ```
 
 
-必要なPython バージョン：
-- Python 3.12以上が必要
 
-### 6. 環境変数の設定
+### 3. 環境変数の設定
 
 `.env`ファイルをプロジェクトルートに作成：
 
 ```env
 PROJECT_ID=your-project-id
 REGION=us-central1
-FILE_NAME=your-file-name
 GOOGLE_APPLICATION_CREDENTIALS=./vertex-ai-key.json
+FILE_NAME=your-file-name
+PROMPT_TEMPLATE_FILE=prompt.md
 ```
 
 ## 使用方法
@@ -90,7 +83,7 @@ GOOGLE_APPLICATION_CREDENTIALS=./vertex-ai-key.json
 
 3. **実行**
    ```bash
-   python main.py
+   python create_minutes.py
    ```
 
 4. **出力**
@@ -119,6 +112,5 @@ GOOGLE_APPLICATION_CREDENTIALS=./vertex-ai-key.json
 - https://techblog.enechain.com/entry/designing-a-multi-llm-workflow-for-efficient-meeting-summarization
 - https://techblog.enechain.com/entry/transcription-using-gemini-and-cloud-speech-to-text
 - https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/audio-understanding?hl=ja
-- https://ai.google.dev/pricing?hl=ja#1_0pro
 - https://cloud.google.com/blog/ja/products/ai-machine-learning/gemini-support-on-vertex-ai
   - データは学習しない
