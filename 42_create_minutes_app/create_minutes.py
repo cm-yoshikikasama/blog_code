@@ -1,7 +1,5 @@
 import os
 import ffmpeg
-
-# import tempfile
 import shutil
 import logging
 import vertexai
