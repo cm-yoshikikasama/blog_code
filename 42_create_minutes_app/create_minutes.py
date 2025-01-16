@@ -41,7 +41,13 @@ def setup_tmp_directory():
 def convert_mp4_to_mp3(mp4_file, mp3_file):
     logger.info("MP4からMP3への変換を開始します...")
     try:
-        (ffmpeg.input(mp4_file).output(mp3_file).run())
+        (
+            ffmpeg.input(mp4_file)
+            .output(mp3_file)
+            # 詳細ログ出力の制御
+            .global_args("-loglevel", "quiet")
+            .run()
+        )
         logger.info(f"MP3への変換が完了しました: {mp3_file}")
     except Exception as e:
         logger.error(f"MP3変換中にエラーが発生しました: {e}")
