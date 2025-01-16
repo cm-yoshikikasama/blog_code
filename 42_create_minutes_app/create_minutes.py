@@ -1,11 +1,12 @@
 import os
+import ffmpeg
+
+# import tempfile
 import shutil
 import logging
 import vertexai
 from vertexai.generative_models import GenerativeModel, Part
-from pydub import AudioSegment
 from dotenv import load_dotenv
-from openai import OpenAI
 
 
 # .envファイルの読み込み
@@ -22,8 +23,7 @@ REGION = os.getenv("REGION")
 FILE_NAME = os.getenv("FILE_NAME")
 INPUT_MP4_FILE_PATH = os.path.join("input", f"{FILE_NAME}.mp4")
 PROMPT_TEMPLATE_FILE = os.getenv("PROMPT_TEMPLATE_FILE")
-# OpenAI APIキーの設定
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+AI_MODEL = "gemini-1.5-pro-001"
 
 # Vertex AI の初期化
 GOOGLE_APPLICATION_CREDENTIALS = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
@@ -43,8 +43,7 @@ def setup_tmp_directory():
 def convert_mp4_to_mp3(mp4_file, mp3_file):
     logger.info("MP4からMP3への変換を開始します...")
     try:
-        audio = AudioSegment.from_file(mp4_file, "mp4")
-        audio.export(mp3_file, format="mp3")
+        (ffmpeg.input(mp4_file).output(mp3_file).run())
         logger.info(f"MP3への変換が完了しました: {mp3_file}")
     except Exception as e:
         logger.error(f"MP3変換中にエラーが発生しました: {e}")
@@ -55,7 +54,7 @@ def transcribe_audio(mp3_file):
     logger.info("音声の文字起こしを開始します...")
     try:
         # Gemini Proモデルの初期化
-        model = GenerativeModel("gemini-1.5-pro-001")
+        model = GenerativeModel(AI_MODEL)
 
         # 音声ファイルを読み込んでPartとして準備
         with open(mp3_file, "rb") as f:
@@ -90,7 +89,7 @@ def create_minutes(text):
         # テキストをプロンプトに組み込む
         prompt = f"会議の記録です:{text}\n{prompt_template}"
 
-        model = GenerativeModel("gemini-1.5-pro-001")
+        model = GenerativeModel(AI_MODEL)
         response = model.generate_content(
             prompt, generation_config={"temperature": 0.1}
         )
