@@ -21,7 +21,9 @@ REGION = os.getenv("REGION")
 FILE_NAME = os.getenv("FILE_NAME")
 INPUT_MP4_FILE_PATH = os.path.join("input", f"{FILE_NAME}.mp4")
 PROMPT_TEMPLATE_FILE = os.getenv("PROMPT_TEMPLATE_FILE")
+SPEAKERS_COUNT = os.getenv("SPEAKERS_COUNT")
 AI_MODEL = "gemini-2.0-flash-exp"
+
 
 # Vertex AI の初期化
 GOOGLE_APPLICATION_CREDENTIALS = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
@@ -67,8 +69,11 @@ def transcribe_audio(mp3_file):
 
         # プロンプトの準備
         prompt = """
-        音声を書き起こしてください。
-        読みやすいように句読点や改行を追加し読みやすくしてください。
+        音声を書き起こしてください。以下の点に注意してください：
+        1. 各発言の冒頭に発言者を明記してください（例：[発言者A]）
+        2. 同じ人物の発言は一貫して同じ識別子を使用してください
+        3. 発言者が変わる際は必ず新しい行から始めてください
+        4. 読みやすいように句読点や改行を追加してください
         """
 
         # コンテンツの準備とAPIリクエスト
@@ -90,6 +95,7 @@ def create_minutes(text):
         # プロンプトファイルを読み込む
         with open(f"input/{PROMPT_TEMPLATE_FILE}", "r", encoding="utf-8") as f:
             prompt_template = f.read()
+        prompt_template = prompt_template.replace("${SPEAKERS_COUNT}", SPEAKERS_COUNT)
         # テキストをプロンプトに組み込む
         prompt = f"会議の記録です:{text}\n{prompt_template}"
 
