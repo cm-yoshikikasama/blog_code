@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 import base64
 import asyncio
+import sounddevice as sd
 from typing import Any, cast
 from dotenv import load_dotenv
 
@@ -87,7 +88,6 @@ async def transcribe_audio():
                 },
             }
         )
-        import sounddevice as sd
 
         print(sd.query_devices())
         SAMPLE_RATE = 24000
@@ -98,9 +98,6 @@ async def transcribe_audio():
             samplerate=SAMPLE_RATE,
             dtype="int16",
         )
-
-        # VAD設定を追加
-        await conn.session.update(session={"turn_detection": {"type": "server_vad"}})
 
         stream.start()
         print("録音中... Ctrl+Cで終了")
