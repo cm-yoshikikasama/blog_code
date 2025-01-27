@@ -60,9 +60,9 @@ async def handle_transcription(conn):
             if assistant_message and assistant_message["content"]:
                 print(f"Assistant: {assistant_message['content']}")
 
-        elif event.type == "response.audio_transcript.done":
-            # アシスタントの応答完了時に改行
-            pass
+        # elif event.type == "response.audio_transcript.done":
+        #     # アシスタントの応答完了時に改行
+        #     pass
 
 
 async def transcribe_audio():
