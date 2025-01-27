@@ -10,7 +10,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from openai import AsyncOpenAI
-from audio_util import CHANNELS, SAMPLE_RATE
 
 # OpenAI APIキーの取得
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -90,6 +89,9 @@ async def transcribe_audio():
         )
         import sounddevice as sd
 
+        print(sd.query_devices())
+        SAMPLE_RATE = 24000
+        CHANNELS = 1
         read_size = int(SAMPLE_RATE * 0.02)
         stream = sd.InputStream(
             channels=CHANNELS,
