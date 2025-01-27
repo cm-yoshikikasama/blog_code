@@ -78,3 +78,4 @@ Assistant: How are you?
 
 https://zenn.dev/asap/articles/4368fd306b592a
 https://qiita.com/akeyhero/items/fe5bdd02d9a1cd7782d7
+https://github.com/openai/openai-python/blob/main/examples/realtime/audio_util.py
