@@ -117,6 +117,7 @@ export class GlueStack extends cdk.Stack {
 			glueVersion: gluel2.GlueVersion.V3_0,
 			pythonVersion: gluel2.PythonVersion.THREE_NINE,
 			script: gluel2.Code.fromBucket(scriptBucket, "scripts/etl_script.py"),
+			// script: gluel2.Code.fromAsset("../resources/glue/etl_script.py"),
 			maxCapacity: gluel2.MaxCapacity.DPU_1_16TH,
 			defaultArguments: {
 				"--env": props.envName,
