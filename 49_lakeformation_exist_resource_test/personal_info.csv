@@ -1,0 +1,11 @@
+employee_id,first_name,last_name,department,salary,hire_date
+1001,John,Smith,Sales,50000,2022-01-15
+1002,Mary,Johnson,IT,60000,2021-06-20
+1003,Robert,Williams,HR,45000,2023-03-10
+1004,Sarah,Brown,Sales,52000,2022-08-01
+1005,Michael,Davis,IT,65000,2021-04-15
+1006,Lisa,Miller,HR,47000,2023-01-20
+1007,David,Wilson,Sales,51000,2022-11-30
+1008,Jennifer,Jones,IT,63000,2021-09-10
+1009,James,Taylor,HR,46000,2023-02-28
+1010,Emily,Anderson,Sales,53000,2022-05-15
