@@ -1,0 +1,126 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: IAM Roles and Policies for HR Reader
+
+Parameters:
+  UserArn:
+    Type: String
+    Description: IAM User ARN who can assume this role
+  AthenaQueryBucketName:
+    Type: String
+    Description: S3 bucket name for Athena query results
+  LakeformationBucketName:
+    Type: String
+    Description: S3 bucket name for Lake Formation data
+  RolePrefixName:
+    Type: String  
+    Description: Role prefix name
+
+Resources:
+  HRReaderRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub ${RolePrefixName}-hr-data-access-with-iam-policy
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !Ref UserArn
+            Action: sts:AssumeRole
+            Condition:
+              Bool:
+                aws:MultiFactorAuthPresent: 'true'
+      Policies:
+        - PolicyName: HRReaderPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - glue:GetDatabases
+                  - glue:GetTables
+                  - glue:GetTable
+                  - glue:GetPartitions
+                  - glue:GetDatabase
+                Resource: '*'
+              - Effect: Allow
+                Action:
+                  - athena:StartQueryExecution
+                  - athena:GetQueryExecution
+                  - athena:GetQueryResults
+                  - athena:GetWorkGroup
+                  - athena:ListWorkGroups
+                Resource: '*'
+              - Effect: Allow
+                Action:
+                  - s3:PutObject
+                  - s3:GetObject
+                  - s3:ListBucket
+                  - s3:GetBucketLocation
+                Resource:
+                  - !Sub arn:aws:s3:::${AthenaQueryBucketName}
+                  - !Sub arn:aws:s3:::${AthenaQueryBucketName}/hr/*
+              - Effect: Allow
+                Action:
+                  - s3:ListBucket
+                  - s3:GetObject
+                Resource:
+                  - !Sub arn:aws:s3:::${LakeformationBucketName}
+                  - !Sub arn:aws:s3:::${LakeformationBucketName}/*
+              - Effect: Allow
+                Action:
+                  - s3:ListAllMyBuckets
+                Resource: '*'
+
+  HRReaderRestrictRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub ${RolePrefixName}-hr-data-access-with-lakeformation
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !Ref UserArn
+            Action: sts:AssumeRole
+            Condition:
+              Bool:
+                aws:MultiFactorAuthPresent: 'true'
+      Policies:
+        - PolicyName: HRReaderRestrictPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - glue:GetDatabases
+                  - glue:GetTables
+                  - glue:GetTable
+                  - glue:GetPartitions
+                  - glue:GetDatabase
+                Resource: '*'
+              - Effect: Allow
+                Action:
+                  - athena:StartQueryExecution
+                  - athena:GetQueryExecution
+                  - athena:GetQueryResults
+                  - athena:GetWorkGroup
+                  - athena:ListWorkGroups
+                Resource: '*'
+              - Effect: Allow
+                Action:
+                  - s3:PutObject
+                  - s3:GetObject
+                  - s3:ListBucket
+                  - s3:GetBucketLocation
+                Resource:
+                  - !Sub arn:aws:s3:::${AthenaQueryBucketName}
+                  - !Sub arn:aws:s3:::${AthenaQueryBucketName}/hr-restrict/*
+              - Effect: Allow
+                Action:
+                  - lakeformation:GetDataAccess
+                Resource: '*'
+              - Effect: Allow
+                Action:
+                  - s3:ListAllMyBuckets
+                Resource: '*'
