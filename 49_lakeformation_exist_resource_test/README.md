@@ -40,41 +40,17 @@
    ```
 
 4. サンプルデータの作成とアップロード
-   - ローカルでCSVファイルを作成（employee_data.csv）：
 
-   ```csv
-   employee_id,first_name,last_name,department,salary,hire_date
-   1,John,Doe,Engineering,80000,2020-01-15
-   2,Jane,Smith,Marketing,75000,2019-11-20
-   3,Bob,Johnson,Sales,85000,2021-03-01
-   ```
-  
-   - 作成したCSVファイルをS3の `/cm_kasama_hr_employee/personal_info/` にアップロード
+- CSVファイルをS3の `/cm_kasama_hr_employee/personal_info/` にアップロード
 
 ## 3. Athenaの設定
 
 1. AWSコンソールで「Athena」を選択
 2. クエリエディタで以下のSQLを実行：
 
-   ```sql
-   CREATE DATABASE IF NOT EXISTS cm_kasama_hr_employee;
+- employee.sqlを実行。
 
-   CREATE EXTERNAL TABLE cm_kasama_hr_employee.personal_info ( 
-       employee_id INT, 
-       first_name STRING, 
-       last_name STRING, 
-       department STRING, 
-       salary INT, 
-       hire_date DATE
-   )
-   ROW FORMAT DELIMITED
-   FIELDS TERMINATED BY ','
-   STORED AS TEXTFILE
-   LOCATION 's3://[あなたのバケット名]/cm_kasama_hr_employee/personal_info/'
-   TBLPROPERTIES ('skip.header.line.count'='1');
-   ```
-
-※ [あなたのバケット名] は実際に作成したバケット名に置き換えてください
+※S3 Bucket名は実際に作成したBucket名に置き換えてください
 
 ## 4. 動作確認
 
