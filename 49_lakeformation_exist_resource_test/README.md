@@ -18,7 +18,7 @@
    - UserArn: 自分のIAMユーザーARNを入力
    - AthenaQueryBucketName: 任意のバケット名を入力
    - LakeformationBucketName: 任意のバケット名を入力
-   - EnvironmentName: 環境名を入力（例：dev）
+   - RolePrefixName: IAM Roleのprefixとなる任意の値を入力
 6. スタックの設定
    - スタック名を入力
    - タグは任意

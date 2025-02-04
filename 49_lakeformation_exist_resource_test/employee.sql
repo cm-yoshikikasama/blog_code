@@ -12,5 +12,5 @@ CREATE EXTERNAL TABLE cm_kasama_hr_employee.personal_info (
 ROW FORMAT DELIMITED
 FIELDS TERMINATED BY ','
 STORED AS TEXTFILE
-LOCATION 's3://cm-kasama-lakeformation-tests/cm_kasama_hr_employee/personal_info/'
+LOCATION 's3://<任意のBucket名>/cm_kasama_hr_employee/personal_info/'
 TBLPROPERTIES ('skip.header.line.count'='1');
