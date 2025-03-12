@@ -1,0 +1,7 @@
+version: 2
+
+sources:
+  - name: glue_db
+    database: cm_kasama_retail_sales_db
+    tables:
+      - name: sales_transactions

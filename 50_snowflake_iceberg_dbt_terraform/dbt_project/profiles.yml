@@ -1,0 +1,13 @@
+snowflake:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      account: "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
+      user: "{{ env_var('SNOWFLAKE_USER') }}"
+      password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
+      role: "RETAIL_ADMIN"
+      database: "snowflake_dbt"
+      warehouse: "RETAIL_WH"
+      schema: "staging"
+      threads: 4
