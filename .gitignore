@@ -14,3 +14,16 @@ htmlcov
 .env
 bsーdataengineering-foundamental.mp4
 bsーdataengineering-foundamental_minutes.md
+go.sum
+*.js
+!jest.config.js
+*.d.ts
+node_modules
+
+# CDK asset staging directory
+.cdk.staging
+cdk.out
+
+.terraform
+.terraform.lock.hcl
+terraform.tfvars
