@@ -21,7 +21,7 @@ export class LakeFormationHybridStack extends cdk.Stack {
 		const existingResources = {
 			dataBucketName: `${props.projectName}-lakeformation-tests`,
 			lakeFormationAdminRoleArn: `arn:aws:iam::${this.account}:role/${props.projectName}-lakeformation-admin`,
-			lakeFormationAccessRoleArn: `arn:aws:iam::${this.account}:role/${props.projectName}-hr-data-access-with-lakeformation`,
+			lakeFormationAccessRoleArn: `arn:aws:iam::${this.account}:role/${props.projectName}-data-access-role`,
 			databaseName: "cm_kasama_hr_employee",
 			tableName: "personal_info",
 			sensitiveColumns: ["salary"], // 機密情報を含む列
