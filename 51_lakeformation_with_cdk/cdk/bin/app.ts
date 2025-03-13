@@ -13,6 +13,6 @@ new LakeFormationHybridStack(app, "CMKasamaLakeFormation", {
 		Repository: "kasama-test-tag",
 	},
 
-	projectName: "cm-kasama",
+	projectName: "project",
 	envName: "dev",
 });
