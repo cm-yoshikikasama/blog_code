@@ -1,6 +1,4 @@
 import * as cdk from "aws-cdk-lib";
-import * as iam from "aws-cdk-lib/aws-iam";
-import * as s3 from "aws-cdk-lib/aws-s3";
 import * as lakeformation from "aws-cdk-lib/aws-lakeformation";
 import type { Construct } from "constructs";
 
@@ -19,7 +17,7 @@ export class LakeFormationHybridStack extends cdk.Stack {
 
 		// 既存リソースを定数として定義
 		const existingResources = {
-			dataBucketName: `${props.projectName}-lakeformation-tests`,
+			dataBucketNameArn: `arn:aws:s3:::${props.projectName}-lakeformation-tests`,
 			lakeFormationAdminRoleArn: `arn:aws:iam::${this.account}:role/${props.projectName}-lakeformation-admin`,
 			lakeFormationAccessRoleArn: `arn:aws:iam::${this.account}:role/${props.projectName}-data-access-role`,
 			databaseName: "cm_kasama_hr_employee",
@@ -27,43 +25,19 @@ export class LakeFormationHybridStack extends cdk.Stack {
 			sensitiveColumns: ["salary"], // 機密情報を含む列
 		};
 
-		// 既存のS3バケットを参照
-		const dataBucket = s3.Bucket.fromBucketName(
-			this,
-			"ExistingDataLakeBucket",
-			existingResources.dataBucketName,
-		);
-
-		// 既存のIAMロールを参照
-		const lakeFormationAdminRole = iam.Role.fromRoleArn(
-			this,
-			"LakeFormationAdminRole",
-			existingResources.lakeFormationAdminRoleArn,
-		);
-
-		const lakeFormationAccessRole = iam.Role.fromRoleArn(
-			this,
-			"LakeFormationAccessRole",
-			existingResources.lakeFormationAccessRoleArn,
-		);
-
 		// Lake Formation 管理ロール設定
 		new lakeformation.CfnDataLakeSettings(this, "DataLakeSettings", {
 			admins: [
 				{
-					dataLakePrincipalIdentifier: lakeFormationAdminRole.roleArn,
+					dataLakePrincipalIdentifier:
+						existingResources.lakeFormationAdminRoleArn,
 				},
 			],
-			allowExternalDataFiltering: true, // 外部データフィルタリングを許可
-			externalDataFilteringAllowList: [
-				{
-					dataLakePrincipalIdentifier: this.account,
-				},
-			],
+			allowExternalDataFiltering: false, // 外部データフィルタリングを許可
 		});
 		// Data lake locationsにS3バケットを登録
 		new lakeformation.CfnResource(this, "RegisterS3Location", {
-			resourceArn: dataBucket.bucketArn,
+			resourceArn: existingResources.dataBucketNameArn,
 			useServiceLinkedRole: true, // サービスリンクロールを使用
 			hybridAccessEnabled: true,
 		});
@@ -121,7 +95,8 @@ export class LakeFormationHybridStack extends cdk.Stack {
 		new lakeformation.CfnPrincipalPermissions(this, "TagBasedPermissions", {
 			catalog: this.account,
 			principal: {
-				dataLakePrincipalIdentifier: lakeFormationAccessRole.roleArn,
+				dataLakePrincipalIdentifier:
+					existingResources.lakeFormationAccessRoleArn,
 			},
 			resource: {
 				lfTagPolicy: {
