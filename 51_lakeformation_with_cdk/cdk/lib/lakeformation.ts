@@ -33,7 +33,7 @@ export class LakeFormationHybridStack extends cdk.Stack {
 						existingResources.lakeFormationAdminRoleArn,
 				},
 			],
-			allowExternalDataFiltering: false, // 外部データフィルタリング許可
+			allowExternalDataFiltering: false, // 外部データフィルタリング
 		});
 		// Data lake locationsにS3バケットを登録
 		new lakeformation.CfnResource(this, "RegisterS3Location", {
