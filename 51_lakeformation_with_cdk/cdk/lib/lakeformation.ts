@@ -50,8 +50,8 @@ export class LakeFormationHybridStack extends cdk.Stack {
 		});
 
 		// LFタグの付与
-		// データベース全体にOpenタグを割り当てる
-		new lakeformation.CfnTagAssociation(this, "DatabaseOpenTagAssociation", {
+		// table全体にOpenタグを割り当てる
+		new lakeformation.CfnTagAssociation(this, "TableOpenTagAssociation", {
 			lfTags: [
 				{
 					catalogId: this.account,
