@@ -60,9 +60,10 @@ export class LakeFormationHybridStack extends cdk.Stack {
 				},
 			],
 			resource: {
-				database: {
+				table: {
 					catalogId: this.account,
-					name: existingResources.databaseName,
+					databaseName: existingResources.databaseName,
+					name: existingResources.tableName,
 				},
 			},
 		});
