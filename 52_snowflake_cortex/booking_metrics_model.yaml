@@ -1,0 +1,122 @@
+name: booking_metrics
+description: 旅行予約データと分析モデル
+tables:
+  - name: BOOKING_METRICS
+    base_table:
+      database: TRAVEL_INTELLIGENCE
+      schema: DATA
+      table: BOOKING_METRICS
+    dimensions:
+      - name: BOOKING_ID
+        expr: BOOKING_ID
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - BOOK001
+          - BOOK002
+          - BOOK003
+        description: 予約の一意の識別子。個々の予約を追跡および分析するために使用されます。
+        synonyms:
+          - 予約番号
+          - 予約コード
+          - 申込ID
+          - 注文ID
+          - 予約識別子
+      - name: CUSTOMER_NAME
+        expr: CUSTOMER_NAME
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - 田中 雅彦
+          - 佐藤 恵子
+          - 伊藤 健太
+        description: 予約を行った顧客の名前。
+        synonyms:
+          - 予約者名
+          - 利用者
+          - 顧客
+          - 宿泊者名
+          - お客様名
+      - name: BOOKING_STATUS
+        expr: BOOKING_STATUS
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - 確定
+          - キャンセル
+          - 保留中
+        description: 予約の現在のステータス。確定済み、キャンセル済み、または保留中かを示します。
+        synonyms:
+          - 予約状況
+          - 申込状態
+          - 予約ステータス
+          - 契約状況
+          - 予約進捗
+      - name: IS_CANCELLED
+        expr: IS_CANCELLED
+        data_type: BOOLEAN
+        sample_values:
+          - 'TRUE'
+          - 'FALSE'
+        description: 予約がキャンセルされたかどうかを示します（TRUE=キャンセル、FALSE=有効）。
+        synonyms:
+          - キャンセル済
+          - 取消状態
+          - 解約フラグ
+          - 取り消し有無
+          - キャンセル状態
+      - name: TRAVEL_AGENT
+        expr: TRAVEL_AGENT
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - 山本 旅行代理店
+          - 日本トラベル
+          - 雪国エクスプレス
+        description: 予約を担当した旅行代理店または担当者。
+        synonyms:
+          - 代理店
+          - 旅行会社
+          - 予約担当
+          - エージェント
+          - 仲介業者
+      - name: TRIP_TYPE
+        expr: TRIP_TYPE
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - 家族旅行
+          - カルチャーツアー
+          - ウィンターリゾート
+        description: 予約された旅行の種類や目的を示す分類。
+        synonyms:
+          - 旅行カテゴリ
+          - 旅のタイプ
+          - 旅行目的
+          - 旅行スタイル
+          - 旅行形態
+    time_dimensions:
+      - name: TRAVEL_DATE
+        expr: TRAVEL_DATE
+        data_type: DATE
+        sample_values:
+          - '2024-02-15'
+          - '2024-02-01'
+          - '2024-01-30'
+        description: 旅行の予定日または出発日。
+        synonyms:
+          - 出発日
+          - 宿泊日
+          - 旅行予定日
+          - 利用日
+          - 予約日
+    measures:
+      - name: BOOKING_VALUE
+        expr: BOOKING_VALUE
+        data_type: FLOAT
+        sample_values:
+          - '150000'
+          - '85000'
+          - '220000'
+        description: 予約の総額（日本円）。
+        synonyms:
+          - 予約金額
+          - 旅行費用
+          - 宿泊料金
+          - 支払額
+          - 料金
