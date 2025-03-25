@@ -13,7 +13,6 @@ API_TIMEOUT = 10000  # in milliseconds
 CORTEX_SEARCH_SERVICES = "travel_intelligence.data.travel_review_search"
 SEMANTIC_MODELS = "@travel_intelligence.data.models/booking_metrics_model.yaml"
 SQL_MODEL = "llama3.1-70b"
-ANSWER_MODEL = "llama3.1-70b"
 
 st.set_page_config(page_title="旅行データアシスタント", page_icon="✈️")
 
