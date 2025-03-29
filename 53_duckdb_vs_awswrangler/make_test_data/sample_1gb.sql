@@ -1,4 +1,4 @@
-CREATE EXTERNAL TABLE cm_kasama_sample.1gb_sample (
+CREATE EXTERNAL TABLE cm_kasama_sample.sample_1gb (
   customer_id STRING,
   full_name STRING,
   email STRING,
