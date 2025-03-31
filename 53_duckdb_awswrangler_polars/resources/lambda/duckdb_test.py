@@ -23,11 +23,9 @@ def lambda_handler(event, context):
     temp_input = "/tmp/input.csv"
     temp_output = "/tmp/output.parquet"
 
-    print(f"source_key: {source_key}")
-
     try:
         # 処理開始をログ出力
-        print(f"処理開始: {source_path}")
+        print(f"処理開始: {source_key}")
 
         # S3からCSVファイルをダウンロード
         s3.download_file(source_bucket, source_key, temp_input)

@@ -23,23 +23,20 @@ def lambda_handler(event, context):
     temp_input = "/tmp/input.csv"
     temp_output = "/tmp/output.parquet"
 
-    print(f"source_key: {source_key}")
-
     try:
         # 処理開始をログ出力
-        print(f"処理開始: {source_path}")
+        print(f"処理開始: {source_key}")
 
         # S3からCSVファイルをダウンロード
         s3.download_file(source_bucket, source_key, temp_input)
 
-        # Polarsを使用してCSVをParquetに変換
-        df = pl.read_csv(
+        # CSVをスキャンしてLazyFrameを作成
+        df_lazy = pl.scan_csv(
             temp_input,
-            low_memory=True,  # 大規模ファイル用に低メモリモードを有効化
+            rechunk=True,  # メモリ効率のためにチャンク処理を有効化
+            low_memory=True,  # 低メモリモードを有効化
         )
-
-        # Parquetとして保存
-        df.write_parquet(temp_output, compression="snappy")
+        df_lazy.sink_parquet(temp_output, compression="snappy")
 
         # 変換したファイルをS3にアップロード
         s3.upload_file(temp_output, destination_bucket, destination_key)
@@ -55,7 +52,7 @@ def lambda_handler(event, context):
             "statusCode": 200,
             "body": json.dumps(
                 {
-                    "message": "CSV to Parquet conversion completed successfully with Polars",
+                    "message": "CSV to Parquet conversion completed successfully with Polars LazyFrame",
                     "execution_time": execution_time,
                     "source": source_path,
                     "destination": destination_path,
