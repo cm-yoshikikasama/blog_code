@@ -27,10 +27,10 @@ export class LambdaStack extends cdk.Stack {
 		const awswranglerLambdaName = `${props.projectName}-${props.envName}-awswrangler-handler`;
 		const duckdbLambdaName = `${props.projectName}-${props.envName}-duckdb-handler`;
 		const polarsLambdaName = `${props.projectName}-${props.envName}-polars-handler`;
-		const source_bucket = "cm-kasama-dms-test";
-		const filename = "small_sample";
+		const source_bucket = "<>source-bucket-name>";
+		const filename = "1gb_sample";
 		const source_key = `src/${filename}.csv`;
-		const destination_bucket = "cm-kasama-dms-test";
+		const destination_bucket = "<destination-bucket-name>`;";
 		const destination_key = `target/${filename}/${filename}.parquet`;
 
 		const duckdbLayer = new PythonLayerVersion(this, "DuckdbLayer", {
