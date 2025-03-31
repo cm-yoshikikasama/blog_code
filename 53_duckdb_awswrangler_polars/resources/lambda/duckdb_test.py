@@ -1,7 +1,6 @@
 import os
 import time
 import json
-import boto3
 import duckdb
 
 
@@ -17,35 +16,24 @@ def lambda_handler(event, context):
     source_path = f"s3://{source_bucket}/{source_key}"
     destination_path = f"s3://{destination_bucket}/{destination_key}"
 
-    s3 = boto3.client("s3")
-
-    # 一時ファイルのパス
-    temp_input = "/tmp/input.csv"
-    temp_output = "/tmp/output.parquet"
-
     try:
         # 処理開始をログ出力
         print(f"処理開始: {source_key}")
 
-        # S3からCSVファイルをダウンロード
-        s3.download_file(source_bucket, source_key, temp_input)
-
-        # DuckDBを使用してCSVをParquetに変換
+        # DuckDBを使用してCSVをParquetに変換（S3から直接読み込み、S3に直接書き込み）
         con = duckdb.connect(database=":memory:")
+        con.execute("SET home_directory='/tmp'")  # Lambdaの一時ディレクトリに設定
+
+        # httpfs拡張をインストールしてロード
+        con.execute("INSTALL httpfs;")
+        con.execute("LOAD httpfs;")
 
         # CSVをParquetに変換（圧縮指定あり）
         con.execute(f"""
-            COPY (SELECT * FROM read_csv_auto('{temp_input}', parallel=True)) 
-            TO '{temp_output}' (FORMAT PARQUET, COMPRESSION 'SNAPPY');
+            COPY (SELECT * FROM read_csv_auto('{source_path}', parallel=True)) 
+            TO '{destination_path}' (FORMAT PARQUET, COMPRESSION 'SNAPPY');
         """)
         con.close()
-
-        # 変換したファイルをS3にアップロード
-        s3.upload_file(temp_output, destination_bucket, destination_key)
-
-        # 一時ファイルを削除
-        os.remove(temp_input)
-        os.remove(temp_output)
 
         execution_time = time.time() - start_time
         print(f"処理完了: 実行時間 {execution_time:.2f}秒")
