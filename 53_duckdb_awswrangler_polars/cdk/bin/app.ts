@@ -4,14 +4,14 @@ import { LambdaStack } from "../lib/lambda-stack";
 
 const app = new cdk.App();
 
-new LambdaStack(app, `CMKasamaLambdaCsvToParquet`, {
-	description: `CMKasamaLambdaCsvToParquet`,
+new LambdaStack(app, `CmKasamaLambdaStack`, {
+	description: `CmKasamaLambdaStack`,
 	env: {
 		account: process.env.CDK_DEFAULT_ACCOUNT,
 		region: process.env.CDK_DEFAULT_REGION,
 	},
 	tags: {
-		Repository: `CMKasamaLambdaCsvToParquet-test-tag`,
+		Repository: `CmKasamaLambdaStack-test-tag`,
 	},
 
 	projectName: "cm-kasama",
