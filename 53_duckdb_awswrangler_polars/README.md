@@ -41,5 +41,5 @@ npx cdk synth --profile <YOUR_AWS_PROFILE>
 ```
 
 ```txt
-npx cdk deploy --all --require-approval never -c environment=dev --profile <YOUR_AWS_PROFILE>
+npx cdk deploy --all --require-approval --profile <YOUR_AWS_PROFILE>
 ```

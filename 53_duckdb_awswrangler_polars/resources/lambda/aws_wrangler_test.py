@@ -16,11 +16,9 @@ def lambda_handler(event, context):
     source_path = f"s3://{source_bucket}/{source_key}"
     destination_path = f"s3://{destination_bucket}/{destination_key}"
 
-    print(f"source_key: {source_key}")
-
     try:
         # 処理開始をログ出力
-        print(f"処理開始: {source_path}")
+        print(f"処理開始: {source_key}")
 
         # AWS Data Wranglerを使用してCSVを直接読み込み、Parquetとして保存
         df = wr.s3.read_csv(source_path)
