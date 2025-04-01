@@ -1,1 +1,3 @@
 polars
+fsspec
+s3fs
