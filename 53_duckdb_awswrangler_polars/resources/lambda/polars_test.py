@@ -11,7 +11,6 @@ def lambda_handler(event, context):
 
     # 環境変数を設定
     os.environ["POLARS_TEMP_DIR"] = tmp_dir
-    os.environ["HOME"] = "/tmp"
 
     # S3バケット情報を取得
     source_bucket = os.environ.get("source_bucket")
