@@ -21,12 +21,15 @@ sns topic は事前に作成しておく
 ## sample データ挿入
 
 ```txt
-mysql -h cm-kasama-mysql.cjot3oez8i6k.ap-northeast-1.rds.amazonaws.com -u admin -p
+mysql -h <RDS インスタンスのエンドポイント> -u admin -p
 ```
+
+`Eh)>po~$-Ntr$4f[j?MRYO~pW_0:`
 
 ```sql
 
 CALL mysql.rds_set_configuration('binlog retention hours', 48);
+CREATE DATABASE sample_db;
 
 CREATE TABLE sample_db.products (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -37,7 +40,7 @@ CREATE TABLE sample_db.products (
   `description` text,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-)
+);
 
 INSERT INTO sample_db.products (name, category, price, stock, description) VALUES
 ('MacBook Pro', 'Electronics', 1999.99, 50, 'Apple MacBook Pro with M2 chip'),
@@ -54,32 +57,4 @@ INSERT INTO sample_db.products (name, category, price, stock, description) VALUE
 ('MacBook Air M4', 'Electronics', 1299.99, 75, 'Apple MacBook Air with M4 chip and 13-inch display'),
 ('MacBook air 2028', 'Electronics', 2499.99, 30, 'Latest generation MacBook Pro with enhanced performance and display.');
 
-```
-
-```sql
-CREATE EXTERNAL TABLE stage_products (
-  Op STRING,
-  id INT,
-  name STRING,
-  category STRING,
-  price DECIMAL(10, 2),
-  stock INT,
-  description STRING,
-  created_at TIMESTAMP
-)
-STORED AS PARQUET
-LOCATION 's3://cm-kasama-dms-test/sample_db/products/'
-TBLPROPERTIES ('parquet.compress'='SNAPPY');
-
-{
-  "DataFormat": "parquet",
-  "ParquetVersion": "PARQUET_2_0",
-  "CompressionType": "GZIP",
-  "CdcMaxBatchInterval": 300,
-  "CdcMinFileSize": 128000,
-  "EnableStatistics": true,
-  "DatePartitionEnabled": true,
-  "DatePartitionSequence": "YYYYMMDD",
-  "DatePartitionDelimiter": "SLASH"
-}
 ```

@@ -17,7 +17,7 @@ Resources:
     Properties:
       VpcId: !Ref VPC
       CidrBlock: 172.16.1.0/24
-      AvailabilityZone: ap-northeast-1a
+      AvailabilityZone: !Select [ 1, !GetAZs '' ]
       MapPublicIpOnLaunch: false
       Tags:
         - Key: Name
@@ -28,7 +28,7 @@ Resources:
     Properties:
       VpcId: !Ref VPC
       CidrBlock: 172.16.2.0/24
-      AvailabilityZone: ap-northeast-1c
+      AvailabilityZone: !Select [ 2, !GetAZs '' ]
       MapPublicIpOnLaunch: false
       Tags:
         - Key: Name
@@ -62,53 +62,6 @@ Resources:
       SubnetId: !Ref SubnetPrivate2C
       RouteTableId: !Ref RouteTablePrivate2C
 
-  RDSMySQLSG:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupDescription: rds-mysql-sg
-      VpcId: !Ref VPC
-      SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: 3306
-          ToPort: 3306
-          CidrIp: 172.16.0.0/16
-          Description: Allow DMS Serverless
-        - IpProtocol: tcp
-          FromPort: 3306
-          ToPort: 3306
-          SourceSecurityGroupId: !Ref CloudShellRDSAccessSG
-          Description: Allow MySQL traffic from CloudShell VPC Environment
-      SecurityGroupEgress:
-        - IpProtocol: -1
-          CidrIp: 0.0.0.0/0
-          Description: Allow all outbound traffic
-      Tags:
-        - Key: Name
-          Value: rds-mysql-sg
-
-  CloudShellRDSAccessSG:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupDescription: cloudshell-rds-access-sg
-      VpcId: !Ref VPC
-      # インバウンドルールなし
-      SecurityGroupEgress:
-        - IpProtocol: -1
-          CidrIp: 0.0.0.0/0
-          Description: Allow all outbound traffic
-      Tags:
-        - Key: Name
-          Value: cloudshell-rds-access-sg
-
-  RDSSubnetGroup:
-    Type: AWS::RDS::DBSubnetGroup
-    Properties:
-      DBSubnetGroupDescription: Subnet group for RDS MySQL
-      SubnetIds:
-        - !Ref SubnetPrivate1A
-        - !Ref SubnetPrivate2C
-      DBSubnetGroupName: cm-kasama-mysql-subnet-group
-
 Outputs:
   VPCId:
     Value: !Ref VPC
@@ -124,13 +77,3 @@ Outputs:
     Value: !Ref SubnetPrivate2C
     Export:
       Name: cm-kasama-subnet-private2c-id
-
-  RDSMySQLSGId:
-    Value: !Ref RDSMySQLSG
-    Export:
-      Name: cm-kasama-rds-mysql-sg-id
-
-  RDSSubnetGroupName:
-    Value: !Ref RDSSubnetGroup
-    Export:
-      Name: cm-kasama-rds-subnet-group-name

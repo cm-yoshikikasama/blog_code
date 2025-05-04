@@ -1,0 +1,29 @@
+{
+  "ssm:account=414416470668:parameterName=/cm-kasama/rds/mysql/password:region=ap-northeast-1": "AQICAHi+OISxkeZAjP8x3Xl/fd3r0rovh91wNWfdHEIetfBBhQHZFs6R5pLA/nTlIKNW8/WjAAAAejB4BgkqhkiG9w0BBwagazBpAgEAMGQGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMd97CPHOip8J1WpABAgEQgDdEZgxwBW4ndytAbZCoSp0H3Y5BXGbZzhDwxrgTxg3cEmZQ6GEcuQUfAJGotEp93RT+ggETIry9",
+  "vpc-provider:account=414416470668:filter.vpc-id=vpc-000f9633c403c8f17:region=ap-northeast-1:returnAsymmetricSubnets=true": {
+    "vpcId": "vpc-000f9633c403c8f17",
+    "vpcCidrBlock": "172.16.0.0/16",
+    "ownerAccountId": "414416470668",
+    "availabilityZones": [],
+    "subnetGroups": [
+      {
+        "name": "Isolated",
+        "type": "Isolated",
+        "subnets": [
+          {
+            "subnetId": "subnet-052eab6cf3f8315bd",
+            "cidr": "172.16.128.0/20",
+            "availabilityZone": "ap-northeast-1a",
+            "routeTableId": "rtb-089cc0ccb6238600b"
+          },
+          {
+            "subnetId": "subnet-0368b7fd8839d01a4",
+            "cidr": "172.16.144.0/20",
+            "availabilityZone": "ap-northeast-1c",
+            "routeTableId": "rtb-09fbd56ab777bd4d2"
+          }
+        ]
+      }
+    ]
+  }
+}
