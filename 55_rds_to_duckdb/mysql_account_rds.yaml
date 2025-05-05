@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: RDS MySQL 用リソース（セキュリティグループ、サブネットグループ、インスタンス）
+Description: RDS MySQL resources for account
 
 Resources:
   RDSMySQLSG:
