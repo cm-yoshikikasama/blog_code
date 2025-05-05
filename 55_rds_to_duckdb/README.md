@@ -92,9 +92,6 @@ CREATE SECRET my_mysql_secret (
 );
 ATTACH '' AS rdsdb (TYPE mysql, SECRET my_mysql_secret);
 
--- テーブル一覧を確認
-SHOW ALL TABLES;
-
 -- データをSELECT
 SELECT * FROM rdsdb.products;
 
@@ -105,7 +102,7 @@ CREATE SECRET(
     PROVIDER CREDENTIAL_CHAIN
 );
 
-SELECT * FROM read_csv('s3://<bucket名>/products.csv', header=true);
+SELECT * FROM read_csv('s3:///products.csv', header=true);
 
 -- 差分確認
 SELECT * FROM rdsdb.products
