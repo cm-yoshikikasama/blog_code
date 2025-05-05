@@ -24,8 +24,6 @@ sns topic は事前に作成しておく
 mysql -h <RDS インスタンスのエンドポイント> -u admin -p
 ```
 
-`Eh)>po~$-Ntr$4f[j?MRYO~pW_0:`
-
 ```sql
 
 CALL mysql.rds_set_configuration('binlog retention hours', 48);
