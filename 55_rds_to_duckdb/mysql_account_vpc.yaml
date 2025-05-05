@@ -34,33 +34,26 @@ Resources:
         - Key: Name
           Value: cm-kasama-dev-subnet-private2-ap-northeast-1c
 
-  RouteTablePrivate1A:
+  RouteTablePrivate:
     Type: AWS::EC2::RouteTable
     Properties:
       VpcId: !Ref VPC
       Tags:
         - Key: Name
-          Value: cm-kasama-dev-rtb-private1-ap-northeast-1a
+          Value: cm-kasama-dev-rtb-private
 
-  RouteTablePrivate2C:
-    Type: AWS::EC2::RouteTable
-    Properties:
-      VpcId: !Ref VPC
-      Tags:
-        - Key: Name
-          Value: cm-kasama-dev-rtb-private2-ap-northeast-1c
 
   SubnetRouteTableAssoc1A:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
       SubnetId: !Ref SubnetPrivate1A
-      RouteTableId: !Ref RouteTablePrivate1A
+      RouteTableId: !Ref RouteTablePrivate
 
   SubnetRouteTableAssoc2C:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
       SubnetId: !Ref SubnetPrivate2C
-      RouteTableId: !Ref RouteTablePrivate2C
+      RouteTableId: !Ref RouteTablePrivate
 
 Outputs:
   VPCId:
