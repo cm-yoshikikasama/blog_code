@@ -31,6 +31,7 @@ RUN apt-get update && apt-get install -y \
     tree \
     gnupg \
     dirmngr \
+    xdg-utils \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
