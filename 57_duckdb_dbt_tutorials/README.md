@@ -31,6 +31,11 @@
 
 `profiles.yml` の例（`~/.dbt/profiles.yml` またはプロジェクト直下に配置）:
 
+```sql
+cd /workspaces/blog_code/57_duckdb_dbt_tutorials/jaffle_shop
+vim profiles.yml
+```
+
 ```yaml
 jaffle_shop:
   outputs:
@@ -38,6 +43,12 @@ jaffle_shop:
       type: duckdb
       path: /workspace/jaffle_shop/jaffle_shop.db
   target: dev
+```
+
+```sql
+export DBT_PROFILES_DIR=/workspaces/blog_code/57_duckdb_dbt_tutorials/jaffle_shop
+dbt run
+duckdb /workspaces/blog_code/57_duckdb_dbt_tutorials/jaffle_shop/jaffle_shop.db
 ```
 
 ---
