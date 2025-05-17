@@ -63,3 +63,5 @@ duckdb /workspaces/blog_code/57_duckdb_dbt_tutorials/jaffle_shop/jaffle_shop.db
 ## 参考
 
 - [dbt 公式クイックスタート（英語）](https://docs.getdbt.com/guides/quickstarts/manual-install)
+- https://qiita.com/sigeta/items/d9c673c1f9dde80e1291
+- https://qiita.com/idenrai/items/01593c38ea76fe463b1a
