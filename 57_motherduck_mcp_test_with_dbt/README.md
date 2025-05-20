@@ -41,6 +41,8 @@ Python で以下のように Parquet ファイルを作成（すでに生成済�
 python create_pq.py
 ```
 
+---
+
 ## 2. dbt プロジェクトのセットアップ
 
 ```sh
@@ -81,6 +83,8 @@ Cursor の「Settings > MCP > Add Global MCP Server」で以下を追加：
   }
 }
 ```
+
+---
 
 ## 4. Cursor での AI プロンプト例（MCP 活用）
 
@@ -135,6 +139,8 @@ Cursor の AI チャットに以下を入力：
    - 生成された staging/mart モデル、テスト、dbt プロジェクト構成のファイルパスと役割を一覧で説明してください。
 ```
 
+---
+
 ## 5. 開発ワークフロー（AI ＋ MCP による自律的サイクル）
 
 1. スキーマ・サンプル確認
@@ -146,6 +152,8 @@ Cursor の AI チャットに以下を入力：
 5. MCP 経由で DuckDB にクエリを投げて検証
    - AI が「エラーが出たら自動修正」まで実施
 6. dbt テストの自動生成（schema.yml）
+
+---
 
 ## 7. dbt 実行・検証
 
