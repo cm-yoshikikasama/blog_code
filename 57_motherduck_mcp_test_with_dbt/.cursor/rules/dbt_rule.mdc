@@ -1,0 +1,100 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# dbt SQL Style Guide (Best Practices)
+
+## Principles
+- Prioritize readability and maintainability.
+- Use only SELECT statements for transformations (no INSERT/UPDATE/DELETE).
+- Always reference tables with `ref` or `source` (e.g., `ref('core_users')`).
+
+---
+
+## Style & Formatting
+- Use snake_case for all names (e.g., `user_id`, `order_amount`).
+- SQL keywords in UPPERCASE, table/column names in lowercase.
+- Indent with 2 or 4 spaces, consistently.
+- One column per line in SELECT.
+- Use CTEs (WITH) for complex logic, keep nesting shallow.
+- Add clear comments for intent and caveats.
+- Never nest Jinja curly braces (`{{ }}`).
+- Do not add a semicolon at the end of dbt SQL files.
+
+---
+
+## Example: Recommended SQL Style
+
+```sql
+with active_users as (
+    select
+        user_id
+    from {{ ref('users') }}
+    where is_active = true
+)
+
+select * from active_users
+```
+
+---
+
+## Naming
+- Use snake_case for tables, models, and columns.
+- Use clear suffixes for aggregates (e.g., `_count`, `_sum`, `_avg`).
+- Boolean columns start with `is_` or `has_` (e.g., `is_active`).
+
+---
+
+## Best Practices
+- Always use `ref`/`source`, never hardcode table names.
+- Minimize CTEs; avoid unnecessary intermediate tables.
+- Handle NULLs explicitly (e.g., `coalesce`, `ifnull`).
+- Use `distinct` only when needed for deduplication.
+- Always pair aggregate functions with `group by`.
+- Avoid excessive subqueries; use CTEs for clarity.
+
+---
+
+## Tests & Documentation
+- Add `description` to all models and columns.
+- Define tests like `not_null` and `unique` in YAML for key columns.
+
+# Rules for CTE (Common Table Expression)
+
+- Always break down complex queries using CTEs (WITH clause), and give each CTE a descriptive name indicating its role.
+- Recommended structure: "import (external reference) → logical (transformation/aggregation) → final (output)".
+- Each CTE should have a single responsibility to maximize reusability and readability.
+- Use snake_case for CTE names, and make the purpose clear in the name.
+- When using multiple CTEs, add a brief comment before each CTE.
+- Avoid deep nesting or excessive dependencies between CTEs.
+- If logic is reused, make it a CTE; if used across models, consider making it a separate model.
+- Use dbt's {{ ref('...') }} in import CTEs at the top.
+
+## Example
+
+```sql
+with import_orders as (
+  select * from {{ ref('orders') }}
+),
+aggregate_orders as (
+  select
+    user_id,
+    count(order_id) as order_count
+  from import_orders
+  where status = 'completed'
+  group by 1
+),
+final as (
+  select
+    user_id,
+    order_count,
+    case when order_count >= 3 then 'super_buyer'
+         when order_count = 2 then 'regular_buyer'
+         else 'single_buyer' end as buyer_type
+  from aggregate_orders
+)
+select * from final
+```
+
+- Be conscious of the order, naming, and responsibility of each CTE.
