@@ -23,7 +23,7 @@ MotherDuck 公式ブログ「Close the Loop: Faster Data Pipelines with MCP, Duc
 #### macOS/Homebrew
 
 ```sh
-brew install duckdb
+curl https://install.duckdb.org | sh
 brew install uv
 
 # 仮想環境の作成とアクティベート
