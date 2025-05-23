@@ -1,0 +1,70 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: RDS MySQL 用リソース（セキュリティグループ、サブネットグループ、インスタンス）
+
+Resources:
+  RDSMySQLSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: cm-kasama-rds-mysql-sg
+      VpcId: !ImportValue cm-kasama-vpc-id
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 3306
+          ToPort: 3306
+          SourceSecurityGroupId: !Ref CloudShellRDSAccessSG
+          Description: Allow MySQL traffic from CloudShell VPC Environment
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          CidrIp: 0.0.0.0/0
+          Description: Allow all outbound traffic
+      Tags:
+        - Key: Name
+          Value: cm-kasama-rds-mysql-sg
+
+  CloudShellRDSAccessSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: cm-kasama-mysql-account-cloudshell-sg
+      VpcId: !ImportValue cm-kasama-vpc-id
+      # インバウンドルールなし
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          CidrIp: 0.0.0.0/0
+          Description: Allow all outbound traffic
+      Tags:
+        - Key: Name
+          Value: cm-kasama-mysql-account-cloudshell-sg
+
+  RDSSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: Subnet group for RDS MySQL
+      SubnetIds:
+        - !ImportValue cm-kasama-subnet-private1a-id
+        - !ImportValue cm-kasama-subnet-private2c-id
+      DBSubnetGroupName: cm-kasama-mysql-subnet-group
+
+  RDSInstance:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceIdentifier: cm-kasama-mysql
+      Engine: mysql
+      EngineVersion: 8.0.40
+      DBInstanceClass: db.t4g.micro
+      AllocatedStorage: 20
+      StorageType: gp2
+      MasterUsername: admin
+      ManageMasterUserPassword: true
+      VPCSecurityGroups:
+        - !Ref RDSMySQLSG
+      DBSubnetGroupName: !Ref RDSSubnetGroup
+      MultiAZ: false
+      PubliclyAccessible: false
+      BackupRetentionPeriod: 7
+      DeletionProtection: false
+      StorageEncrypted: true
+      KmsKeyId: alias/aws/rds
+      EnableIAMDatabaseAuthentication: false
+      Tags:
+        - Key: Name
+          Value: cm-kasama-mysql
