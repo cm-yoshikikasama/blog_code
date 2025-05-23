@@ -1,0 +1,14 @@
+id,name,category,price,stock,description,created_at
+1,MacBook Pro,Electronics,1999,50,Apple MacBook Pro with M2 chip,2025-05-04 12:21:11
+2,iPhone 15,Mobile,999,100,Latest iPhone model with 128GB storage,2025-05-04 12:21:11
+3,AirPods Pro,Audio,249,200,Wireless noise-cancelling earbuds,2025-05-04 12:21:11
+4,iPad Air,Tablet,599,75,10.9-inch display with 64GB storage,2025-05-04 12:21:11
+5,Apple Watch,Wearable,399,120,Series 8 with health monitoring features,2025-05-04 12:21:11
+6,Magic Mouse,Accessories,79,150,Wireless mouse for Mac,2025-05-04 12:21:11
+7,Magic Keyboard,Accessories,99,100,Wireless keyboard with numeric keypad,2025-05-04 12:21:11
+8,HomePod Mini,Smart Home,99,80,Smart speaker with Siri,2025-05-04 12:21:11
+9,AirTag,Accessories,29,300,Item tracker,2025-05-04 12:21:11
+10,Apple TV 4K,Entertainment,179,60,Streaming device with 4K HDR support,2025-05-04 12:21:11
+11,MacBook Air M3,Electronics,1299,75,Apple MacBook Air with M3 chip and 13-inch display,2025-05-04 12:21:11
+12,MacBook Air M4,Electronics,1299,75,Apple MacBook Air with M4 chip and 13-inch display,2025-05-04 12:21:11
+13,MacBook air 2028,Electronics,2499,30,Latest generation MacBook Pro with enhanced performance and display.,2025-05-04 12:21:11
