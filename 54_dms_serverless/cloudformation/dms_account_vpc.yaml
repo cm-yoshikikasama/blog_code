@@ -1,0 +1,89 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: cm-kasama-bastion-vpc, private subnets, route tables, and S3 VPC endpoint
+
+Resources:
+  BastionVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 172.17.0.0/16
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+        - Key: Name
+          Value: cm-kasama-bastion-vpc
+
+  BastionSubnetPrivate1A:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref BastionVPC
+      CidrBlock: 172.17.1.0/24
+      AvailabilityZone: !Select [ 1, !GetAZs '' ]
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: cm-kasama-bastion-vpc-subnet-private1-ap-northeast-1a
+
+  BastionSubnetPrivate2C:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref BastionVPC
+      CidrBlock: 172.17.2.0/24
+      AvailabilityZone: !Select [ 2, !GetAZs '' ]
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: cm-kasama-bastion-vpc-subnet-private2-ap-northeast-1c
+
+  BastionRouteTablePrivate:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref BastionVPC
+      Tags:
+        - Key: Name
+          Value: cm-kasama-bastion-vpc-rtb-private
+
+
+  BastionSubnetRouteTableAssoc1A:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref BastionSubnetPrivate1A
+      RouteTableId: !Ref BastionRouteTablePrivate
+
+  BastionSubnetRouteTableAssoc2C:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref BastionSubnetPrivate2C
+      RouteTableId: !Ref BastionRouteTablePrivate
+
+  BastionVPCEndpointS3:
+    Type: AWS::EC2::VPCEndpoint
+    Properties:
+      VpcId: !Ref BastionVPC
+      ServiceName: !Sub com.amazonaws.${AWS::Region}.s3
+      RouteTableIds:
+        - !Ref BastionRouteTablePrivate1A
+        - !Ref InfaRouteTablePrivate2C
+      VpcEndpointType: Gateway
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal: "*"
+            Action: "s3:*"
+            Resource: "*"
+      Tags:
+        - Key: Name
+          Value: cm-kasama-bastion-vpc-vpce-s3
+
+  CloudShellRDSAccessSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: cm-kasama-cloudshell-rds-access-sg
+      VpcId: !Ref BastionVPC
+      SecurityGroupEgress:
+      - IpProtocol: -1
+        CidrIp: 0.0.0.0/0
+        Description: Allow all outbound traffic
+      Tags:
+        - Key: Name
+          Value: cm-kasama-cloudshell-rds-access-sg

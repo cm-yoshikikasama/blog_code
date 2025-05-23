@@ -1,0 +1,125 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: cm-kasama-bastion-vpc, private subnet, NAT Gateway, route table
+
+Resources:
+  BastionVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 172.17.0.0/16
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+        - Key: Name
+          Value: cm-kasama-bastion-vpc
+
+  # パブリックサブネット（NAT Gateway配置用）
+  BastionSubnetPublic1A:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref BastionVPC
+      CidrBlock: 172.17.10.0/24
+      AvailabilityZone: !Select [ 1, !GetAZs '' ]
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: cm-kasama-bastion-vpc-subnet-public1-ap-northeast-1a
+
+  # プライベートサブネット（CloudShell用）
+  BastionSubnetPrivate1A:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref BastionVPC
+      CidrBlock: 172.17.20.0/24
+      AvailabilityZone: !Select [ 1, !GetAZs '' ]
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: cm-kasama-bastion-vpc-subnet-private1-ap-northeast-1a
+
+  # IGW
+  BastionInternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: cm-kasama-bastion-vpc-igw
+
+  BastionVPCGatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref BastionVPC
+      InternetGatewayId: !Ref BastionInternetGateway
+
+  # Elastic IP for NAT Gateway
+  BastionEIP:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
+
+  # NAT Gateway（パブリックサブネットに配置）
+  BastionNatGateway:
+    Type: AWS::EC2::NatGateway
+    Properties:
+      SubnetId: !Ref BastionSubnetPublic1A
+      AllocationId: !GetAtt BastionEIP.AllocationId
+      Tags:
+        - Key: Name
+          Value: cm-kasama-bastion-natgw
+
+  # パブリックサブネット用ルートテーブル（0.0.0.0/0 → IGW）
+  BastionRouteTablePublic:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref BastionVPC
+      Tags:
+        - Key: Name
+          Value: cm-kasama-bastion-vpc-rtb-public
+
+  BastionRoutePublicInternet:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref BastionRouteTablePublic
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref BastionInternetGateway
+
+  BastionSubnetRouteTableAssocPublic1A:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref BastionSubnetPublic1A
+      RouteTableId: !Ref BastionRouteTablePublic
+
+  # プライベートサブネット用ルートテーブル（0.0.0.0/0 → NAT Gateway）
+  BastionRouteTablePrivate:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref BastionVPC
+      Tags:
+        - Key: Name
+          Value: cm-kasama-bastion-vpc-rtb-private
+
+  BastionRoutePrivateNatGateway:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref BastionRouteTablePrivate
+      DestinationCidrBlock: 0.0.0.0/0
+      NatGatewayId: !Ref BastionNatGateway
+
+  BastionSubnetRouteTableAssocPrivate1A:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref BastionSubnetPrivate1A
+      RouteTableId: !Ref BastionRouteTablePrivate
+
+  # CloudShell用SG
+  CloudShellRDSAccessSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: cm-kasama-cloudshell-rds-access-sg
+      VpcId: !Ref BastionVPC
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          CidrIp: 0.0.0.0/0
+          Description: Allow all outbound traffic
+      Tags:
+        - Key: Name
+          Value: cm-kasama-cloudshell-rds-access-sg
