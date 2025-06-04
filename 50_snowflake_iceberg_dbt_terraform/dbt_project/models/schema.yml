@@ -1,8 +1,0 @@
-version: 2
-
-sources:
-  - name: sales
-    database: cm_kasama_retail_sales_db
-    schema: default
-    tables:
-      - name: sales_transactions

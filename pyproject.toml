@@ -1,0 +1,4 @@
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+select = ["E", "F", "I"]
