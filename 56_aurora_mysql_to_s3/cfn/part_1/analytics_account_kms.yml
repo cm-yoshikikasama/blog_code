@@ -1,0 +1,45 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Aurora export data S3
+
+Parameters:
+  AuroraExportRoleArn:
+    Type: String
+    Description: Aurora Account s3 export data IAM Role ARN
+  SfnExportTriggerRoleArn:
+    Type: String
+    Description: Aurora Account Step Functions RoleARN
+
+Resources:
+  AuroraExportKmsKey:
+    Type: AWS::KMS::Key
+    Properties:
+      Description: Aurora s3 export customer kms key
+      EnableKeyRotation: true
+      KeyPolicy:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: AllowRootAccountFullAccess
+            Effect: Allow
+            Principal:
+              AWS: !Sub arn:aws:iam::${AWS::AccountId}:root
+            Action: "kms:*"
+            Resource: "*"
+          - Sid: AllowRdsExportRoleAccess
+            Effect: Allow
+            Principal:
+              AWS:
+                - !Ref AuroraExportRoleArn
+                - !Ref SfnExportTriggerRoleArn
+            Action:
+              - kms:Encrypt
+              - kms:Decrypt
+              - kms:ReEncrypt
+              - kms:GenerateDataKey
+              - kms:CreateGrant
+              - kms:DescribeKey
+            Resource: "*"
+  AuroraExportKmsKeyAlias:
+    Type: AWS::KMS::Alias
+    Properties:
+      AliasName: alias/cm-kasama-aurora-export-kms-key
+      TargetKeyId: !Ref AuroraExportKmsKey

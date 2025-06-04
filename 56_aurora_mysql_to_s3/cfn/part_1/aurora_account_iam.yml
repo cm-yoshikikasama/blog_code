@@ -1,0 +1,93 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Aurora snapshot export iam role
+
+Parameters:
+  ExportBucketName:
+    Type: String
+    Description: Analytics Account S3 bucket name
+  ExportKmsKeyArn:
+    Type: String
+    Description: Analytics Account KMS key ARN
+  SfnRoleArn:
+    Type: String
+    Description: Analytics Account Step Functions execution role ARN
+
+Resources:
+  # 1. rds export service role
+  RdsExportServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: cm-kasama-rds-export-service-role
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: export.rds.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: RdsExportServicePolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              # S3アクセス権限
+              - Effect: Allow
+                Action:
+                  - s3:PutObject
+                  - s3:GetObject
+                  - s3:DeleteObject
+                  - s3:ListBucket
+                  - s3:GetBucketLocation
+                Resource:
+                  - !Sub arn:aws:s3:::${ExportBucketName}
+                  - !Sub arn:aws:s3:::${ExportBucketName}/*
+              # KMSアクセス権限
+              - Effect: Allow
+                Action:
+                  - kms:Encrypt
+                  - kms:Decrypt
+                  - kms:ReEncrypt
+                  - kms:GenerateDataKey
+                  - kms:DescribeKey
+                  - kms:CreateGrant
+                Resource: !Ref ExportKmsKeyArn
+
+  # 2. cross account assume role
+  CrossAccountSfnExportTriggerRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: cm-kasama-cross-account-sfn-export-trigger-role
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !Ref SfnRoleArn
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: StartExportTaskPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              # RDSスナップショットエクスポート権限
+              - Effect: Allow
+                Action:
+                  - rds:StartExportTask
+                Resource:
+                  - !Sub arn:aws:rds:${AWS::Region}:${AWS::AccountId}:cluster:cm-kasama-aurora-mysql-cluster
+              - Effect: Allow
+                Action:
+                  - rds:DescribeExportTasks
+                Resource:
+                  # - !Sub arn:aws:rds:${AWS::Region}:${AWS::AccountId}:export-task/*
+                  - "*"
+              # RdsExportServiceRoleInAをRDSサービスに渡す権限
+              - Effect: Allow
+                Action: iam:PassRole
+                Resource: !GetAtt RdsExportServiceRole.Arn
+              # KMSキーへのアクセス権限
+              - Effect: Allow
+                Action:
+                  - kms:DescribeKey
+                  - kms:CreateGrant
+                Resource: !Ref ExportKmsKeyArn

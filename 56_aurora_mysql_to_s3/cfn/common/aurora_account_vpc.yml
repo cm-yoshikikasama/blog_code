@@ -1,0 +1,72 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: cm-kasama-dev-vpc, private subnets, RDS subnet group, and RDS security group
+
+Resources:
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 172.16.0.0/16
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+        - Key: Name
+          Value: cm-kasama-dev-vpc
+
+  SubnetPrivate1A:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: 172.16.1.0/24
+      AvailabilityZone: !Select [ 1, !GetAZs '' ]
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: cm-kasama-dev-subnet-private1-ap-northeast-1a
+
+  SubnetPrivate2C:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: 172.16.2.0/24
+      AvailabilityZone: !Select [ 2, !GetAZs '' ]
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: cm-kasama-dev-subnet-private2-ap-northeast-1c
+
+  RouteTablePrivate:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: cm-kasama-dev-rtb-private
+
+
+  SubnetRouteTableAssoc1A:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref SubnetPrivate1A
+      RouteTableId: !Ref RouteTablePrivate
+
+  SubnetRouteTableAssoc2C:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref SubnetPrivate2C
+      RouteTableId: !Ref RouteTablePrivate
+
+Outputs:
+  VPCId:
+    Value: !Ref VPC
+    Export:
+      Name: cm-kasama-vpc-id
+
+  SubnetPrivate1AId:
+    Value: !Ref SubnetPrivate1A
+    Export:
+      Name: cm-kasama-subnet-private1a-id
+
+  SubnetPrivate2CId:
+    Value: !Ref SubnetPrivate2C
+    Export:
+      Name: cm-kasama-subnet-private2c-id

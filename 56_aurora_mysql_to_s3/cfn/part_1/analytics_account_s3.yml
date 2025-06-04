@@ -1,0 +1,55 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Aurora export data S3
+
+Parameters:
+  AuroraExportRoleArn:
+    Type: String
+    Description: Aurora Account s3 export data IAM Role ARN
+  Env:
+    Type: String
+    Description: Environment (dev, stg, prd)
+    AllowedValues:
+      - dev
+      - stg
+      - prd
+
+Conditions:
+  IsPrdEnv: !Equals [!Ref Env, prd]
+
+Resources:
+  AuroraExportS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub cm-kasama-${Env}-rds-export-bucket
+      VersioningConfiguration:
+        Status: !If [IsPrdEnv, Enabled, Suspended]
+      LifecycleConfiguration: !If
+        - IsPrdEnv
+        - Rules:
+            - Id: NoncurrentVersionExpiration
+              NoncurrentVersionExpiration:
+                NewerNoncurrentVersions: 1
+                NoncurrentDays: 7
+              Status: Enabled
+        - !Ref AWS::NoValue
+
+  AuroraExportS3BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref AuroraExportS3Bucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: AllowRDSExportFromOtherAccount
+            Effect: Allow
+            Principal:
+              AWS: !Ref AuroraExportRoleArn
+            Action:
+              - "s3:PutObject*"
+              - "s3:ListBucket"
+              - "s3:GetObject*"
+              - "s3:DeleteObject*"
+              - "s3:GetBucketLocation"
+            Resource:
+              - !Sub arn:aws:s3:::${AuroraExportS3Bucket}
+              - !Sub arn:aws:s3:::${AuroraExportS3Bucket}/*
