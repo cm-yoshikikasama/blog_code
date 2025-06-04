@@ -1,0 +1,99 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Export RDS snapshot to S3 across accounts using Step Functions
+
+Parameters:
+  CrossAccountRoleArn:
+    Type: String
+    Description: Aurora Account Cross-account Sfn export trigger role ARN
+  RdsExportServiceRoleArn:
+    Type: String
+    Description: Aurora Account Rds export service role ARN
+  ExportKmsKeyArn:
+    Type: String
+    Description: Analytics Account KMS key ARN
+  ExportBucketName:
+    Type: String
+    Description: Analytics Account S3 bucket name
+  SfnExecutionRoleArn:
+    Type: String
+    Description:  Analytics Account Step Functions execution role ARN
+
+Resources:
+  ExportSnapshotStateMachine:
+    Type: AWS::StepFunctions::StateMachine
+    Properties:
+      StateMachineName: cm-kasama-export-aurora-sfn
+      RoleArn: !Ref SfnExecutionRoleArn
+      DefinitionString: !Sub |
+        {
+          "Comment": "Export Aurora Snapshot to S3 in cross-account",
+          "StartAt": "AssignExportTaskIdentifier",
+          "States": {
+            "AssignExportTaskIdentifier": {
+              "Type": "Pass",
+              "Assign": {
+                "exportTaskId.$": "$.ExportTaskIdentifier"
+              },
+              "Next": "StartExportTask"
+            },
+            "StartExportTask": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::aws-sdk:rds:startExportTask",
+              "Parameters": {
+                "ExportTaskIdentifier.$": "$exportTaskId",
+                "SourceArn": "arn:aws:rds:ap-northeast-1:<AuroraAccountId>:cluster:cm-kasama-aurora-mysql-cluster",
+                "S3BucketName": "${ExportBucketName}",
+                "IamRoleArn": "${RdsExportServiceRoleArn}",
+                "KmsKeyId": "${ExportKmsKeyArn}",
+                "S3Prefix": "cm-kasama",
+                "ExportOnly": [
+                  "sample_db.products"
+                ]
+              },
+              "Credentials": {
+                "RoleArn": "${CrossAccountRoleArn}"
+              },
+              "Next": "WaitForExport"
+            },
+            "WaitForExport": {
+              "Type": "Wait",
+              "Seconds": 30,
+              "Next": "CheckExportStatus"
+            },
+            "CheckExportStatus": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::aws-sdk:rds:describeExportTasks",
+              "Parameters": {
+                "ExportTaskIdentifier.$": "$exportTaskId"
+              },
+              "Credentials": {
+                "RoleArn": "${CrossAccountRoleArn}"
+              },
+              "Next": "IsExportComplete"
+            },
+            "IsExportComplete": {
+              "Type": "Choice",
+              "Choices": [
+                {
+                  "Variable": "$.ExportTasks[0].Status",
+                  "StringEquals": "COMPLETE",
+                  "Next": "Success"
+                },
+                {
+                  "Variable": "$.ExportTasks[0].Status",
+                  "StringEquals": "FAILED",
+                  "Next": "Fail"
+                }
+              ],
+              "Default": "WaitForExport"
+            },
+            "Success": {
+              "Type": "Succeed"
+            },
+            "Fail": {
+              "Type": "Fail",
+              "Error": "ExportFailed",
+              "Cause": "The export task failed."
+            }
+          }
+        }
