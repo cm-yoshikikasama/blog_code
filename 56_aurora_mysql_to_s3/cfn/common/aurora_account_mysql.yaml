@@ -1,0 +1,83 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Aurora MySQL resources for cm-kasama account
+
+Resources:
+  AuroraSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: cm-kasama-aurora-mysql-sg
+      VpcId: !ImportValue cm-kasama-vpc-id
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 3306
+          ToPort: 3306
+          SourceSecurityGroupId: !Ref CloudShellAuroraAccessSG
+          Description: Allow MySQL traffic from CloudShell VPC Environment
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          CidrIp: 0.0.0.0/0
+          Description: Allow all outbound traffic
+      Tags:
+        - Key: Name
+          Value: cm-kasama-aurora-mysql-sg
+  CloudShellAuroraAccessSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: cm-kasama-aurora-account-cloudshell-sg
+      VpcId: !ImportValue cm-kasama-vpc-id
+      # インバウンドルールなし
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          CidrIp: 0.0.0.0/0
+          Description: Allow all outbound traffic
+      Tags:
+        - Key: Name
+          Value: cm-kasama-aurora-account-cloudshell-sg
+  AuroraSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: Subnet group for Aurora MySQL
+      SubnetIds:
+        - !ImportValue cm-kasama-subnet-private1a-id
+        - !ImportValue cm-kasama-subnet-private2c-id
+      DBSubnetGroupName: cm-kasama-aurora-mysql-subnet-group
+  AuroraCluster:
+    Type: AWS::RDS::DBCluster
+    Properties:
+      DBClusterIdentifier: cm-kasama-aurora-mysql-cluster
+      Engine: aurora-mysql
+      EngineVersion: 8.0.mysql_aurora.3.04.2
+      MasterUsername: admin
+      ManageMasterUserPassword: true
+      DatabaseName: sample_db
+      DBSubnetGroupName: !Ref AuroraSubnetGroup
+      VpcSecurityGroupIds:
+        - !Ref AuroraSG
+      BackupRetentionPeriod: 7
+      PreferredBackupWindow: 18:30-19:00
+      PreferredMaintenanceWindow: thu:17:53-thu:18:23
+      StorageEncrypted: true
+      KmsKeyId: alias/aws/rds
+      DeletionProtection: false
+      Port: 3306
+      EnableIAMDatabaseAuthentication: false
+      Tags:
+        - Key: Name
+          Value: cm-kasama-aurora-mysql-cluster
+  AuroraInstance1:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceIdentifier: cm-kasama-aurora-mysql-instance-1
+      DBInstanceClass: db.t4g.large
+      Engine: aurora-mysql
+      DBClusterIdentifier: !Ref AuroraCluster
+      PubliclyAccessible: false
+      DBSubnetGroupName: !Ref AuroraSubnetGroup
+      PreferredMaintenanceWindow: thu:17:53-thu:18:23
+      AutoMinorVersionUpgrade: false
+      PromotionTier: 1
+      MonitoringInterval: 0
+      EnablePerformanceInsights: false
+      Tags:
+        - Key: Name
+          Value: cm-kasama-aurora-mysql-instance-1

@@ -1,0 +1,43 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Step Functions execution role with cross-account AssumeRole permission
+
+Parameters:
+  CrossAccountRoleArn:
+    Type: String
+    Description: Aurora Account Cross-account Sfn export trigger role ARN
+  ExportBucketName:
+    Type: String
+    Description: Analytics Account S3 bucket name
+
+Resources:
+  SfnExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: cm-kasama-export-aurora-sfn-role
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: states.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: AssumeCrossAccountRole
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: sts:AssumeRole
+                Resource: !Ref CrossAccountRoleArn
+        - PolicyName: S3Access
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:ListBucket
+                Resource: !Sub arn:aws:s3:::${ExportBucketName}
+              - Effect: Allow
+                Action:
+                  - s3:DeleteObject
+                Resource: !Sub arn:aws:s3:::${ExportBucketName}/*
