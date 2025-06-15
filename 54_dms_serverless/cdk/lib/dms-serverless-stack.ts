@@ -48,7 +48,7 @@ export class DmsServerlessStack extends cdk.Stack {
 
 		// RDSへのアウトバウンドルール（MySQL/Aurora）
 		dmsSecurityGroup.addEgressRule(
-			ec2.Peer.ipv4("10.0.0.0/16"),
+			ec2.Peer.ipv4("172.16.0.0/16"),
 			ec2.Port.tcp(3306),
 			"To RDS",
 		);
