@@ -61,8 +61,7 @@ Resources:
       VpcId: !Ref BastionVPC
       ServiceName: !Sub com.amazonaws.${AWS::Region}.s3
       RouteTableIds:
-        - !Ref BastionRouteTablePrivate1A
-        - !Ref InfaRouteTablePrivate2C
+        - !Ref BastionRouteTablePrivate
       VpcEndpointType: Gateway
       PolicyDocument:
         Version: "2012-10-17"
