@@ -16,7 +16,7 @@ const SUBNET_IDS = [
 	"subnet-yyyyyyyyyyyyyyyyy", // 2つ目のDMSサブネットID
 ];
 const SECRET_ARN =
-	"arn:aws:secretsmanager:ap-northeast-1:xxxxxxxxxxxx:secret:m-kasama-rds-secret-manager-9BA88J";
+	"arn:aws:secretsmanager:ap-northeast-1:xxxxxxxxxxxx:secret:ID";
 const DMS_SECURITY_GROUP_PREFIX_LIST_ID = "pl-"; // S3 VPCエンドポイントのPrefixListId
 const RDS_SERVER_NAME = "rds-arn"; // RDSのエンドポイント名
 
