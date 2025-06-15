@@ -223,7 +223,7 @@ export class DmsServerlessStack extends cdk.Stack {
 					minCapacityUnits: 1,
 					multiAz: false,
 					vpcSecurityGroupIds: [dmsSecurityGroup.securityGroupId],
-					maxCapacityUnits: 16,
+					maxCapacityUnits: 4,
 					replicationSubnetGroupId:
 						dmsSubnetGroup.replicationSubnetGroupIdentifier,
 				},
