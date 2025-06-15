@@ -73,16 +73,3 @@ Resources:
       Tags:
         - Key: Name
           Value: cm-kasama-bastion-vpc-vpce-s3
-
-  CloudShellRDSAccessSG:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupDescription: cm-kasama-cloudshell-rds-access-sg
-      VpcId: !Ref BastionVPC
-      SecurityGroupEgress:
-      - IpProtocol: -1
-        CidrIp: 0.0.0.0/0
-        Description: Allow all outbound traffic
-      Tags:
-        - Key: Name
-          Value: cm-kasama-cloudshell-rds-access-sg
