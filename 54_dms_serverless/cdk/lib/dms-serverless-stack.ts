@@ -1,4 +1,4 @@
-import { Construct } from "constructs";
+import type { Construct } from "constructs";
 import * as cdk from "aws-cdk-lib";
 import * as s3 from "aws-cdk-lib/aws-s3";
 import * as iam from "aws-cdk-lib/aws-iam";
@@ -142,7 +142,7 @@ export class DmsServerlessStack extends cdk.Stack {
 			this,
 			"DbSecret",
 			{
-				secretCompleteArn: `arn:aws:secretsmanager:${this.region}:${this.account}:secret:cm-kasama-rds-secret-manager-9BA88J`,
+				secretCompleteArn: `arn:aws:secretsmanager:${this.region}:${this.account}:secret:<ID>`,
 			},
 		);
 
