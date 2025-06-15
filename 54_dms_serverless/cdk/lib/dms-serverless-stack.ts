@@ -15,6 +15,7 @@ const SUBNET_IDS = [
 	"subnet-xxxxxxxxxxxxxxxxx", // 1つ目のDMSサブネットID
 	"subnet-yyyyyyyyyyyyyyyyy", // 2つ目のDMSサブネットID
 ];
+const S3_BUCKET_NAME = "S3-Bucket-Name"; // DMSターゲット用S3バケット名
 const SECRET_ARN =
 	"arn:aws:secretsmanager:ap-northeast-1:xxxxxxxxxxxx:secret:ID"; // DMSアカウントのRDSシークレットのARN
 const DMS_SECURITY_GROUP_PREFIX_LIST_ID = "pl-"; // S3 VPCエンドポイントのPrefixListId
@@ -31,7 +32,7 @@ export class DmsServerlessStack extends cdk.Stack {
 		const targetBucket = s3.Bucket.fromBucketName(
 			this,
 			"TargetBucket",
-			"cm-kasama-dms-test",
+			S3_BUCKET_NAME,
 		);
 
 		const vpc = ec2.Vpc.fromLookup(this, "ExistingVpc", {
@@ -179,7 +180,7 @@ export class DmsServerlessStack extends cdk.Stack {
 
 			// S3固有の設定
 			s3Settings: {
-				bucketName: "cm-kasama-dms-test",
+				bucketName: S3_BUCKET_NAME,
 				serviceAccessRoleArn: dmsRole.roleArn,
 
 				// Parquet形式の設定
