@@ -12,7 +12,8 @@ sns topic は事前に作成しておく
    - `cloudformation/rds.yaml` をデプロイ
 3. DMS 用 IAM ロールの作成
    - `cloudformation/IAM.yaml` をデプロイ
-4. CDK による DMS Serverless リソースのデプロイ
+4. Secrets Manager に RDS のパスワードを登録
+5. CDK による DMS Serverless リソースのデプロイ
    - `cdk` ディレクトリで `npm install` 実行
    - `cdk deploy` を実行
 
