@@ -1,3 +1,3 @@
 # 54_dms_serverless
 
-ブログ参照
+デプロイ手順は![ブログ参照](https://dev.classmethod.jp/articles/aws-dms-serverless-stop-billing-48hours/)
