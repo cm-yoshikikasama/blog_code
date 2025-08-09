@@ -44,6 +44,16 @@ Resources:
         - !ImportValue cm-kasama-subnet-private2c-id
       DBSubnetGroupName: cm-kasama-mysql-subnet-group
 
+  RDSParameterGroup:
+    Type: AWS::RDS::DBParameterGroup
+    Properties:
+      Description: Custom parameter group for DMS migration
+      Family: mysql8.0
+      Parameters:
+        binlog_format: ROW
+        binlog_checksum: NONE
+        binlog_row_image: FULL
+
   RDSInstance:
     Type: AWS::RDS::DBInstance
     Properties:
@@ -58,6 +68,7 @@ Resources:
       VPCSecurityGroups:
         - !Ref RDSMySQLSG
       DBSubnetGroupName: !Ref RDSSubnetGroup
+      DBParameterGroupName: !Ref RDSParameterGroup
       MultiAZ: false
       PubliclyAccessible: false
       BackupRetentionPeriod: 7
