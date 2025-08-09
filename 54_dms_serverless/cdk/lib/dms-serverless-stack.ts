@@ -1,19 +1,25 @@
-import { Construct } from "constructs";
+import type { Construct } from "constructs";
 import * as cdk from "aws-cdk-lib";
 import * as s3 from "aws-cdk-lib/aws-s3";
 import * as iam from "aws-cdk-lib/aws-iam";
-import * as sns from "aws-cdk-lib/aws-sns";
 import * as dms from "aws-cdk-lib/aws-dms";
-import * as events from "aws-cdk-lib/aws-events";
-import * as scheduler from "aws-cdk-lib/aws-scheduler";
 import * as secretsmanager from "aws-cdk-lib/aws-secretsmanager";
-// import * as ssm from "aws-cdk-lib/aws-ssm";
 import * as ec2 from "aws-cdk-lib/aws-ec2";
 
 export interface DmsServerlessStackStackProps extends cdk.StackProps {
 	envName: string;
 	projectName: string;
 }
+// デプロイ前に指定が必要な値はここでまとめて管理
+const SUBNET_IDS = [
+	"subnet-xxxxxxxxxxxxxxxxx", // 1つ目のDMSサブネットID
+	"subnet-yyyyyyyyyyyyyyyyy", // 2つ目のDMSサブネットID
+];
+const S3_BUCKET_NAME = "S3-Bucket-Name"; // DMSターゲット用S3バケット名
+const SECRET_ARN =
+	"arn:aws:secretsmanager:ap-northeast-1:xxxxxxxxxxxx:secret:ID"; // DMSアカウントのRDSシークレットのARN
+const DMS_SECURITY_GROUP_PREFIX_LIST_ID = "pl-"; // S3 VPCエンドポイントのPrefixListId
+const RDS_SERVER_NAME = "rds-arn"; // RDSのエンドポイント名
 
 export class DmsServerlessStack extends cdk.Stack {
 	constructor(
@@ -26,11 +32,11 @@ export class DmsServerlessStack extends cdk.Stack {
 		const targetBucket = s3.Bucket.fromBucketName(
 			this,
 			"TargetBucket",
-			"cm-kasama-dms-test",
+			S3_BUCKET_NAME,
 		);
 
 		const vpc = ec2.Vpc.fromLookup(this, "ExistingVpc", {
-			vpcId: "vpc-id",
+			vpcName: "cm-kasama-bastion-vpc",
 		});
 
 		// DMSセキュリティグループの作成
@@ -43,22 +49,22 @@ export class DmsServerlessStack extends cdk.Stack {
 
 		// RDSへのアウトバウンドルール（MySQL/Aurora）
 		dmsSecurityGroup.addEgressRule(
-			ec2.Peer.ipv4("10.0.0.0/16"),
+			ec2.Peer.ipv4("172.16.0.0/16"),
 			ec2.Port.tcp(3306),
 			"To RDS",
 		);
 
 		// S3へのアウトバウンドルール（HTTPS）
 		dmsSecurityGroup.addEgressRule(
-			ec2.Peer.prefixList("pl-61a54008"),
+			ec2.Peer.prefixList(DMS_SECURITY_GROUP_PREFIX_LIST_ID),
 			ec2.Port.tcp(443),
 			"Allow traffic to S3",
 		);
 
 		// 既存のサブネットを参照
 		const subnets = [
-			ec2.Subnet.fromSubnetId(this, "Subnet1", "subnet-id"),
-			ec2.Subnet.fromSubnetId(this, "Subnet2", "subnet-id"),
+			ec2.Subnet.fromSubnetId(this, "Subnet1", SUBNET_IDS[0]),
+			ec2.Subnet.fromSubnetId(this, "Subnet2", SUBNET_IDS[1]),
 		];
 		// DMSサブネットグループの作成
 		const dmsSubnetGroup = new dms.CfnReplicationSubnetGroup(
@@ -142,7 +148,7 @@ export class DmsServerlessStack extends cdk.Stack {
 			this,
 			"DbSecret",
 			{
-				secretCompleteArn: `arn:aws:secretsmanager:${this.region}:${this.account}:secret:cm-kasama-rds-secret-manager-9BA88J`,
+				secretCompleteArn: SECRET_ARN,
 			},
 		);
 
@@ -152,7 +158,7 @@ export class DmsServerlessStack extends cdk.Stack {
 			endpointIdentifier: "cm-kasama-rds-endpoint-test",
 
 			// RDS サーバー接続情報
-			serverName: "rds-arn",
+			serverName: RDS_SERVER_NAME,
 			port: 3306,
 			username: "admin",
 			password: dbSecret.secretValueFromJson("password").unsafeUnwrap(),
@@ -174,7 +180,7 @@ export class DmsServerlessStack extends cdk.Stack {
 
 			// S3固有の設定
 			s3Settings: {
-				bucketName: "cm-kasama-dms-test",
+				bucketName: S3_BUCKET_NAME,
 				serviceAccessRoleArn: dmsRole.roleArn,
 
 				// Parquet形式の設定
@@ -217,7 +223,7 @@ export class DmsServerlessStack extends cdk.Stack {
 					minCapacityUnits: 1,
 					multiAz: false,
 					vpcSecurityGroupIds: [dmsSecurityGroup.securityGroupId],
-					maxCapacityUnits: 16,
+					maxCapacityUnits: 4,
 					replicationSubnetGroupId:
 						dmsSubnetGroup.replicationSubnetGroupIdentifier,
 				},
@@ -255,109 +261,5 @@ export class DmsServerlessStack extends cdk.Stack {
 		dmsReplicationConfig.addDependency(rdsSourceEndpoint);
 		dmsReplicationConfig.addDependency(s3TargetEndpoint);
 		dmsReplicationConfig.addDependency(dmsSubnetGroup);
-
-		// 既存のSNSトピックを参照
-		const errorNotificationTopic = sns.Topic.fromTopicArn(
-			this,
-			"ErrorNotificationTopic",
-			`arn:aws:sns:${this.region}:${this.account}:cm-kasama-dms-error-topic`,
-		);
-
-		// EventBridge Scheduler用のIAMロールを作成
-		const schedulerRole = new iam.Role(this, "DmsEventSchedulerRole", {
-			roleName: "cm-kasama-dms-event-scheduler-test",
-			assumedBy: new iam.CompositePrincipal(
-				new iam.ServicePrincipal("scheduler.amazonaws.com"),
-				new iam.ServicePrincipal("events.amazonaws.com"),
-			),
-			description:
-				"IAM role for EventBridge Scheduler to start/stop DMS replication",
-		});
-		schedulerRole.addToPolicy(
-			// DMSレプリケーションの開始と停止権限を付与
-			new iam.PolicyStatement({
-				effect: iam.Effect.ALLOW,
-				actions: ["dms:StartReplication", "dms:StopReplication"],
-				resources: [dmsReplicationConfig.attrReplicationConfigArn],
-			}),
-		);
-
-		schedulerRole.addToPolicy(
-			new iam.PolicyStatement({
-				effect: iam.Effect.ALLOW,
-				actions: ["sns:Publish"],
-				resources: [errorNotificationTopic.topicArn],
-			}),
-		);
-		// DMS開始スケジューラー
-		new scheduler.CfnSchedule(this, "DmsStartSchedule", {
-			name: "cm-kasama-dms-start-test",
-			description: "Schedule to start DMS replication",
-			flexibleTimeWindow: {
-				mode: "OFF",
-			},
-			// スケジュールは可変
-			scheduleExpression: "cron(0 1 * * ? *)",
-			scheduleExpressionTimezone: "Asia/Tokyo",
-			target: {
-				arn: "arn:aws:scheduler:::aws-sdk:databasemigration:startReplication",
-				roleArn: schedulerRole.roleArn,
-				input: JSON.stringify({
-					ReplicationConfigArn: dmsReplicationConfig.attrReplicationConfigArn,
-					StartReplicationType: "resume-processing",
-				}),
-			},
-			state: "ENABLED",
-			groupName: "default",
-		});
-
-		// DMS停止スケジューラー
-		new scheduler.CfnSchedule(this, "DmsStopSchedule", {
-			name: "cm-kasama-dms-stop-test",
-			description: "Schedule to stop DMS replication",
-			flexibleTimeWindow: {
-				mode: "OFF",
-			},
-			// スケジュールは可変
-			scheduleExpression: "cron(0 2 * * ? *)",
-			scheduleExpressionTimezone: "Asia/Tokyo",
-			target: {
-				arn: "arn:aws:scheduler:::aws-sdk:databasemigration:stopReplication",
-				roleArn: schedulerRole.roleArn,
-				input: JSON.stringify({
-					ReplicationConfigArn: dmsReplicationConfig.attrReplicationConfigArn,
-				}),
-			},
-			state: "ENABLED",
-			groupName: "default",
-		});
-
-		new events.CfnRule(this, "DmsFailureRule", {
-			name: "cm-kasama-event-rule-dms-failure-test",
-			description:
-				"Rule to detect when DMS replication fails and send notification",
-			eventPattern: {
-				source: ["aws.dms"],
-				"detail-type": ["DMS Replication State Change"],
-				detail: {
-					eventType: ["REPLICATION_FAILED"],
-				},
-				resources: [dmsReplicationConfig.attrReplicationConfigArn],
-			},
-			state: "ENABLED",
-			targets: [
-				{
-					id: "DMSFailureNotification",
-					arn: errorNotificationTopic.topicArn,
-					roleArn: schedulerRole.roleArn,
-					input: JSON.stringify({
-						source: "custom",
-						content: {
-							description: `DMS replication failed for configuration: ${dmsReplicationConfig.attrReplicationConfigArn}. Please check the AWS DMS console for more details.`,
-						},
-					}),
-				},
-			],
-		});
 	}
 }

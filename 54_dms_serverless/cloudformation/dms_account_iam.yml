@@ -1,3 +1,6 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: IAM roles for DMS VPC management and CloudWatch Logs integration
+Resources:
   # DMSのVPC操作用の特別なロール（名前は固定）
   DmsVpcRole:
     Type: AWS::IAM::Role
