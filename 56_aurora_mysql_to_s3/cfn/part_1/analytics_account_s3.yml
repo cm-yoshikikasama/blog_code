@@ -5,6 +5,7 @@ Parameters:
   AuroraExportRoleArn:
     Type: String
     Description: Aurora Account s3 export data IAM Role ARN
+    Default: ""
   Env:
     Type: String
     Description: Environment (dev, stg, prd)
@@ -12,9 +13,6 @@ Parameters:
       - dev
       - stg
       - prd
-
-Conditions:
-  IsPrdEnv: !Equals [!Ref Env, prd]
 
 Resources:
   AuroraExportS3Bucket:

@@ -1,0 +1,134 @@
+{
+  "env": {
+    "TF_LOG": "WARN",
+    "CLAUDE_CODE_ENABLE_TELEMETRY": "0",
+    "BASH_DEFAULT_TIMEOUT_MS": "120000"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(terraform fmt .)",
+      "Bash(terraform fmt -recursive .)",
+      "Bash(terraform validate .)",
+      "Bash(yamllint ./environments/**/*.yml)",
+      "Bash(yamllint ./cfn/*.yml)",
+      "Bash(yamllint ./cfn/*.yaml)",
+      "Bash(tflint .)",
+      "Bash(tflint --recursive .)",
+      "Bash(trivy config .)",
+      "Bash(pre-commit run --all-files)",
+      "Bash(ls ./)",
+      "Bash(ls ./*)",
+      "Bash(cat ./*)",
+      "Bash(grep * ./)",
+      "Bash(rg * ./)",
+      "Bash(find ./)",
+      "Bash(tree ./)",
+      "Bash(head ./*)",
+      "Bash(tail ./*)",
+      "Bash(echo *)",
+      "Bash(pwd)",
+      "Bash(cd ./)",
+      "Bash(mkdir ./)",
+      "Bash(cp ./* ./)",
+      "Bash(mv ./* ./)",
+      "Bash(touch ./)",
+      "Bash(which *)",
+      "Bash(env)",
+      "Bash(whoami)",
+      "Bash(date)",
+      "Bash(git status)",
+      "Bash(git diff)",
+      "Bash(git diff ./)",
+      "Bash(git log --oneline -10)",
+      "Bash(git branch)",
+      "Bash(git show HEAD)",
+      "Read(./**)",
+      "Edit(./**)",
+      "Edit(!.git/**)",
+      "Edit(!.terraform/**)",
+      "Edit(!terraform.tfstate*)",
+      "Edit(!*.tfvars)",
+      "Grep(./**)",
+      "Glob(./**)",
+      "LS(./**)",
+      "Write(./**)",
+      "Write(!.git/**)",
+      "Write(!.terraform/**)",
+      "Write(!terraform.tfstate*)",
+      "Write(!*.tfvars)",
+      "MultiEdit(./**)",
+      "MultiEdit(!.git/**)",
+      "MultiEdit(!.terraform/**)",
+      "MultiEdit(!terraform.tfstate*)",
+      "MultiEdit(!*.tfvars)",
+      "TodoRead(**)",
+      "TodoWrite(**)",
+      "Task(**)",
+      "mcp__awslabs_aws-documentation-mcp-server__read_documentation",
+      "mcp__awslabs_aws-documentation-mcp-server__search_documentation",
+      "mcp__terraform__searchModules",
+      "mcp__terraform__moduleDetails",
+      "Bash(cp:*)",
+      "mcp__context7__resolve-library-id"
+    ],
+    "deny": [
+      "Bash(terraform init*)",
+      "Bash(terraform plan*)",
+      "Bash(terraform apply*)",
+      "Bash(terraform destroy*)",
+      "Bash(terraform import*)",
+      "Bash(terraform state*)",
+      "Bash(terraform refresh*)",
+      "Bash(terraform output*)",
+      "Bash(terraform workspace*)",
+      "Bash(git add*)",
+      "Bash(git commit*)",
+      "Bash(git push*)",
+      "Bash(git pull*)",
+      "Bash(git merge*)",
+      "Bash(git rebase*)",
+      "Bash(git reset*)",
+      "Bash(git checkout*)",
+      "Bash(git switch*)",
+      "Bash(rm -rf*)",
+      "Bash(rm /*)",
+      "Bash(cp /* *)",
+      "Bash(cp * /*)",
+      "Bash(mv /* *)",
+      "Bash(mv * /*)",
+      "Bash(mkdir /*)",
+      "Bash(sudo*)",
+      "Edit(.terraform/**)",
+      "Write(.terraform/**)"
+    ]
+  },
+  "enabledMcpjsonServers": [
+    "terraform",
+    "awslabs.aws-documentation-mcp-server"
+  ],
+  "disabledMcpjsonServers": [],
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "afplay /System/Library/Sounds/Funk.aiff"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "afplay /System/Library/Sounds/Funk.aiff"
+          }
+        ]
+      }
+    ]
+  }
+}

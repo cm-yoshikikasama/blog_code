@@ -33,7 +33,8 @@ Resources:
             Action:
               - kms:Encrypt
               - kms:Decrypt
-              - kms:ReEncrypt
+              - kms:ReEncryptFrom
+              - kms:ReEncryptTo
               - kms:GenerateDataKey
               - kms:CreateGrant
               - kms:DescribeKey
