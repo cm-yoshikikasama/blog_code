@@ -11,16 +11,15 @@ aws rds start-export-task \
 
 - part_1 デプロイ手順
   - analytics_account_s3.yml
-    - 一時的に BucketPolicy をコメントアウトして作成
-  - analytics_account_kms.yml
-    - 一時的に KMS key のポリシーをコメントアウトして作成
-  - analytics_account_iam.yml
-    - 一時的に policy をコメントアウトして作成
+    - パラメータを false にして作成
   - aurora_account_iam.yml
+    - kms key arn は dummy
+    - useIam は false
+  - CDK で kms key, sfn role をデプロイ
   - analytics_account_s3.yml
-    - コメントアウトを戻して更新
-  - analytics_account_kms.yml
-    - コメントアウトを戻して更新
+    - パラメータを true にして作成
+    - iam role arn は作成された role の arn を指定
   - analytics_account_iam.yml
-    - コメントアウトを戻して更新
-  - analytics_account_sfn.yml
+    - kms key arn は CDK でデプロイしたものを指定
+    - sfn role arn は CDK でデプロイしたものを指定
+    - useIam は true

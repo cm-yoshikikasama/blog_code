@@ -2,15 +2,19 @@ AWSTemplateFormatVersion: "2010-09-09"
 Description: Aurora snapshot export iam role
 
 Parameters:
+  SfnRoleArn:
+    Type: String
+    Description: Analytics Account Step Functions execution role ARN
+    Default: ""
   ExportBucketName:
     Type: String
     Description: Analytics Account S3 bucket name
   ExportKmsKeyArn:
     Type: String
     Description: Analytics Account KMS key ARN
-  SfnRoleArn:
-    Type: String
-    Description: Analytics Account Step Functions execution role ARN
+
+Conditions:
+  IsSfnRoleArnNotEmpty: !Not [!Equals [!Ref SfnRoleArn, ""]]
 
 Resources:
   # 1. rds export service role
@@ -46,7 +50,6 @@ Resources:
                 Action:
                   - kms:Encrypt
                   - kms:Decrypt
-                  - kms:ReEncrypt
                   - kms:GenerateDataKey
                   - kms:DescribeKey
                   - kms:CreateGrant
@@ -62,7 +65,11 @@ Resources:
         Statement:
           - Effect: Allow
             Principal:
-              AWS: !Ref SfnRoleArn
+              AWS:
+                !If
+                  - IsSfnRoleArnNotEmpty
+                  - !Ref SfnRoleArn
+                  - !Sub arn:aws:iam::${AWS::AccountId}:root
             Action: sts:AssumeRole
       Policies:
         - PolicyName: StartExportTaskPolicy
