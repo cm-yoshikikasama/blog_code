@@ -1,0 +1,45 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Source account resources for Glue Zero-ETL (DynamoDB table with PITR). Does NOT create the integration or table resource policy.
+
+Parameters:
+  TableName:
+    Type: String
+    Default: cm-kasama-test-transactions
+    Description: DynamoDB table name (source)
+
+Resources:
+  SourceTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Ref TableName
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: transaction_id
+          AttributeType: S
+        - AttributeName: timestamp
+          AttributeType: N
+      KeySchema:
+        - AttributeName: transaction_id
+          KeyType: HASH
+        - AttributeName: timestamp
+          KeyType: RANGE
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+      ResourcePolicy:
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Sid: AllowGlueZeroETLFromIntegration
+              Effect: Allow
+              Principal:
+                Service: glue.amazonaws.com
+              Action:
+                - dynamodb:ExportTableToPointInTime
+                - dynamodb:DescribeTable
+                - dynamodb:DescribeExport
+              Resource: "*"
+              Condition:
+                StringEquals:
+                  aws:SourceAccount: !Ref AWS::AccountId
+                StringLike:
+                  aws:SourceArn: !Sub arn:aws:glue:${AWS::Region}:${AWS::AccountId}:integration:*

@@ -1,0 +1,84 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Target account resources for Glue Zero-ETL (S3, Glue DB, IAM Role). Glue Catalog resource policy must be applied via CLI. Does NOT create the integration itself.
+
+Parameters:
+  GlueDatabaseName:
+    Type: String
+    Default: cm_kasama_zero_etl_db
+    Description: Glue database name to receive data
+  S3BucketName:
+    Type: String
+    Description: S3 bucket to store data
+  TargetRoleName:
+    Type: String
+    Default: cm-kasama-zero-etl-target-role
+    Description: IAM role used by Glue on target side
+
+Resources:
+  DataBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref S3BucketName
+
+  TargetRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Ref TargetRoleName
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: glue.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: glue-target-inline
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Sid: GlueCatalogAccess
+                Effect: Allow
+                Action:
+                  - glue:GetDatabase
+                  - glue:GetDatabases
+                  - glue:GetTable
+                  - glue:GetTables
+                  - glue:CreateTable
+                  - glue:UpdateTable
+                  - glue:DeleteTable
+                  - glue:CreatePartition
+                  - glue:BatchCreatePartition
+                  - glue:UpdatePartition
+                  - glue:GetPartition
+                  - glue:GetPartitions
+                Resource:
+                  - !Sub arn:aws:glue:${AWS::Region}:${AWS::AccountId}:catalog
+                  - !Sub arn:aws:glue:${AWS::Region}:${AWS::AccountId}:database/${GlueDatabaseName}
+                  - !Sub arn:aws:glue:${AWS::Region}:${AWS::AccountId}:table/${GlueDatabaseName}/*
+              - Sid: S3Write
+                Effect: Allow
+                Action:
+                  - s3:ListBucket
+                  - s3:GetBucketLocation
+                  - s3:PutObject
+                  - s3:GetObject
+                  - s3:DeleteObject
+                Resource:
+                  - !Sub arn:aws:s3:::${S3BucketName}
+                  - !Sub arn:aws:s3:::${S3BucketName}/*
+              - Sid: LogsAndMetrics
+                Effect: Allow
+                Action:
+                  - cloudwatch:PutMetricData
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: "*"
+  GlueDatabase:
+    Type: AWS::Glue::Database
+    Properties:
+      CatalogId: !Sub ${AWS::AccountId}
+      DatabaseInput:
+        Name: !Ref GlueDatabaseName
+        Description: Zero-ETL target database
+        LocationUri: !Sub s3://${S3BucketName}/
