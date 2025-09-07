@@ -28,3 +28,4 @@ cdk.out
 .terraform
 .terraform.lock.hcl
 terraform.tfvars
+58_zeroetl_dynamodb_s3/scripts
