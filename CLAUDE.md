@@ -2,75 +2,123 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Repository Structure
+## プロジェクト概要
 
-This is a Japanese blog code repository containing AWS cloud technology tutorials and examples. Each numbered directory (e.g., `03_`, `34_`, `56_`) represents a complete, self-contained project for a specific blog post.
+このリポジトリは、AWS クラウド技術のチュートリアルとサンプルコードを提供する日本語技術ブログのコードベースです。各番号付きディレクトリは、個別のブログ記事に対応する完結したプロジェクトを表しています。
 
-## Common Development Commands
+### 主要技術スタック
 
-### CDK Projects (in `/cdk/` subdirectories)
+- **AWS CDK**: TypeScript でインフラストラクチャをコード管理
+- **AWS Lambda**: Python/Node.js によるサーバーレス処理
+- **AWS Glue**: ETL パイプラインとデータ変換
+- **CloudFormation**: インフラストラクチャテンプレート
+
+## リポジトリ構造
+
+各プロジェクトは以下の構造を持ちます：
+
+```
+<project_directory>/
+├── cdk/                   # CDK プロジェクト
+│   ├── lib/               # スタックとコンストラクト
+│   ├── parameter.ts       # 環境設定（重要）
+│   └── bin/app.ts         # エントリーポイント
+├── resources/lambda/      # Lambda 関数コード
+└── README.md              # プロジェクト説明
+```
+
+## よく使うコマンド
+
+### AWS CDK
+
 ```bash
-npm install                                                    # Install dependencies
-npx cdk synth --profile <AWS_PROFILE>                        # Synthesize CloudFormation
-npx cdk deploy --all --require-approval never --profile <AWS_PROFILE>  # Deploy all stacks
-npx cdk deploy <STACK_NAME> --profile <AWS_PROFILE>          # Deploy specific stack
-npx jest                                                      # Run unit tests
+cd cdk
+npm install
+npx cdk synth --profile <AWS_PROFILE>
+npx cdk deploy --all --require-approval never --profile <AWS_PROFILE>
+npx cdk destroy --profile <AWS_PROFILE>
 ```
 
-### Serverless Framework Projects
+### CloudFormation
+
 ```bash
-npm install -g serverless                                     # Install globally (if needed)
-sls plugin install -n serverless-python-requirements         # Install Python plugin
-AWS_SDK_LOAD_CONFIG=true AWS_PROFILE=<PROFILE> sls deploy   # Deploy with profile
-sls logs -f <function-name> -t                              # Tail function logs
+aws cloudformation create-stack \
+  --stack-name <STACK_NAME> \
+  --template-body file://template.yaml \
+  --capabilities CAPABILITY_IAM \
+  --profile <AWS_PROFILE>
+
+aws cloudformation delete-stack \
+  --stack-name <STACK_NAME> \
+  --profile <AWS_PROFILE>
 ```
 
-### Python Projects
+## Linter & Formatter
+
+`.claude/hooks/format-all.sh` により、ファイル編集時に自動フォーマット & lint が実行されます：
+
+- **Python**: Ruff (format + check)
+- **TypeScript/JS**: Biome
+- **SQL**: SQLFluff
+- **Shell**: shfmt + shellcheck
+- **YAML**: Prettier + yamllint
+- **Markdown**: Prettier + markdownlint
+
+手動実行：
+
 ```bash
-pip install -r requirements.txt  # Standard pip installation
-poetry install                   # For poetry-managed projects
+# TypeScript/JavaScript
+npx @biomejs/biome check --write .
+
+# Python
+ruff format . && ruff check --fix .
 ```
 
-## Architecture Patterns
+## コーディング規約
 
-### CDK Project Structure
+- **言語**: コメント・ドキュメントは日本語、コード・変数名は英語
+- **命名規則**:
+  - Python: スネークケース (`user_id`, `calculate_total`)
+  - TypeScript: キャメルケース (`userId`, `calculateTotal`)
+  - CDK リソース: パスカルケース (`MyLambdaFunction`)
+- **品質管理**: lint エラーは必ず修正すること
+
+## 重要な設定ファイル
+
+### parameter.ts
+
+CDK プロジェクトの環境設定を一元管理：
+
+```typescript
+export const devParameter: AppParameter = {
+  envName: "dev",
+  projectName: "my-project",
+  env: {},
+};
 ```
-cdk/
-├── lib/
-│   ├── constructs/          # Reusable CDK constructs
-│   └── stack/              # Main stack definitions
-├── parameter.ts            # Environment configuration (critical file)
-├── package.json           # CDK dependencies
-└── test/                  # Unit tests
+
+## Git 運用
+
+### コミットメッセージ
+
+```bash
+# 形式: <type>: <subject>
+feat: Lambda 関数に S3 イベントトリガーを追加
+fix: CDK デプロイ時のタイムアウトエラーを修正
+docs: README にデプロイ手順を追加
 ```
 
-### Lambda Function Structure
-```
-resources/
-├── lambda/
-│   ├── handler.py         # Main Lambda handler
-│   └── lib/              # Shared utilities and helpers
-└── requirements.txt      # Python dependencies
-```
+## 注意事項
 
-## Key Configuration Files
+### セキュリティ
 
-- **`parameter.ts`** - Contains environment variables, account IDs, and project configuration for CDK projects
-- **`serverless.yml`** - Serverless Framework configuration with service definitions
-- **CloudFormation YAML files** - Infrastructure templates for direct CloudFormation deployment
+- **認証情報**: 環境変数または AWS Secrets Manager から取得（ハードコード禁止）
+- **IAM ポリシー**: 最小権限の原則に従う
+- **S3 バケット**: 適切な暗号化とアクセス制御を設定
 
-## AWS Services and Patterns
+### デプロイ前のチェックリスト
 
-This codebase primarily demonstrates:
-- **Data Engineering**: ETL pipelines with Glue, DMS migrations, data lake architectures
-- **Serverless Applications**: Lambda functions with various triggers (S3, EventBridge, API Gateway)
-- **Infrastructure as Code**: CDK constructs and CloudFormation templates
-- **Multi-Account Deployments**: Cross-account IAM roles and resource access patterns
-
-## Development Notes
-
-- Each project directory is self-contained and can be deployed independently
-- Documentation is primarily in Japanese, but code comments and variable names are in English
-- Projects include production-ready IAM policies and security configurations
-- Common pattern: infrastructure code + application code + comprehensive tests
-- AWS profiles are used extensively - check `parameter.ts` or README files for required profile names
+- [ ] AWS プロファイル設定を確認
+- [ ] `parameter.ts` の設定値を確認
+- [ ] CDK diff で変更内容を確認
+- [ ] 機密情報がハードコードされていない

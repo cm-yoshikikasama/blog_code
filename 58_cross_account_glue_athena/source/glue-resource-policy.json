@@ -1,0 +1,17 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::<TARGET_ACCOUNT_ID>:role/cm-kasama-cross-account-dev-sfn-execution-role"
+      },
+      "Action": ["glue:GetDatabase", "glue:GetTable", "glue:GetPartitions"],
+      "Resource": [
+        "arn:aws:glue:ap-northeast-1:<SOURCE_ACCOUNT_ID>:catalog",
+        "arn:aws:glue:ap-northeast-1:<SOURCE_ACCOUNT_ID>:database/*",
+        "arn:aws:glue:ap-northeast-1:<SOURCE_ACCOUNT_ID>:table/*/*"
+      ]
+    }
+  ]
+}

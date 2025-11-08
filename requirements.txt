@@ -1,7 +1,0 @@
-numpy
-pandas
-pytz
-six
-tzdata
-cfn-lint
-pyarrow

@@ -1,0 +1,11 @@
+id,product,amount,date
+1,ProductA,1000,2025-01-01
+2,ProductB,2000,2025-01-02
+3,ProductC,1500,2025-01-03
+4,ProductA,1200,2025-01-04
+5,ProductD,3000,2025-01-05
+6,ProductB,1800,2025-01-06
+7,ProductC,2200,2025-01-07
+8,ProductE,2500,2025-01-08
+9,ProductA,1100,2025-01-09
+10,ProductD,2800,2025-01-10

@@ -1,0 +1,50 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "S3 Bucket for data storage"
+
+Parameters:
+  ProjectName:
+    Type: String
+    Default: cm-kasama-cross-account
+    Description: Project name for resource naming
+  EnvName:
+    Type: String
+    Default: dev
+    Description: Environment name (dev, prod, etc.)
+  TargetAccountId:
+    Type: String
+    Description: Target Account ID for cross-account access
+
+Resources:
+  # S3 Bucket for data
+  DataBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "${ProjectName}-${EnvName}-data"
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+
+  # Bucket Policy to allow Target Account access
+  DataBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref DataBucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: AllowTargetAccountRead
+            Effect: Allow
+            Principal:
+              AWS: !Sub "arn:aws:iam::${TargetAccountId}:role/${ProjectName}-${EnvName}-sfn-execution-role"
+            Action:
+              - s3:GetObject
+              - s3:ListBucket
+            Resource:
+              - !GetAtt DataBucket.Arn
+              - !Sub "${DataBucket.Arn}/*"

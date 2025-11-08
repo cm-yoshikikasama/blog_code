@@ -1,6 +1,5 @@
 {
   "env": {
-    "TF_LOG": "WARN",
     "CLAUDE_CODE_ENABLE_TELEMETRY": "0",
     "BASH_DEFAULT_TIMEOUT_MS": "120000"
   },
@@ -19,20 +18,18 @@
       "Bash(ls ./)",
       "Bash(ls ./*)",
       "Bash(cat ./*)",
-      "Bash(grep * ./)",
-      "Bash(rg * ./)",
       "Bash(find ./)",
       "Bash(tree ./)",
       "Bash(head ./*)",
       "Bash(tail ./*)",
-      "Bash(echo *)",
+      "Bash(echo:*)",
       "Bash(pwd)",
       "Bash(cd ./)",
       "Bash(mkdir ./)",
       "Bash(cp ./* ./)",
       "Bash(mv ./* ./)",
       "Bash(touch ./)",
-      "Bash(which *)",
+      "Bash(which:*)",
       "Bash(env)",
       "Bash(whoami)",
       "Bash(date)",
@@ -44,23 +41,11 @@
       "Bash(git show HEAD)",
       "Read(./**)",
       "Edit(./**)",
-      "Edit(!.git/**)",
-      "Edit(!.terraform/**)",
-      "Edit(!terraform.tfstate*)",
-      "Edit(!*.tfvars)",
       "Grep(./**)",
       "Glob(./**)",
       "LS(./**)",
       "Write(./**)",
-      "Write(!.git/**)",
-      "Write(!.terraform/**)",
-      "Write(!terraform.tfstate*)",
-      "Write(!*.tfvars)",
       "MultiEdit(./**)",
-      "MultiEdit(!.git/**)",
-      "MultiEdit(!.terraform/**)",
-      "MultiEdit(!terraform.tfstate*)",
-      "MultiEdit(!*.tfvars)",
       "TodoRead(**)",
       "TodoWrite(**)",
       "Task(**)",
@@ -72,40 +57,32 @@
       "mcp__context7__resolve-library-id"
     ],
     "deny": [
-      "Bash(terraform init*)",
-      "Bash(terraform plan*)",
-      "Bash(terraform apply*)",
-      "Bash(terraform destroy*)",
-      "Bash(terraform import*)",
-      "Bash(terraform state*)",
-      "Bash(terraform refresh*)",
-      "Bash(terraform output*)",
-      "Bash(terraform workspace*)",
-      "Bash(git add*)",
-      "Bash(git commit*)",
-      "Bash(git push*)",
-      "Bash(git pull*)",
-      "Bash(git merge*)",
-      "Bash(git rebase*)",
-      "Bash(git reset*)",
-      "Bash(git checkout*)",
-      "Bash(git switch*)",
-      "Bash(rm -rf*)",
+      "Bash(terraform init:*)",
+      "Bash(terraform plan:*)",
+      "Bash(terraform apply:*)",
+      "Bash(terraform destroy:*)",
+      "Bash(terraform import:*)",
+      "Bash(terraform state:*)",
+      "Bash(terraform refresh:*)",
+      "Bash(terraform output:*)",
+      "Bash(terraform workspace:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git pull:*)",
+      "Bash(git merge:*)",
+      "Bash(git rebase:*)",
+      "Bash(git reset:*)",
+      "Bash(git checkout:*)",
+      "Bash(git switch:*)",
+      "Bash(rm -rf:*)",
       "Bash(rm /*)",
-      "Bash(cp /* *)",
-      "Bash(cp * /*)",
-      "Bash(mv /* *)",
-      "Bash(mv * /*)",
-      "Bash(mkdir /*)",
-      "Bash(sudo*)",
+      "Bash(sudo:*)",
       "Edit(.terraform/**)",
       "Write(.terraform/**)"
     ]
   },
-  "enabledMcpjsonServers": [
-    "terraform",
-    "awslabs.aws-documentation-mcp-server"
-  ],
+  "enabledMcpjsonServers": ["terraform", "awslabs.aws-documentation-mcp-server"],
   "disabledMcpjsonServers": [],
   "hooks": {
     "Notification": [
@@ -126,6 +103,18 @@
           {
             "type": "command",
             "command": "afplay /System/Library/Sounds/Funk.aiff"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/format-all.sh",
+            "timeout": 30
           }
         ]
       }
