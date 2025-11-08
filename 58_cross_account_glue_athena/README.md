@@ -61,7 +61,7 @@ aws cloudformation create-stack \
 ### Step 3: Source Account - サンプルデータアップロード
 
 ```bash
-aws s3 cp sample-data/sales.csv s3://<PROJECT_NAME>-<ENV>-data/data/sales.csv \
+aws s3 cp sample-data/sales.csv s3://<SOURCE_BUCKET_NAME>/data/sales.csv \
   --profile <SOURCE_ACCOUNT_PROFILE>
 ```
 
@@ -109,7 +109,7 @@ aws glue delete-resource-policy --profile <SOURCE_ACCOUNT_PROFILE>
 # DROP DATABASE IF EXISTS cm_kasama_cross_account_db CASCADE;
 
 # 6. Source Account: S3 バケットとスタック削除
-aws s3 rb s3://<PROJECT_NAME>-<ENV>-data --force --profile <SOURCE_ACCOUNT_PROFILE>
+aws s3 rb s3://<SOURCE_BUCKET_NAME> --force --profile <SOURCE_ACCOUNT_PROFILE>
 
 aws cloudformation delete-stack \
   --stack-name <STACK_NAME> \
