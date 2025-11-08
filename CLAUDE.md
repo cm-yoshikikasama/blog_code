@@ -8,16 +8,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### 主要技術スタック
 
-- **AWS CDK**: TypeScript でインフラストラクチャをコード管理
-- **AWS Lambda**: Python/Node.js によるサーバーレス処理
-- **AWS Glue**: ETL パイプラインとデータ変換
-- **CloudFormation**: インフラストラクチャテンプレート
+- AWS CDK: TypeScript でインフラストラクチャをコード管理
+- AWS Lambda: Python/Node.js によるサーバーレス処理
+- AWS Glue: ETL パイプラインとデータ変換
+- CloudFormation: インフラストラクチャテンプレート
 
 ## リポジトリ構造
 
 各プロジェクトは以下の構造を持ちます：
 
-```
+```txt
 <project_directory>/
 ├── cdk/                   # CDK プロジェクト
 │   ├── lib/               # スタックとコンストラクト
@@ -57,12 +57,12 @@ aws cloudformation delete-stack \
 
 `.claude/hooks/format-all.sh` により、ファイル編集時に自動フォーマット & lint が実行されます：
 
-- **Python**: Ruff (format + check)
-- **TypeScript/JS**: Biome
-- **SQL**: SQLFluff
-- **Shell**: shfmt + shellcheck
-- **YAML**: Prettier + yamllint
-- **Markdown**: Prettier + markdownlint
+- Python: Ruff (format + check)
+- TypeScript/JS: Biome
+- SQL: SQLFluff
+- Shell: shfmt + shellcheck
+- YAML: Prettier + yamllint
+- Markdown: Prettier + markdownlint
 
 手動実行：
 
@@ -76,12 +76,25 @@ ruff format . && ruff check --fix .
 
 ## コーディング規約
 
-- **言語**: コメント・ドキュメントは日本語、コード・変数名は英語
-- **命名規則**:
+- 言語: コメント・ドキュメントは日本語、コード・変数名は英語
+- 命名規則:
   - Python: スネークケース (`user_id`, `calculate_total`)
   - TypeScript: キャメルケース (`userId`, `calculateTotal`)
   - CDK リソース: パスカルケース (`MyLambdaFunction`)
-- **品質管理**: lint エラーは必ず修正すること
+- 品質管理: lint エラーは必ず修正すること
+- Markdown 記法:
+  - 太字記法（アスタリスク2つで囲む形式）は使用しない
+  - ✓、✗ などの記号は使用しない
+  - 強調が必要な場合は文章構造や見出しで表現すること
+  - コードブロックには必ず言語指定を付ける（例: txt、bash、typescript など）
+  - URLは`<>`で括らない（素のURLをそのまま記載する）
+  - 見出しの粒度を揃える（`##`、`###`レベルを適切に使い分け、突然`####`などを使わない）
+
+## 編集ポリシー
+
+- 指示された内容のみを修正すること
+- 指示されていない箇所は、linterによる自動修正を除き、勝手に変更しない
+- 見出しや文章構造の変更は、明示的に指示された場合のみ実施する
 
 ## 重要な設定ファイル
 
@@ -97,24 +110,13 @@ export const devParameter: AppParameter = {
 };
 ```
 
-## Git 運用
-
-### コミットメッセージ
-
-```bash
-# 形式: <type>: <subject>
-feat: Lambda 関数に S3 イベントトリガーを追加
-fix: CDK デプロイ時のタイムアウトエラーを修正
-docs: README にデプロイ手順を追加
-```
-
 ## 注意事項
 
 ### セキュリティ
 
-- **認証情報**: 環境変数または AWS Secrets Manager から取得（ハードコード禁止）
-- **IAM ポリシー**: 最小権限の原則に従う
-- **S3 バケット**: 適切な暗号化とアクセス制御を設定
+- 認証情報: 環境変数または AWS Secrets Manager から取得（ハードコード禁止）
+- IAM ポリシー: 最小権限の原則に従う
+- S3 バケット: 適切な暗号化とアクセス制御を設定
 
 ### デプロイ前のチェックリスト
 
