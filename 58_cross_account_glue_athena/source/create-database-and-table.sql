@@ -1,7 +1,7 @@
 -- Create Glue Database
 CREATE DATABASE IF NOT EXISTS cm_kasama_cross_account_db
 COMMENT 'Database for cross-account access testing'
-LOCATION 's3://<PROJECT_NAME>-<ENV>-data/data/';
+LOCATION 's3://<SOURCE_BUCKET_NAME>/data/';
 
 -- Create Glue Table
 CREATE EXTERNAL TABLE IF NOT EXISTS cm_kasama_cross_account_db.sales (
@@ -13,7 +13,7 @@ CREATE EXTERNAL TABLE IF NOT EXISTS cm_kasama_cross_account_db.sales (
 ROW FORMAT DELIMITED
 FIELDS TERMINATED BY ','
 STORED AS TEXTFILE
-LOCATION 's3://<PROJECT_NAME>-<ENV>-data/data/'
+LOCATION 's3://<SOURCE_BUCKET_NAME>/data/'
 TBLPROPERTIES (
   'skip.header.line.count' = '1',
   'classification' = 'csv'
