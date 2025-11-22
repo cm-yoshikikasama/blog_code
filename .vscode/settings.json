@@ -1,0 +1,60 @@
+{
+  // ファイル監視の除外（メモリ・CPU使用量削減）
+  "files.watcherExclude": {
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/node_modules/*/**": true,
+    "**/cdk.out/**": true,
+    "**/dist/**": true,
+    "**/build/**": true,
+    "**/.vscode/**": true,
+    "**/coverage/**": true,
+    "**/__generated__/**": true,
+    "**/tmp/**": true,
+    "**/.cache/**": true,
+    "**/__pycache__/**": true,
+    "**/.pytest_cache/**": true,
+    "**/.ruff_cache/**": true,
+    "**/.venv/**": true,
+    "**/venv/**": true,
+    "**/.mypy_cache/**": true
+  },
+
+  // 検索対象から除外（検索パフォーマンス向上）
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/bower_components": true,
+    "**/*.code-search": true,
+    "**/dist": true,
+    "**/build": true,
+    "**/cdk.out": true,
+    "**/coverage": true,
+    "**/__pycache__": true,
+    "**/.pytest_cache": true,
+    "**/.ruff_cache": true,
+    "**/.venv": true,
+    "**/venv": true,
+    "**/.mypy_cache": true
+  },
+
+  // TypeScript最適化
+  "typescript.tsserver.log": "off",
+  "typescript.disableAutomaticTypeAcquisition": true,
+
+  // UI軽量化
+  "editor.minimap.enabled": false,
+  "breadcrumbs.enabled": false,
+  "editor.codeLens": false,
+
+  // 自動保存・フォーマット
+  "files.autoSave": "onFocusChange",
+  "files.autoSaveDelay": 1000,
+  "editor.formatOnSave": true,
+  "editor.formatOnType": false,
+  "editor.formatOnPaste": false,
+
+  // Git設定の最適化
+  "git.autorefresh": false,
+  "git.autofetch": false,
+  "git.decorations.enabled": false
+}
