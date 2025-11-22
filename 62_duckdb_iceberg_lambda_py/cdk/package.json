@@ -1,0 +1,20 @@
+{
+  "name": "cm-kasama-iceberg-duckdb-lambda",
+  "version": "1.0.0",
+  "description": "Lambda + DuckDB Iceberg data copy",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "cdk": "cdk"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "aws-cdk": "^2.170.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@aws-cdk/aws-lambda-python-alpha": "^2.170.0-alpha.0",
+    "aws-cdk-lib": "^2.170.0",
+    "constructs": "^10.0.0"
+  }
+}
