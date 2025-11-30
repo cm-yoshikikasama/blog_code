@@ -191,3 +191,5 @@ WHERE date = DATE '2025-11-19';
 cd cdk
 npx cdk destroy --all --profile <AWS_PROFILE>
 ```
+
+hoge
