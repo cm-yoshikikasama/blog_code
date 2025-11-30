@@ -8,7 +8,7 @@ export interface AppParameter {
 
 export const devParameter: AppParameter = {
   envName: 'dev',
-  projectName: 'cm-kasama-iceberg-duckdb-lambda',
+  projectName: 'my-iceberg-duckdb-lambda',
   env: {
     account: process.env.CDK_DEFAULT_ACCOUNT,
     region: process.env.CDK_DEFAULT_REGION,

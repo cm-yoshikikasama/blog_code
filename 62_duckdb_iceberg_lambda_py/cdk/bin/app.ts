@@ -7,6 +7,6 @@ const app = new cdk.App();
 
 new MainStack(app, `${devParameter.projectName}-stack`, {
   env: devParameter.env,
-  description: 'Cross-account Iceberg data copy using Glue Python Shell and Step Functions',
+  description: 'Iceberg data copy using Lambda and DuckDB',
   parameter: devParameter,
 });
