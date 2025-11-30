@@ -54,7 +54,7 @@
   "editor.formatOnPaste": false,
 
   // Git設定の最適化
-  "git.autorefresh": false,
+  "git.autorefresh": true,
   "git.autofetch": false,
   "git.decorations.enabled": false
 }
