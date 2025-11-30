@@ -43,7 +43,13 @@ def lambda_handler(event, _context):
         )
         print(f"Reading: {source_path}")
 
-        query = f"SELECT * FROM read_csv_auto('{source_path}')"
+        # CSVを読み取り、updated_atカラムを追加
+        query = f"""
+            SELECT
+                *,
+                CURRENT_TIMESTAMP AS updated_at
+            FROM read_csv_auto('{source_path}')
+        """
         df = con.execute(query).fetch_arrow_table()
         row_count = len(df)
         print(f"Rows read: {row_count:,}")
@@ -101,7 +107,4 @@ def lambda_handler(event, _context):
     except Exception as e:
         error_message = f"Lambda failed: {str(e)}"
         print(error_message)
-        return {
-            "statusCode": 500,
-            "body": json.dumps({"error": error_message}),
-        }
+        raise

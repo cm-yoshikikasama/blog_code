@@ -70,20 +70,11 @@ export class MainStack extends cdk.Stack {
       ],
     });
 
-    // Glue Catalog書き込み権限
+    // Glue Catalog書き込み権限（最小権限）
     lambdaRole.addToPolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
-        actions: [
-          'glue:GetDatabase',
-          'glue:GetTable',
-          'glue:CreateTable',
-          'glue:UpdateTable',
-          'glue:BatchCreatePartition',
-          'glue:BatchUpdatePartition',
-          'glue:GetPartition',
-          'glue:GetPartitions',
-        ],
+        actions: ['glue:GetCatalog', 'glue:GetDatabase', 'glue:GetTable', 'glue:UpdateTable'],
         resources: [
           `arn:aws:glue:${this.region}:${this.account}:catalog`,
           `arn:aws:glue:${this.region}:${this.account}:database/${targetDatabase}`,

@@ -116,18 +116,6 @@ npx cdk deploy --all --require-approval never --profile <AWS_PROFILE>
 - Lambda 関数
 - IAM ロール
 
-注意: CDK デプロイによってサンプル CSV データは自動的に S3 にアップロードされます。手動でアップロードする場合は、以下の手順を実行してください。
-
-#### AWS CLI でサンプルデータを手動アップロード
-
-```bash
-# プロジェクトルートから実行
-aws s3 sync resources/data/ s3://<PROJECT_NAME>-<ENV_NAME>-source/data/sales_data/ --profile <AWS_PROFILE>
-
-# アップロード確認
-aws s3 ls s3://<PROJECT_NAME>-<ENV_NAME>-source/data/sales_data/ --profile <AWS_PROFILE>
-```
-
 ### 3. Glue Database と Iceberg テーブル作成
 
 `sql/create_iceberg_tables.sql` を編集して、プレースホルダーを実際の値に置き換えてください。
