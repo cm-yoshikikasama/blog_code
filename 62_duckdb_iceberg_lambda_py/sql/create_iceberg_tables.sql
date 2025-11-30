@@ -17,7 +17,7 @@ CREATE TABLE <DATABASE_NAME>.sales_data_iceberg (
     sales_amount DOUBLE,
     quantity BIGINT,
     region STRING,
-    created_at TIMESTAMP
+    updated_at TIMESTAMP
 )
 LOCATION 's3://<PROJECT_NAME>-<ENV_NAME>-target/iceberg/sales_data_iceberg/'
 TBLPROPERTIES (
