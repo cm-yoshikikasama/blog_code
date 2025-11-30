@@ -1,5 +1,5 @@
 {
-  "name": "cm-kasama-iceberg-duckdb-lambda",
+  "name": "iceberg-duckdb-lambda",
   "version": "1.0.0",
   "description": "Lambda + DuckDB Iceberg data copy",
   "scripts": {

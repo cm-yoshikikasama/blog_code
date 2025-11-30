@@ -1,18 +1,21 @@
 import json
+import os
 
 import boto3
 import duckdb
 
 
-def lambda_handler(event, context):
+def lambda_handler(event, _context):
     """
     Lambda handler for cross-account Iceberg data copy using DuckDB
     """
-    # パラメータ取得
-    source_bucket = event["SOURCE_BUCKET"]
-    source_prefix = event["SOURCE_PREFIX"]
-    target_database = event["TARGET_DATABASE"]
-    target_table = event["TARGET_TABLE"]
+    # パラメータ取得（環境変数から）
+    source_bucket = os.environ["SOURCE_BUCKET"]
+    source_prefix = os.environ["SOURCE_PREFIX"]
+    target_database = os.environ["TARGET_DATABASE"]
+    target_table = os.environ["TARGET_TABLE"]
+
+    # パラメータ取得（実行時入力から）
     target_date = event["TARGET_DATE"]
 
     print("Lambda started")
@@ -65,8 +68,16 @@ def lambda_handler(event, context):
         )
         print(f"Glue カタログ接続完了: Account={account_id}")
 
-        # Iceberg テーブルに insert
+        # Iceberg テーブルに対する処理
         table_identifier = f"glue_catalog.{target_database}.{target_table}"
+
+        # 既存のデータを削除（重複防止）
+        delete_query = f"DELETE FROM {table_identifier} WHERE date = '{target_date}'"
+        print(f"Deleting existing data for date={target_date}...")
+        con.execute(delete_query)
+        print("DELETE完了")
+
+        # データを insert
         print(f"Inserting into {table_identifier}...")
         con.execute(f"INSERT INTO {table_identifier} SELECT * FROM df")
         print("INSERT完了")

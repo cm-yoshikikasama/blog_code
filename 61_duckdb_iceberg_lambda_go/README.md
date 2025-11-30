@@ -122,3 +122,5 @@ aws cloudformation delete-stack \
   --stack-name cm-kasama-duckdb-iceberg-source-bucket \
   --profile <SOURCE_ACCOUNT_PROFILE>
 ```
+
+https://zenn.dev/isawa/articles/a721641613f013
