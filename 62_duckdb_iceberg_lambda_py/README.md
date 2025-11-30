@@ -13,7 +13,8 @@ Lambda Function（手動実行）
   └─ DuckDB 1.4.2 + Iceberg 拡張（Lambda Layer）
      ├─ S3 から CSV 読み取り
      ├─ AWS Glue カタログに接続
-     └─ Iceberg テーブルに直接 insert
+     ├─ 既存データを delete（重複防止）
+     └─ Iceberg テーブルに insert
 ```
 
 ## 特徴
@@ -21,7 +22,6 @@ Lambda Function（手動実行）
 - Lambda Layer による DuckDB のシンプルなデプロイ
 - DuckDB の Iceberg 拡張による Iceberg テーブルへの直接書き込み
 - CDK による S3 バケットとサンプルデータの自動デプロイ
-- 中間ストレージ不要のシンプルな構成
 - DuckDB だけで完結する高速な ETL 処理
 - サーバーレスで低コスト
 
@@ -41,7 +41,7 @@ Lambda Function（手動実行）
 ## ディレクトリ構造
 
 ```txt
-62_iceberg_duckdb_lambda/
+62_duckdb_iceberg_lambda_py/
 ├── cdk/
 │   ├── bin/
 │   │   └── app.ts              # CDK エントリーポイント
@@ -71,13 +71,31 @@ Lambda Function（手動実行）
 2. Node.js と npm のインストール
 3. AWS CDK のインストール（グローバルまたはローカル）
 
-注意: `cdk/lib/parameter.ts` の `projectName` を設定してください。
-この値は S3 バケット名、IAM ロール名、データベース名などの
-プレフィックスとして使用されます。
-
 ## デプロイ手順
 
-### 1. CDK デプロイ
+### 1. プロジェクト設定
+
+デプロイ前に `cdk/lib/parameter.ts` を編集して、`projectName` を変更してください。
+
+```typescript
+export const devParameter: AppParameter = {
+  envName: "dev",
+  projectName: "my-iceberg-duckdb-lambda", // ← ここを変更
+  env: {
+    account: process.env.CDK_DEFAULT_ACCOUNT,
+    region: process.env.CDK_DEFAULT_REGION,
+  },
+};
+```
+
+この値は以下のリソース名のプレフィックスとして使用されます：
+
+- S3 バケット名: `<PROJECT_NAME>-<ENV_NAME>-source`, `<PROJECT_NAME>-<ENV_NAME>-target`
+- Lambda 関数名: `<PROJECT_NAME>-<ENV_NAME>-function`
+- IAM ロール名: `<PROJECT_NAME>-<ENV_NAME>-lambda-role`
+- Glue Database 名: `<PROJECT_NAME の - を _ に置換>_<ENV_NAME>`
+
+### 2. CDK デプロイ
 
 ```bash
 cd cdk
@@ -98,9 +116,33 @@ npx cdk deploy --all --require-approval never --profile <AWS_PROFILE>
 - Lambda 関数
 - IAM ロール
 
-### 2. Glue Database と Iceberg テーブル作成
+注意: CDK デプロイによってサンプル CSV データは自動的に S3 にアップロードされます。手動でアップロードする場合は、以下の手順を実行してください。
 
-Athena で `sql/create_iceberg_tables.sql` を実行してください。
+#### AWS CLI でサンプルデータを手動アップロード
+
+```bash
+# プロジェクトルートから実行
+aws s3 sync resources/data/ s3://<PROJECT_NAME>-<ENV_NAME>-source/data/sales_data/ --profile <AWS_PROFILE>
+
+# アップロード確認
+aws s3 ls s3://<PROJECT_NAME>-<ENV_NAME>-source/data/sales_data/ --profile <AWS_PROFILE>
+```
+
+### 3. Glue Database と Iceberg テーブル作成
+
+`sql/create_iceberg_tables.sql` を編集して、プレースホルダーを実際の値に置き換えてください。
+
+```sql
+-- 修正例
+CREATE DATABASE IF NOT EXISTS my_iceberg_duckdb_lambda_dev
+
+CREATE TABLE my_iceberg_duckdb_lambda_dev.sales_data_iceberg (
+  ...
+)
+LOCATION 's3://my-iceberg-duckdb-lambda-dev-target/iceberg/sales_data_iceberg/'
+```
+
+修正後、Athena でこのファイルの内容を実行してください。
 
 このファイルには以下が含まれています：
 
@@ -115,7 +157,6 @@ Athena で `sql/create_iceberg_tables.sql` を実行してください。
 
 ```json
 {
-  "SOURCE_BUCKET": "<PROJECT_NAME>-<ENV_NAME>-source",
   "TARGET_DATE": "2025-11-19"
 }
 ```
@@ -132,12 +173,14 @@ Athena で `sql/create_iceberg_tables.sql` を実行してください。
 
 #### Athena でデータ確認
 
+注意: `<DATABASE_NAME>` を実際のデータベース名（例: `my_iceberg_duckdb_lambda_dev`）に置き換えてください。
+
 ```sql
-SELECT * FROM cm_kasama_iceberg_duckdb_lambda_dev.sales_data_iceberg
+SELECT * FROM <DATABASE_NAME>.sales_data_iceberg
 WHERE date = DATE '2025-11-19'
 LIMIT 10;
 
-SELECT COUNT(*) FROM cm_kasama_iceberg_duckdb_lambda_dev.sales_data_iceberg
+SELECT COUNT(*) FROM <DATABASE_NAME>.sales_data_iceberg
 WHERE date = DATE '2025-11-19';
 ```
 
