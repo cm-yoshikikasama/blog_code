@@ -1,0 +1,109 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Prerequisites for Salesforce Zero-ETL Integration
+
+Parameters:
+  ProjectName:
+    Type: String
+    Default: my-sf-zeroetl
+    Description: Project name prefix
+  EnvName:
+    Type: String
+    Default: dev
+    Description: Environment name
+
+Resources:
+  # ========================================
+  # S3 Data Lake Bucket
+  # ========================================
+  DataLakeBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Delete
+    Properties:
+      BucketName: !Sub ${ProjectName}-${EnvName}-datalake
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+
+  # ========================================
+  # Secrets Manager (for OAuth token storage)
+  # ========================================
+  SalesforceOAuthSecret:
+    Type: AWS::SecretsManager::Secret
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Description: Stores OAuth tokens for Salesforce connection (auto-populated by AWS Glue)
+      SecretString: "{}"
+
+  # ========================================
+  # Source IAM Role (for Salesforce Connection)
+  # ========================================
+  ZeroETLSourceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub ${ProjectName}-${EnvName}-source-role
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: glue.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: GlueConnectionAccess
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - glue:GetConnection
+                  - glue:GetConnections
+                  - glue:ListConnectionTypes
+                  - glue:DescribeConnectionType
+                  - glue:RefreshOAuth2Tokens
+                  - glue:ListEntities
+                  - glue:DescribeEntity
+                Resource: "*"
+        - PolicyName: SecretsManagerAccess
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - secretsmanager:DescribeSecret
+                  - secretsmanager:GetSecretValue
+                  - secretsmanager:PutSecretValue
+                Resource: "*"
+
+  # ========================================
+  # Glue Database (for Zero-ETL target)
+  # ========================================
+  GlueDatabase:
+    Type: AWS::Glue::Database
+    Properties:
+      CatalogId: !Ref AWS::AccountId
+      DatabaseInput:
+        Name: !Sub
+          - ${ProjectNameUnderscore}_${EnvName}
+          - ProjectNameUnderscore: !Join ["_", !Split ["-", !Ref ProjectName]]
+        Description: Zero-ETL target database with Iceberg tables
+        LocationUri: !Sub s3://${DataLakeBucket}/data/
+
+Outputs:
+  DataLakeBucketName:
+    Value: !Ref DataLakeBucket
+  SourceRoleArn:
+    Value: !GetAtt ZeroETLSourceRole.Arn
+  GlueDatabaseName:
+    Value: !Sub
+      - ${ProjectNameUnderscore}_${EnvName}
+      - ProjectNameUnderscore: !Join ["_", !Split ["-", !Ref ProjectName]]
+  SalesforceOAuthSecretName:
+    Value: !Ref SalesforceOAuthSecret
+    Description: Select this secret in Glue Console when creating Salesforce connection

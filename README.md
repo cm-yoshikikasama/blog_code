@@ -1,30 +1,30 @@
 # Blog_Code
 
-ブログで紹介したソースコードを掲載するリポジトリです。
+Repository for publishing source code introduced in blog posts.
 
-## 特徴
+## Features
 
-- AWS CDK: TypeScript によるインフラストラクチャコード
-- サーバーレス: Lambda, Glue, Step Functions などの実装例
-- 自動フォーマット & Lint: Claude Code hooks により編集時に自動実行
+- AWS CDK: Infrastructure code in TypeScript
+- Serverless: Implementation examples for Lambda, Glue, Step Functions, etc.
+- Auto format and lint: Automatically executed on edit via Claude Code hooks
 
-## 開発環境
+## Development Environment
 
-### 自動フォーマット & Lint（Claude Code）
+### Auto Format and Lint (Claude Code)
 
-このリポジトリは Claude Code の hooks 機能により、ファイル編集時に自動的にフォーマット & lint が実行されます。
+This repository automatically executes format and lint on file edit via Claude Code hooks feature.
 
-対応ファイル:
+Supported files:
 
-- Python (.py): Ruff でフォーマット + lint
-- TypeScript/JavaScript (.ts, .js, .tsx, .jsx): Biome でフォーマット + lint
+- Python (.py): Format + lint with Ruff
+- TypeScript/JavaScript (.ts, .js, .tsx, .jsx): Format + lint with Biome
 - Markdown (.md): Prettier + markdownlint
 - YAML (.yml, .yaml): Prettier + yamllint
 - Shell Script (.sh): shfmt + shellcheck
 - SQL (.sql): SQLFluff
 - Go (.go): gofmt + golangci-lint
 
-### 必要なツール
+### Required Tools
 
 ```bash
 # Python
@@ -39,11 +39,11 @@ brew install yamllint
 # SQL
 brew install sqlfluff
 
-# Go（使用する場合）
+# Go (if used)
 brew install go golangci-lint
 
 # TypeScript/JS/Markdown
-# npx で自動ダウンロードされるためインストール不要
+# No installation required - auto downloaded via npx
 ```
 
-詳細は [CLAUDE.md](./CLAUDE.md) を参照してください。
+See [CLAUDE.md](./CLAUDE.md) for details.

@@ -1,0 +1,39 @@
+# CDK
+cdk/node_modules/
+cdk/.cdk.staging/
+cdk/cdk.out/
+cdk/*.js
+cdk/*.d.ts
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Secrets (重要: 絶対にコミットしない)
+*secret*
+*credentials*
+*.pem
+*.key
+
+# Temporary files
+tmp/
+temp/
+*.tmp
