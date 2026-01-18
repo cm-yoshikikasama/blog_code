@@ -1,0 +1,19 @@
+{
+  "name": "salesforce-glue-zeroetl",
+  "version": "1.0.0",
+  "description": "Salesforce to S3 Zero ETL integration with AWS Glue",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "cdk": "cdk"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "aws-cdk": "^2.170.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "^2.170.0",
+    "constructs": "^10.0.0"
+  }
+}
