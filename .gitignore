@@ -30,4 +30,4 @@ cdk.out
 terraform.tfvars
 BLOG_TEMPLATE.md
 memo.md
-.claude/plans/
+.claude/
