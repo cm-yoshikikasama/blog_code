@@ -31,3 +31,4 @@ terraform.tfvars
 BLOG_TEMPLATE.md
 memo.md
 .claude/
+.tmp/
