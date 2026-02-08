@@ -1,0 +1,20 @@
+{
+  "name": "dynamodb-glue-zeroetl-cross-account",
+  "version": "1.0.0",
+  "description": "DynamoDB to SageMaker Lakehouse Zero-ETL integration (Cross-Account)",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "cdk": "cdk"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "aws-cdk": "^2.170.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "^2.170.0",
+    "constructs": "^10.0.0"
+  }
+}
