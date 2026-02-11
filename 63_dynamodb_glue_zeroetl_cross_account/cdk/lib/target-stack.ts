@@ -25,6 +25,8 @@ export class TargetStack extends cdk.Stack {
       encryption: s3.BucketEncryption.S3_MANAGED,
       blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
+      // Adds a Lambda-backed custom resource that empties the bucket on stack deletion,
+      // so cdk destroy works even when Iceberg data exists in the bucket.
       autoDeleteObjects: true,
     });
 

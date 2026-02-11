@@ -3,7 +3,6 @@ import type { Environment } from 'aws-cdk-lib';
 export interface AppParameter {
   envName: string;
   projectName: string;
-  tableName: string;
   refreshIntervalMinutes: number;
   sourceEnv: Required<Environment>;
   targetEnv: Required<Environment>;
@@ -12,7 +11,6 @@ export interface AppParameter {
 export const devParameter: AppParameter = {
   envName: 'dev',
   projectName: 'cm-kasama-dynamodb-zeroetl',
-  tableName: 'Orders',
   refreshIntervalMinutes: 15,
   sourceEnv: {
     account: '111111111111', // TODO: Replace with Source Account ID
