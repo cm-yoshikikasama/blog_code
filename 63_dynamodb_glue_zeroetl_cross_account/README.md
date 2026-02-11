@@ -179,7 +179,7 @@ After deployment, verify the integration status:
 
 Insert test items into the DynamoDB table.
 These items include Map with mixed value types (string/number)
-and Map with List values to verify type preservation in Iceberg:
+to verify type preservation in Iceberg:
 
 ```bash
 aws dynamodb batch-write-item \
@@ -194,12 +194,6 @@ aws dynamodb batch-write-item \
             "customer_name":{"S":"Tanaka"},
             "attributes":{"M":{
               "color":{"S":"red"},"size":{"S":"L"},"weight":{"N":"2.5"}
-            }},
-            "category_scores":{"M":{
-              "AFFILIATION":{"L":[{"N":"3"}]},
-              "STUDENT":{"L":[{"N":"2"}]},
-              "WORK":{"L":[{"N":"2"}]},
-              "PURPOSES":{"L":[{"N":"1"},{"N":"2"},{"N":"3"}]}
             }}
           }
         }
@@ -213,12 +207,6 @@ aws dynamodb batch-write-item \
             "customer_name":{"S":"Suzuki"},
             "attributes":{"M":{
               "color":{"S":"blue"},"size":{"S":"M"},"weight":{"N":"1.8"}
-            }},
-            "category_scores":{"M":{
-              "AFFILIATION":{"L":[{"N":"1"},{"N":"4"}]},
-              "STUDENT":{"L":[{"N":"5"}]},
-              "WORK":{"L":[{"N":"3"},{"N":"1"}]},
-              "PURPOSES":{"L":[{"N":"2"}]}
             }}
           }
         }
@@ -236,10 +224,6 @@ SELECT * FROM cm_kasama_dynamodb_zeroetl_dev.orders;
 
 -- Verify Map type preservation (attributes: str->varchar, num->double)
 SELECT pk, attributes.color, attributes.weight
-FROM cm_kasama_dynamodb_zeroetl_dev.orders;
-
--- Verify Map with List values (category_scores)
-SELECT pk, category_scores.AFFILIATION, category_scores.PURPOSES
 FROM cm_kasama_dynamodb_zeroetl_dev.orders;
 ```
 
