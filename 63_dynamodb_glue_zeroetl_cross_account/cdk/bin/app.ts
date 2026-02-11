@@ -8,7 +8,7 @@ import { devParameter } from '../lib/parameter';
 const app = new cdk.App();
 
 const databaseName = `${devParameter.projectName.replace(/-/g, '_')}_${devParameter.envName}`;
-const sourceTableArn = `arn:aws:dynamodb:${devParameter.sourceEnv.region}:${devParameter.sourceEnv.account}:table/${devParameter.tableName}`;
+const sourceTableArn = `arn:aws:dynamodb:${devParameter.sourceEnv.region}:${devParameter.sourceEnv.account}:table/Orders`;
 const targetDatabaseArn = `arn:aws:glue:${devParameter.targetEnv.region}:${devParameter.targetEnv.account}:database/${databaseName}`;
 
 new SourceStack(
@@ -33,7 +33,7 @@ new IntegrationStack(
   app,
   `${devParameter.projectName}-integration-stack`,
   {
-    env: devParameter.targetEnv,
+    env: devParameter.sourceEnv,
     description: 'DynamoDB Zero-ETL Integration (deploy after scripts)',
     parameter: devParameter,
     sourceTableArn,

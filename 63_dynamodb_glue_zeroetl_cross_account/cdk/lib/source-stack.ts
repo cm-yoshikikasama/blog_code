@@ -20,7 +20,7 @@ export class SourceStack extends cdk.Stack {
     // DynamoDB TableV2 with PITR
     // ========================================
     this.table = new dynamodb.TableV2(this, 'ZeroETLSourceTable', {
-      tableName: parameter.tableName,
+      tableName: 'Orders',
       partitionKey: { name: 'PK', type: dynamodb.AttributeType.STRING },
       sortKey: { name: 'SK', type: dynamodb.AttributeType.STRING },
       billing: dynamodb.Billing.onDemand(),
@@ -29,7 +29,9 @@ export class SourceStack extends cdk.Stack {
     });
 
     // ========================================
-    // Resource Policy: Allow Glue service (from Target Account) to export
+    // Resource Policy: Allow Glue service to export via Zero-ETL
+    // Integration is created in the source account, so SourceAccount/SourceArn
+    // reference this (source) account, not the target account.
     // ========================================
     this.table.addToResourcePolicy(
       new iam.PolicyStatement({
@@ -41,12 +43,13 @@ export class SourceStack extends cdk.Stack {
           'dynamodb:DescribeTable',
           'dynamodb:DescribeExport',
         ],
+        resources: ['*'],
         conditions: {
           StringEquals: {
-            'aws:SourceAccount': parameter.targetEnv.account,
+            'aws:SourceAccount': parameter.sourceEnv.account,
           },
           ArnLike: {
-            'aws:SourceArn': `arn:aws:glue:${parameter.targetEnv.region}:${parameter.targetEnv.account}:integration:*`,
+            'aws:SourceArn': `arn:aws:glue:${parameter.sourceEnv.region}:${parameter.sourceEnv.account}:integration:*`,
           },
         },
       })

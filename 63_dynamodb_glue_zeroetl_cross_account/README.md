@@ -15,7 +15,7 @@ which require CLI scripts (no CloudFormation support).
 
 ## Architecture
 
-![DynamoDB Zero-ETL Cross-Account Architecture](generated-diagrams/dynamodb-zeroetl-cross-account-architecture.png)
+![DynamoDB Zero-ETL Cross-Account Architecture](generated-diagrams/blog_dynamodb_lakehouse_zeroetl.png)
 
 ```text
 Source Account (CDK: source-stack)
@@ -79,13 +79,12 @@ Zero-ETL integration, then redeploying.
 
 ### CDK Parameters (cdk/lib/parameter.ts)
 
-Edit account IDs, table name, and refresh interval:
+Edit account IDs and refresh interval:
 
 ```typescript
 export const devParameter: AppParameter = {
   envName: "dev",
   projectName: "cm-kasama-dynamodb-zeroetl",
-  tableName: "Orders",
   refreshIntervalMinutes: 15,
   sourceEnv: {
     account: "111111111111", // TODO: Replace with Source Account ID
@@ -100,14 +99,13 @@ export const devParameter: AppParameter = {
 
 ### Shell Scripts (scripts/config.sh)
 
-Edit account IDs, table name, and unnest spec:
+Edit account IDs and unnest spec:
 
 ```bash
 PROJECT_NAME="cm-kasama-dynamodb-zeroetl"
 ENV_NAME="dev"
 SOURCE_ACCOUNT_ID="111111111111"
 TARGET_ACCOUNT_ID="222222222222"
-TABLE_NAME="Orders"
 UNNEST_SPEC="TOPLEVEL"
 ```
 
@@ -158,14 +156,15 @@ AWS_PROFILE=TARGET_ACCOUNT_PROFILE ./setup-glue-resource-policy.sh
 AWS_PROFILE=TARGET_ACCOUNT_PROFILE ./setup-integration-table-properties.sh
 ```
 
-### 5. Deploy Integration Stack (Target Account)
+### 5. Deploy Integration Stack (Source Account)
 
-Deploys the Zero-ETL Integration:
+Deploys the Zero-ETL Integration.
+Cross-account DynamoDB Zero-ETL requires creating the integration from the source account.
 
 ```bash
 cd cdk
 pnpm run cdk deploy cm-kasama-dynamodb-zeroetl-integration-stack \
-  --profile TARGET_ACCOUNT_PROFILE
+  --profile SOURCE_ACCOUNT_PROFILE
 ```
 
 ### 6. Verify Deployment
@@ -282,17 +281,17 @@ FROM cm_kasama_dynamodb_zeroetl_dev.orders;
 | IntegrationResourceProperty  | CDK (target-stack)      | Target  |
 | Glue Catalog Resource Policy | Shell Script            | Target  |
 | IntegrationTableProperties   | Shell Script            | Target  |
-| Zero-ETL Integration         | CDK (integration-stack) | Target  |
+| Zero-ETL Integration         | CDK (integration-stack) | Source  |
 
 ## Cleanup
 
 Delete resources in reverse order:
 
 ```bash
-# 1. Integration Stack (Target Account)
+# 1. Integration Stack (Source Account)
 cd cdk
 pnpm run cdk destroy cm-kasama-dynamodb-zeroetl-integration-stack \
-  --profile TARGET_ACCOUNT_PROFILE
+  --profile SOURCE_ACCOUNT_PROFILE
 
 # 2. Target Stack (Target Account)
 pnpm run cdk destroy cm-kasama-dynamodb-zeroetl-target-stack \

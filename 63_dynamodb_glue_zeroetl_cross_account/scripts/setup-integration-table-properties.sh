@@ -17,21 +17,22 @@ if [ -z "$REGION" ]; then
 fi
 
 echo "=== Integration Table Properties Setup ==="
-echo "Table Name:   ${TABLE_NAME}"
+echo "Table Name:   Orders"
 echo "UnnestSpec:   ${UNNEST_SPEC}"
 echo "Database:     ${DATABASE_NAME}"
 echo "Region:       ${REGION}"
 echo ""
 
-SOURCE_TABLE_ARN="arn:aws:dynamodb:${REGION}:${SOURCE_ACCOUNT_ID}:table/${TABLE_NAME}"
-
 echo "Creating integration table properties..."
 aws glue create-integration-table-properties \
   --resource-arn "arn:aws:glue:${REGION}:${TARGET_ACCOUNT_ID}:database/${DATABASE_NAME}" \
-  --table-name "${TABLE_NAME}" \
-  --source-table-config "{\"Fields\":[\"*\"],\"Filter\":\"\",\"PrimaryKey\":[\"PK\",\"SK\"],\"SourceTableArn\":\"${SOURCE_TABLE_ARN}\"}" \
-  --target-table-config "{\"UnnestSpec\":\"${UNNEST_SPEC}\",\"TargetTableName\":\"${TABLE_NAME}\",\"PartitionSpec\":[],\"Description\":\"\"}" \
+  --table-name "Orders" \
+  --target-table-config "{\"UnnestSpec\":\"${UNNEST_SPEC}\"}" \
   --region "${REGION}"
 
 echo ""
-echo "Done. Verify with: aws glue get-integration-table-properties --resource-arn arn:aws:glue:${REGION}:${TARGET_ACCOUNT_ID}:database/${DATABASE_NAME} --table-name ${TABLE_NAME} --region ${REGION}"
+echo "=== Verifying integration table properties ==="
+aws glue get-integration-table-properties \
+  --resource-arn "arn:aws:glue:${REGION}:${TARGET_ACCOUNT_ID}:database/${DATABASE_NAME}" \
+  --table-name "Orders" \
+  --region "${REGION}"
