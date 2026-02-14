@@ -1,5 +1,5 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" version="29.3.8">
-  <diagram name="2. GAS 処理フロー" id="gas-flow">
+  <diagram name="2. GAS Processing Flow" id="gas-flow">
     <mxGraphModel dx="946" dy="610" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="700" math="0" shadow="0">
       <root>
         <mxCell id="0" />
@@ -7,13 +7,13 @@
         <mxCell id="bg" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8F9FA;strokeColor=#DADCE0;arcSize=6;" value="" vertex="1">
           <mxGeometry height="450" width="1410" x="10" y="20" as="geometry" />
         </mxCell>
-        <mxCell id="title" parent="1" style="text;html=1;fontSize=20;fontStyle=1;fontColor=#202124;align=center;" value="構成図 2: GAS 処理フロー（Markdown 変換 + ローカル同期）" vertex="1">
+        <mxCell id="title" parent="1" style="text;html=1;fontSize=20;fontStyle=1;fontColor=#202124;align=center;" value="Diagram 2: GAS Processing Flow (Markdown Conversion + Local Sync)" vertex="1">
           <mxGeometry height="35" width="900" x="250" y="40" as="geometry" />
         </mxCell>
         <mxCell id="p1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F5E9;strokeColor=#34A853;strokeWidth=2;arcSize=12;" value="" vertex="1">
           <mxGeometry height="290" width="250" x="50" y="115" as="geometry" />
         </mxCell>
-        <mxCell id="p1_from" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1A73E8;fontColor=#FFFFFF;fontSize=10;fontStyle=1;strokeColor=none;arcSize=50;" value="構成図 1 から" vertex="1">
+        <mxCell id="p1_from" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1A73E8;fontColor=#FFFFFF;fontSize=10;fontStyle=1;strokeColor=none;arcSize=50;" value="From Diagram 1" vertex="1">
           <mxGeometry height="24" width="90" x="60" y="125" as="geometry" />
         </mxCell>
         <mxCell id="p1_icon" parent="1" style="shape=image;verticalLabelPosition=bottom;labelBackgroundColor=none;verticalAlign=top;aspect=fixed;imageAspect=0;image=https://fonts.gstatic.com/s/i/productlogos/drive_2020q4/v8/web-96dp/logo_drive_2020q4_color_2x_web_96dp.png;" value="" vertex="1">
@@ -25,22 +25,22 @@
         <mxCell id="p1_folder" parent="1" style="text;html=1;fontSize=13;fontColor=#34A853;align=center;fontStyle=1;" value="meeting_notes_docs/" vertex="1">
           <mxGeometry height="20" width="220" x="65" y="228" as="geometry" />
         </mxCell>
-        <mxCell id="p1_desc" parent="1" style="text;html=1;fontSize=11;fontColor=#5F6368;align=center;" value="Workspace Studio が自動で格納した&lt;br&gt;YAML frontmatter 付き Docs" vertex="1">
+        <mxCell id="p1_desc" parent="1" style="text;html=1;fontSize=11;fontColor=#5F6368;align=center;" value="Docs with YAML frontmatter&lt;br&gt;auto-stored by Workspace Studio" vertex="1">
           <mxGeometry height="30" width="230" x="60" y="252" as="geometry" />
         </mxCell>
-        <mxCell id="p1_f1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#DADCE0;fontSize=11;fontColor=#202124;align=left;spacingLeft=8;" value="プロジェクトA_定例.gdoc" vertex="1">
+        <mxCell id="p1_f1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#DADCE0;fontSize=11;fontColor=#202124;align=left;spacingLeft=8;" value="ProjectA_standup.gdoc" vertex="1">
           <mxGeometry height="28" width="215" x="68" y="290" as="geometry" />
         </mxCell>
-        <mxCell id="p1_f2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#DADCE0;fontSize=11;fontColor=#202124;align=left;spacingLeft=8;" value="プロジェクトB_進捗報告.gdoc" vertex="1">
+        <mxCell id="p1_f2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#DADCE0;fontSize=11;fontColor=#202124;align=left;spacingLeft=8;" value="ProjectB_progress_report.gdoc" vertex="1">
           <mxGeometry height="28" width="215" x="68" y="324" as="geometry" />
         </mxCell>
-        <mxCell id="p1_f3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#DADCE0;fontSize=11;fontColor=#202124;align=left;spacingLeft=8;" value="社内MTG_メモ.gdoc" vertex="1">
+        <mxCell id="p1_f3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#DADCE0;fontSize=11;fontColor=#202124;align=left;spacingLeft=8;" value="Internal_MTG_notes.gdoc" vertex="1">
           <mxGeometry height="28" width="215" x="68" y="358" as="geometry" />
         </mxCell>
         <mxCell id="a1" edge="1" parent="1" source="p1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;strokeColor=#F9AB00;strokeWidth=3;" target="p2">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="a1_label" connectable="0" parent="a1" style="edgeLabel;html=1;fontSize=12;fontColor=#F9AB00;fontStyle=1;labelBackgroundColor=#F8F9FA;" value="定期トリガー" vertex="1">
+        <mxCell id="a1_label" connectable="0" parent="a1" style="edgeLabel;html=1;fontSize=12;fontColor=#F9AB00;fontStyle=1;labelBackgroundColor=#F8F9FA;" value="Scheduled&lt;div&gt;trigger&lt;/div&gt;" vertex="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="-35" y="5" as="offset" />
           </mxGeometry>
@@ -57,16 +57,16 @@
         <mxCell id="p2_file" parent="1" style="text;html=1;fontSize=11;fontColor=#F9AB00;align=center;fontStyle=1;fontFamily=monospace;" value="gas-gdocs-to-markdown.js" vertex="1">
           <mxGeometry height="18" width="240" x="410" y="218" as="geometry" />
         </mxCell>
-        <mxCell id="gs1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#F9AB00;fontSize=12;fontColor=#202124;align=left;spacingLeft=10;" value="1. Export API で Markdown 取得" vertex="1">
+        <mxCell id="gs1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#F9AB00;fontSize=12;fontColor=#202124;align=left;spacingLeft=10;" value="1. Fetch Markdown via Export API" vertex="1">
           <mxGeometry height="32" width="240" x="410" y="248" as="geometry" />
         </mxCell>
-        <mxCell id="gs2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#F9AB00;fontSize=12;fontColor=#202124;align=left;spacingLeft=10;" value="2. ファイル名でルーティング判定" vertex="1">
+        <mxCell id="gs2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#F9AB00;fontSize=12;fontColor=#202124;align=left;spacingLeft=10;" value="2. Route by filename keywords" vertex="1">
           <mxGeometry height="32" width="240" x="410" y="288" as="geometry" />
         </mxCell>
-        <mxCell id="gs3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#F9AB00;fontSize=12;fontColor=#202124;align=left;spacingLeft=10;" value="3. サブフォルダに .md 保存" vertex="1">
+        <mxCell id="gs3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#F9AB00;fontSize=12;fontColor=#202124;align=left;spacingLeft=10;" value="3. Save .md to subfolder" vertex="1">
           <mxGeometry height="32" width="240" x="410" y="328" as="geometry" />
         </mxCell>
-        <mxCell id="gs4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#F9AB00;fontSize=12;fontColor=#202124;align=left;spacingLeft=10;" value="4. 元の Docs をゴミ箱に移動" vertex="1">
+        <mxCell id="gs4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#F9AB00;fontSize=12;fontColor=#202124;align=left;spacingLeft=10;" value="4. Trash the original Doc" vertex="1">
           <mxGeometry height="32" width="240" x="410" y="368" as="geometry" />
         </mxCell>
         <mxCell id="gsa1" edge="1" parent="1" source="gs1" style="rounded=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeColor=#F9AB00;strokeWidth=1;" target="gs2">
@@ -81,7 +81,7 @@
         <mxCell id="a2" edge="1" parent="1" source="p2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;strokeColor=#34A853;strokeWidth=3;" target="p3">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="a2_label" connectable="0" parent="a2" style="edgeLabel;html=1;fontSize=12;fontColor=#34A853;fontStyle=1;labelBackgroundColor=#F8F9FA;" value="MD 出力" vertex="1">
+        <mxCell id="a2_label" connectable="0" parent="a2" style="edgeLabel;html=1;fontSize=12;fontColor=#34A853;fontStyle=1;labelBackgroundColor=#F8F9FA;" value="MD&amp;nbsp;&lt;div&gt;output&lt;/div&gt;" vertex="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="-25" as="offset" />
           </mxGeometry>
@@ -104,7 +104,7 @@
         <mxCell id="f1_name" parent="1" style="text;html=1;fontSize=12;fontStyle=1;fontColor=#34A853;align=left;spacingLeft=10;" value="project_a/" vertex="1">
           <mxGeometry height="20" width="100" x="760" y="260" as="geometry" />
         </mxCell>
-        <mxCell id="f1_file" parent="1" style="text;html=1;fontSize=10;fontColor=#5F6368;align=left;spacingLeft=14;" value="  プロジェクトA_定例.md" vertex="1">
+        <mxCell id="f1_file" parent="1" style="text;html=1;fontSize=10;fontColor=#5F6368;align=left;spacingLeft=14;" value="  ProjectA_standup.md" vertex="1">
           <mxGeometry height="16" width="200" x="760" y="280" as="geometry" />
         </mxCell>
         <mxCell id="f2_box" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#34A853;arcSize=10;" value="" vertex="1">
@@ -113,19 +113,19 @@
         <mxCell id="f2_name" parent="1" style="text;html=1;fontSize=12;fontStyle=1;fontColor=#34A853;align=left;spacingLeft=10;" value="project_b/" vertex="1">
           <mxGeometry height="20" width="100" x="760" y="318" as="geometry" />
         </mxCell>
-        <mxCell id="f2_file" parent="1" style="text;html=1;fontSize=10;fontColor=#5F6368;align=left;spacingLeft=14;" value="  プロジェクトB_進捗報告.md" vertex="1">
+        <mxCell id="f2_file" parent="1" style="text;html=1;fontSize=10;fontColor=#5F6368;align=left;spacingLeft=14;" value="  ProjectB_progress_report.md" vertex="1">
           <mxGeometry height="16" width="200" x="760" y="338" as="geometry" />
         </mxCell>
         <mxCell id="f3_box" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#9E9E9E;arcSize=10;" value="" vertex="1">
           <mxGeometry height="22" width="220" x="762.5" y="373" as="geometry" />
         </mxCell>
-        <mxCell id="f3_name" parent="1" style="text;html=1;fontSize=10;fontColor=#9E9E9E;align=left;spacingLeft=10;" value="others/   社内MTG_メモ.md" vertex="1">
+        <mxCell id="f3_name" parent="1" style="text;html=1;fontSize=10;fontColor=#9E9E9E;align=left;spacingLeft=10;" value="others/   Internal_MTG_notes.md" vertex="1">
           <mxGeometry height="22" width="220" x="780" y="373" as="geometry" />
         </mxCell>
         <mxCell id="a3" edge="1" parent="1" source="p3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;strokeColor=#5F6368;strokeWidth=3;" target="p4">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="a3_label" connectable="0" parent="a3" style="edgeLabel;html=1;fontSize=12;fontColor=#5F6368;fontStyle=1;labelBackgroundColor=#F8F9FA;" value="Drive Desktop&lt;br&gt;自動同期" vertex="1">
+        <mxCell id="a3_label" connectable="0" parent="a3" style="edgeLabel;html=1;fontSize=12;fontColor=#5F6368;fontStyle=1;labelBackgroundColor=#F8F9FA;" value="Drive Desktop&lt;br&gt;auto-sync" vertex="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="-45" as="offset" />
           </mxGeometry>
@@ -136,22 +136,22 @@
         <mxCell id="p4_pc" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1a1a2e;fontColor=#4FC3F7;fontSize=28;fontStyle=1;fontFamily=monospace;strokeColor=none;arcSize=20;" value="&gt;_" vertex="1">
           <mxGeometry height="50" width="80" x="1200" y="130" as="geometry" />
         </mxCell>
-        <mxCell id="p4_title" parent="1" style="text;html=1;fontSize=18;fontStyle=1;fontColor=#202124;align=center;" value="ローカル PC" vertex="1">
+        <mxCell id="p4_title" parent="1" style="text;html=1;fontSize=18;fontStyle=1;fontColor=#202124;align=center;" value="Local PC" vertex="1">
           <mxGeometry height="28" width="220" x="1130" y="190" as="geometry" />
         </mxCell>
-        <mxCell id="p4_path" parent="1" style="text;html=1;fontSize=11;fontColor=#5F6368;align=center;" value="~/Google Drive/マイドライブ/&lt;br&gt;meeting_notes_md/" vertex="1">
+        <mxCell id="p4_path" parent="1" style="text;html=1;fontSize=11;fontColor=#5F6368;align=center;" value="~/Google Drive/My Drive/&lt;br&gt;meeting_notes_md/" vertex="1">
           <mxGeometry height="28" width="240" x="1120" y="220" as="geometry" />
         </mxCell>
         <mxCell id="ai_sep" parent="1" style="line;strokeColor=#DADCE0;strokeWidth=1;" value="" vertex="1">
           <mxGeometry height="1" width="260" x="1075" y="256" as="geometry" />
         </mxCell>
-        <mxCell id="ai_label" parent="1" style="text;html=1;fontSize=12;fontStyle=1;fontColor=#7C4DFF;align=center;" value="AI ツールから .md を参照" vertex="1">
+        <mxCell id="ai_label" parent="1" style="text;html=1;fontSize=12;fontStyle=1;fontColor=#7C4DFF;align=center;" value="Reference .md from AI tools" vertex="1">
           <mxGeometry height="20" width="220" x="1130" y="265" as="geometry" />
         </mxCell>
         <mxCell id="t1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1a1a2e;fontColor=#FFFFFF;fontSize=13;fontStyle=1;strokeColor=none;arcSize=50;" value="Claude Code" vertex="1">
           <mxGeometry height="34" width="220" x="1130" y="295" as="geometry" />
         </mxCell>
-        <mxCell id="t_desc" parent="1" style="text;html=1;fontSize=11;fontColor=#5F6368;align=center;" value="議事録の検索・要約・分析を&lt;br&gt;ローカルで完結" vertex="1">
+        <mxCell id="t_desc" parent="1" style="text;html=1;fontSize=11;fontColor=#5F6368;align=center;" value="Search, summarize, and analyze&lt;br&gt;meeting notes locally" vertex="1">
           <mxGeometry height="28" width="220" x="1130" y="338" as="geometry" />
         </mxCell>
       </root>
