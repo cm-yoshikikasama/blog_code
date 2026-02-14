@@ -1,10 +1,10 @@
 /**
- * スクリプト プロパティから設定を読み込む
+ * Load configuration from Script Properties.
  */
 function getConfig_() {
   const props = PropertiesService.getScriptProperties();
 
-  // ROUTING_RULES: "プロジェクトA:project_a,プロジェクトB:project_b" 形式
+  // ROUTING_RULES format: "keywordA:folder_a,keywordB:folder_b"
   const routingRaw = props.getProperty('ROUTING_RULES') || '';
   const routingRules = routingRaw
     ? routingRaw.split(',').map((rule) => {
@@ -22,8 +22,8 @@ function getConfig_() {
 }
 
 /**
- * ファイル名からルーティング先サブフォルダ名を決定
- * マッチしなければ "others"
+ * Determine the routing subfolder name from a file name.
+ * Returns "others" if no rule matches.
  */
 function resolveFolder_(fileName, routingRules) {
   for (const rule of routingRules) {
@@ -35,11 +35,11 @@ function resolveFolder_(fileName, routingRules) {
 }
 
 // ============================================================
-// メイン関数
+// Main functions
 // ============================================================
 
 /**
- * メイン: 前回チェック以降に追加・更新された Docs を変換
+ * Main: convert Docs that have been added or updated since the last run.
  */
 function exportChanged() {
   const config = getConfig_();
@@ -65,7 +65,7 @@ function exportChanged() {
 }
 
 /**
- * 全ファイルを強制エクスポート（初回実行用）
+ * Force-export all files (for initial run).
  */
 function exportAll() {
   const config = getConfig_();
@@ -90,8 +90,8 @@ function exportAll() {
 }
 
 /**
- * 1ファイルを処理: MD変換 → 振り分け保存 → 元ファイル削除
- * @return {number} 1=成功, 0=失敗
+ * Process a single file: convert to Markdown, route to subfolder, delete original.
+ * @return {number} 1 on success, 0 on failure
  */
 function processFile_(file, outputRoot, config) {
   const docName = file.getName();
@@ -110,11 +110,11 @@ function processFile_(file, outputRoot, config) {
 }
 
 // ============================================================
-// 検索・エクスポート
+// Search and export
 // ============================================================
 
 /**
- * 検索クエリを構築（Google Docs かつ更新日時でフィルタ）
+ * Build a search query (Google Docs filtered by modified date).
  */
 function buildQuery_(lastRunIso) {
   let q = 'mimeType = "application/vnd.google-apps.document"';
@@ -125,7 +125,7 @@ function buildQuery_(lastRunIso) {
 }
 
 /**
- * Google Docs → Markdown テキスト取得（Drive API v3 REST）
+ * Fetch Markdown text from a Google Doc via Drive API v3 REST export.
  */
 function exportAsMarkdown_(docId) {
   const url = `https://www.googleapis.com/drive/v3/files/${docId}/export?mimeType=${encodeURIComponent('text/markdown')}`;
@@ -136,11 +136,11 @@ function exportAsMarkdown_(docId) {
 }
 
 // ============================================================
-// ユーティリティ
+// Utilities
 // ============================================================
 
 /**
- * 出力先のサブフォルダを取得（なければ作成）
+ * Get an existing subfolder by name, or create one if it doesn't exist.
  */
 function getOrCreateSubFolder_(parentFolder, subName) {
   const folders = parentFolder.getFoldersByName(subName);
@@ -151,7 +151,7 @@ function getOrCreateSubFolder_(parentFolder, subName) {
 }
 
 /**
- * フォルダ内に .md ファイルを保存（既存なら上書き）
+ * Save a .md file to a folder (overwrite if it already exists).
  */
 function saveToFolder_(folder, fileName, content) {
   const existing = folder.getFilesByName(fileName);
@@ -165,18 +165,18 @@ function saveToFolder_(folder, fileName, content) {
 }
 
 /**
- * ファイル名に使えない文字を除去
+ * Remove characters that are invalid in file names.
  */
 function sanitizeFileName_(name) {
   return name.replace(/[\/\\?%*:|"<>\s]/g, '_').trim();
 }
 
 // ============================================================
-// トリガー管理
+// Trigger management
 // ============================================================
 
 /**
- * 定期実行トリガーを設定（一度だけ実行すればOK）
+ * Set up a daily trigger (run once to configure).
  */
 function setupTrigger() {
   const config = getConfig_();
@@ -191,7 +191,7 @@ function setupTrigger() {
 }
 
 /**
- * トリガーを全削除
+ * Remove all existing triggers.
  */
 function removeTriggers_() {
   const triggers = ScriptApp.getProjectTriggers();
