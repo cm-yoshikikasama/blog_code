@@ -68,12 +68,11 @@ https://drive.google.com/drive/folders/<FOLDER_ID>
 
 Go to "Project Settings" (gear icon) in the GAS editor left menu, then add the following under "Script Properties".
 
-| Property             | Value                                 | Description                     |
-| -------------------- | ------------------------------------- | ------------------------------- |
-| `WATCH_FOLDER_ID`    | ID of meeting_notes_docs              | Folder to watch                 |
-| `OUTPUT_FOLDER_ID`   | ID of meeting_notes_md                | Parent folder for .md output    |
-| `ROUTING_RULES`      | ProjectA:project_a,ProjectB:project_b | keyword:subfolder pairs         |
-| `TRIGGER_DAILY_HOUR` | 18                                    | Hour for daily execution (0-23) |
+| Property           | Value                                 | Description                  |
+| ------------------ | ------------------------------------- | ---------------------------- |
+| `WATCH_FOLDER_ID`  | ID of meeting_notes_docs              | Folder to watch              |
+| `OUTPUT_FOLDER_ID` | ID of meeting_notes_md                | Parent folder for .md output |
+| `ROUTING_RULES`    | ProjectA:project_a,ProjectB:project_b | keyword:subfolder pairs      |
 
 `ROUTING_RULES` accepts multiple comma-separated rules. Each rule maps a filename keyword (before the colon) to an output subfolder name (after the colon). Files that match no rule are routed to `others`.
 
@@ -103,9 +102,16 @@ Done. 2 file(s) exported.
 
 ### 5. Set Up Scheduled Trigger
 
-1. Switch to `setupTrigger` in the function dropdown
-2. Click "Run" (the play button)
-3. If the execution log shows `Trigger set: daily at 18:00`, setup is complete
+1. Click "Triggers" (clock icon) in the GAS editor left menu
+2. Click "Add Trigger" in the bottom right
+3. Configure the following settings
+   - Choose which function to run: `exportChanged`
+   - Choose which deployment should run: `Head`
+   - Select event source: `Time-driven`
+   - Select type of time based trigger: `Hour timer`
+   - Select hour interval: `Every hour`
+   - Failure notification settings: `Notify me daily`
+4. Click "Save"
 
 ### 6. Sync with Google Drive Desktop
 
@@ -148,8 +154,7 @@ Place the generated Google Doc in the watch folder, and GAS will automatically c
 
 ## Notes
 
-- To change trigger settings, update Script Properties and re-run `setupTrigger`
-- To stop the trigger, delete it from "Triggers" in the GAS left menu
+- To change or stop the trigger, edit or delete it from "Triggers" in the GAS left menu
 - File naming: the Google Doc filename becomes the .md filename (`/` and other special characters and spaces are replaced with `_`)
 - Auto-creation of subfolders: if a routing target subfolder doesn't exist, it is created automatically in the output folder
 - Original file deletion: after successful conversion, the original Google Doc is moved to trash (recoverable within 30 days)

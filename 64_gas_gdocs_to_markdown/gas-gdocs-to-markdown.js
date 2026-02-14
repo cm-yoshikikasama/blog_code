@@ -16,7 +16,6 @@ function getConfig_() {
   return {
     watchFolderId: props.getProperty('WATCH_FOLDER_ID'),
     outputFolderId: props.getProperty('OUTPUT_FOLDER_ID'),
-    triggerDailyHour: Number(props.getProperty('TRIGGER_DAILY_HOUR')) || 18,
     routingRules,
   };
 }
@@ -171,31 +170,3 @@ function sanitizeFileName_(name) {
   return name.replace(/[\/\\?%*:|"<>\s]/g, '_').trim();
 }
 
-// ============================================================
-// Trigger management
-// ============================================================
-
-/**
- * Set up a daily trigger (run once to configure).
- */
-function setupTrigger() {
-  const config = getConfig_();
-  removeTriggers_();
-
-  ScriptApp.newTrigger('exportChanged')
-    .timeBased()
-    .atHour(config.triggerDailyHour)
-    .everyDays(1)
-    .create();
-  Logger.log(`Trigger set: daily at ${config.triggerDailyHour}:00`);
-}
-
-/**
- * Remove all existing triggers.
- */
-function removeTriggers_() {
-  const triggers = ScriptApp.getProjectTriggers();
-  for (const trigger of triggers) {
-    ScriptApp.deleteTrigger(trigger);
-  }
-}
