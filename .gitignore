@@ -17,6 +17,7 @@ bsーdataengineering-foundamental_minutes.md
 go.sum
 *.js
 !jest.config.js
+!gas-gdocs-to-markdown.js
 *.d.ts
 node_modules
 
