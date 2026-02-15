@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" version="29.3.8">
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" version="29.4.0">
   <diagram name="1. Workspace Studio Flow" id="ws-flow">
-    <mxGraphModel dx="946" dy="610" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="700" math="0" shadow="0">
+    <mxGraphModel dx="1455" dy="938" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="700" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -37,19 +37,19 @@
           <mxGeometry height="280" width="260" x="400" y="120" as="geometry" />
         </mxCell>
         <mxCell id="p2_icon" parent="1" style="shape=image;verticalLabelPosition=bottom;labelBackgroundColor=none;verticalAlign=top;aspect=fixed;imageAspect=0;image=https://fonts.gstatic.com/s/i/productlogos/gmail_2020q4/v8/web-96dp/logo_gmail_2020q4_color_2x_web_96dp.png;" value="" vertex="1">
-          <mxGeometry height="70" width="70" x="470" y="138" as="geometry" />
+          <mxGeometry height="70" width="70" x="495" y="140" as="geometry" />
         </mxCell>
         <mxCell id="p2_title" parent="1" style="text;html=1;fontSize=18;fontStyle=1;fontColor=#202124;align=center;" value="Gmail" vertex="1">
-          <mxGeometry height="28" width="210" x="405" y="225" as="geometry" />
+          <mxGeometry height="28" width="210" x="425" y="220" as="geometry" />
         </mxCell>
         <mxCell id="p2_desc" parent="1" style="text;html=1;fontSize=13;fontColor=#5F6368;align=center;" value="Meeting notes notification email" vertex="1">
-          <mxGeometry height="24" width="210" x="405" y="260" as="geometry" />
+          <mxGeometry height="24" width="210" x="425" y="254" as="geometry" />
         </mxCell>
         <mxCell id="p2_from" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#EA4335;fontSize=11;fontColor=#EA4335;fontFamily=monospace;arcSize=50;" value="From: gemini-notes@google.com" vertex="1">
-          <mxGeometry height="30" width="220" x="410" y="300" as="geometry" />
+          <mxGeometry height="30" width="220" x="425" y="285" as="geometry" />
         </mxCell>
         <mxCell id="p2_detail" parent="1" style="text;html=1;fontSize=11;fontColor=#5F6368;align=center;" value="Subject/body contains a link&lt;br&gt;to the meeting notes Doc" vertex="1">
-          <mxGeometry height="30" width="220" x="400" y="340" as="geometry" />
+          <mxGeometry height="30" width="220" x="410" y="332" as="geometry" />
         </mxCell>
         <mxCell id="a2" edge="1" parent="1" source="p2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;strokeColor=#1A73E8;strokeWidth=3;" target="p3">
           <mxGeometry relative="1" as="geometry" />
@@ -126,6 +126,9 @@
         </mxCell>
         <mxCell id="next_label" parent="1" style="text;html=1;fontSize=12;fontStyle=1;fontColor=#FFFFFF;align=center;" value="To Diagram 2" vertex="1">
           <mxGeometry height="36" width="100" x="1185" y="420" as="geometry" />
+        </mxCell>
+        <mxCell id="IGmQhauKY6F7tJ4S6tPq-1" edge="1" parent="1" source="p2_title" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="p2_title">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
