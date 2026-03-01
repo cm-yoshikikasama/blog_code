@@ -1,15 +1,12 @@
-import { Construct } from "constructs";
-import * as cdk from "aws-cdk-lib";
-import { S3Construct } from "../constructs/s3";
-import { LambdaConstruct, LambdaConstructProps } from "../constructs/lambda";
+import * as cdk from 'aws-cdk-lib';
+import type { Construct } from 'constructs';
+import { EventBridgeConstruct, type EventBridgeConstructProps } from '../constructs/eventbridge';
+import { LambdaConstruct, type LambdaConstructProps } from '../constructs/lambda';
+import { S3Construct } from '../constructs/s3';
 import {
   StepFunctionsConstruct,
-  StepFunctionsConstructProps,
-} from "../constructs/step-functions";
-import {
-  EventBridgeConstruct,
-  EventBridgeConstructProps,
-} from "../constructs/eventbridge";
+  type StepFunctionsConstructProps,
+} from '../constructs/step-functions';
 
 export interface ETLStackProps extends cdk.StackProps {
   envName: string;
@@ -19,29 +16,25 @@ export interface ETLStackProps extends cdk.StackProps {
 export class ETLStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: ETLStackProps) {
     super(scope, id, props);
-    const s3Construct = new S3Construct(this, "S3", {
+    const s3Construct = new S3Construct(this, 'S3', {
       envName: props.envName,
       projectName: props.projectName,
     });
-    const lambdaConstruct = new LambdaConstruct(this, "Lambda", {
+    const lambdaConstruct = new LambdaConstruct(this, 'Lambda', {
       envName: props.envName,
       projectName: props.projectName,
       dataSourceBucketName: s3Construct.dataSourceBucket.bucketName,
       dataStoreBucketName: s3Construct.dataStoreBucket.bucketName,
     } as LambdaConstructProps);
 
-    const stepFunctionsConstruct = new StepFunctionsConstruct(
-      this,
-      "StepFunctions",
-      {
-        envName: props.envName,
-        projectName: props.projectName,
-        dataSourceBucketName: s3Construct.dataSourceBucket.bucketName,
-        dataStoreBucketName: s3Construct.dataStoreBucket.bucketName,
-        lambdaName: lambdaConstruct.LambdaName,
-      } as StepFunctionsConstructProps
-    );
-    new EventBridgeConstruct(this, "EventBridge", {
+    const stepFunctionsConstruct = new StepFunctionsConstruct(this, 'StepFunctions', {
+      envName: props.envName,
+      projectName: props.projectName,
+      dataSourceBucketName: s3Construct.dataSourceBucket.bucketName,
+      dataStoreBucketName: s3Construct.dataStoreBucket.bucketName,
+      lambdaName: lambdaConstruct.LambdaName,
+    } as StepFunctionsConstructProps);
+    new EventBridgeConstruct(this, 'EventBridge', {
       envName: props.envName,
       projectName: props.projectName,
       dataSourceBucketName: s3Construct.dataSourceBucket.bucketName,

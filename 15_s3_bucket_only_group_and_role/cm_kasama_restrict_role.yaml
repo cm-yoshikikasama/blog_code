@@ -4,7 +4,7 @@ Description: Creating Role
 Parameters:
   Env:
     Type: String
-    AllowedValues: 
+    AllowedValues:
       - dev
       - prod
     Default: dev

@@ -122,7 +122,8 @@ export class MainStack extends cdk.Stack {
         GLUE_TABLE: glueTable,
         LOG_LEVEL: 'INFO',
         // ソースデータ設定
-        SOURCE_BUCKET: parameter.sourceBucketName || `${parameter.projectName}-${parameter.envName}-source`,
+        SOURCE_BUCKET:
+          parameter.sourceBucketName || `${parameter.projectName}-${parameter.envName}-source`,
         SOURCE_PREFIX: 'data/sales_data',
         // ターゲットデータ設定
         TARGET_BUCKET: targetBucketName,

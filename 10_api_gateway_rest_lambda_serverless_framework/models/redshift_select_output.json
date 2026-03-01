@@ -1,14 +1,13 @@
 {
-    "properties" : {
-        "status": {
-            "type": "string"
-        },
-        "result_value": {
-            "type": "string"
-        },
-        "ErrorReason": {
-            "type": "string"
-        }
-        
+  "properties": {
+    "status": {
+      "type": "string"
+    },
+    "result_value": {
+      "type": "string"
+    },
+    "ErrorReason": {
+      "type": "string"
     }
+  }
 }

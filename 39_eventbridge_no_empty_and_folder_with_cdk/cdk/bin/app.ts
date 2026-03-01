@@ -1,26 +1,26 @@
 #!/usr/bin/env node
-import * as cdk from "aws-cdk-lib";
-import { ETLStack } from "../lib/stack/event-trigger-test-stack";
-import { devParameter, prodParameter } from "../parameter";
+import * as cdk from 'aws-cdk-lib';
+import { ETLStack } from '../lib/stack/event-trigger-test-stack';
+import { type AppParameter, devParameter, prodParameter } from '../parameter';
 
 const app = new cdk.App();
 
 // This context need to be specified in args
-const argContext = "environment";
+const argContext = 'environment';
 let envKey = app.node.tryGetContext(argContext);
-if (envKey == undefined) {
+if (envKey === undefined) {
   console.warn(
     `Warning: Environment key not specified, defaulting to 'dev'. For specifying environment, use context option. ex) cdk deploy -c ${argContext}=dev/prod`
   );
   // throw new Error(
   //   `Please specify environment with context option. ex) cdk deploy -c ${argContext}=dev`
   // );
-  envKey = "dev";
+  envKey = 'dev';
 }
 
-let parameter;
+let parameter: AppParameter;
 
-if (envKey === "dev") {
+if (envKey === 'dev') {
   parameter = devParameter;
 } else {
   parameter = prodParameter;

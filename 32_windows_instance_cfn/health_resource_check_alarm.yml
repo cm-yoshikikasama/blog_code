@@ -114,7 +114,7 @@ Resources:
   ######################
   CPUAlarmEvent:
     Type: AWS::Events::Rule
-    Properties: 
+    Properties:
       Description: String
       Name: cpu-check-event
       EventPattern: !Sub |
@@ -124,7 +124,7 @@ Resources:
           "resources": [{"prefix": "arn:aws:cloudwatch:${AWS::Region}:${AWS::AccountId}:alarm:cpu-check-alarm"}],
           "detail": {"state": {"value": ["ALARM"]}}
         }
-      Targets: 
+      Targets:
         - Arn: !Ref SNSResourceStateMachine
           Id: step-function
           RoleArn: !Ref StatemachineExecRoleARN
@@ -143,7 +143,7 @@ Resources:
 
   MemoryAlarmEvent:
     Type: AWS::Events::Rule
-    Properties: 
+    Properties:
       Description: String
       Name: memory-check-event
       EventPattern: !Sub |
@@ -153,7 +153,7 @@ Resources:
           "resources": [{"prefix": "arn:aws:cloudwatch:${AWS::Region}:${AWS::AccountId}:alarm:memory-check-alarm"}],
           "detail": {"state": {"value": ["ALARM"]}}
         }
-      Targets: 
+      Targets:
         - Arn: !Ref SNSResourceStateMachine
           Id: step-function
           RoleArn: !Ref StatemachineExecRoleARN
@@ -172,7 +172,7 @@ Resources:
 
   CDiskAlarmEvent:
     Type: AWS::Events::Rule
-    Properties: 
+    Properties:
       Description: String
       Name: c-disk-check-event
       EventPattern: !Sub |
@@ -182,7 +182,7 @@ Resources:
           "resources": [{"prefix": "arn:aws:cloudwatch:${AWS::Region}:${AWS::AccountId}:alarm:c-disk-free-space-alarm"}],
           "detail": {"state": {"value": ["ALARM"]}}
         }
-      Targets: 
+      Targets:
         - Arn: !Ref SNSResourceStateMachine
           Id: step-function
           RoleArn: !Ref StatemachineExecRoleARN
@@ -200,7 +200,7 @@ Resources:
               }
   DDiskAlarmEvent:
     Type: AWS::Events::Rule
-    Properties: 
+    Properties:
       Description: String
       Name: !Sub "d-disk-check-event"
       EventPattern: !Sub |
@@ -210,7 +210,7 @@ Resources:
           "resources": [{"prefix": "arn:aws:cloudwatch:${AWS::Region}:${AWS::AccountId}:alarm:d-disk-free-space-alarm"}],
           "detail": {"state": {"value": ["ALARM"]}}
         }
-      Targets: 
+      Targets:
         - Arn: !Ref SNSResourceStateMachine
           Id: step-function
           RoleArn: !Ref StatemachineExecRoleARN

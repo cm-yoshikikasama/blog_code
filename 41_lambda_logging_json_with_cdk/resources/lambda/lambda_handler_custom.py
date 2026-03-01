@@ -1,6 +1,7 @@
 import json
-from lib.get_logger import setup_logger
+
 from lib.check_log_custom import check_log_test
+from lib.get_logger import setup_logger
 
 logger = setup_logger()
 

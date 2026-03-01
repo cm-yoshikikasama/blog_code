@@ -25,6 +25,7 @@ node_modules
 .cdk.staging
 cdk.context.json
 cdk.out
+__snapshots__
 
 .terraform
 .terraform.lock.hcl
@@ -33,3 +34,5 @@ BLOG_TEMPLATE.md
 memo.md
 .claude/
 .tmp/
+.workflow-log
+workflow.json

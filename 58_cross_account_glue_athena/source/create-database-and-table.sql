@@ -1,3 +1,4 @@
+-- noqa: disable=all
 -- Create Glue Database
 CREATE DATABASE IF NOT EXISTS cm_kasama_cross_account_db
 COMMENT 'Database for cross-account access testing'

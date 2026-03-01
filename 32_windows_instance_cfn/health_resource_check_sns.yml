@@ -16,7 +16,7 @@ Resources:
 
   ResourceSnsTopic:
     Type: AWS::SNS::Topic
-    Properties: 
+    Properties:
       TopicName: CloudWatchAlarmResourceNotificationTopic
       Subscription:
         - Endpoint: !Sub ${NotificateDestinationEmail}

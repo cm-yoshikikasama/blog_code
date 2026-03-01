@@ -1,15 +1,15 @@
 #!/usr/bin/env node
-import * as cdk from "aws-cdk-lib";
-import { AppFlowStack } from "../lib/salesforce-appflow-stack";
-import { devParameter, prodParameter } from "../parameter";
+import * as cdk from 'aws-cdk-lib';
+import { AppFlowStack } from '../lib/salesforce-appflow-stack';
+import { type AppParameter, devParameter, prodParameter } from '../parameter';
 
 const app = new cdk.App();
 
-const envKey = app.node.tryGetContext("environment") ?? "dev"; // default: dev
+const envKey = app.node.tryGetContext('environment') ?? 'dev'; // default: dev
 
-let parameter;
+let parameter: AppParameter;
 
-if (envKey === "dev") {
+if (envKey === 'dev') {
   parameter = devParameter;
 } else {
   parameter = prodParameter;

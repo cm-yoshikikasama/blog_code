@@ -48,8 +48,8 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     && make altinstall \
     && cd / \
     && rm -f Python-${PYTHON_VERSION}.tar.xz \
-    && rm -rf /tmp/Python-${PYTHON_VERSION} 
-    
+    && rm -rf /tmp/Python-${PYTHON_VERSION}
+
 # 仮想環境の作成とpipのアップグレード
 RUN --mount=type=cache,target=/root/.cache/pip \
     python${PYTHON_VERSION%.*} -m venv $VIRTUAL_ENV \

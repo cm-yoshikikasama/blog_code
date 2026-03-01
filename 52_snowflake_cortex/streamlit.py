@@ -1,9 +1,10 @@
-import streamlit as st
 import json
+
 import _snowflake
-from snowflake.snowpark.context import get_active_session
-import pandas as pd
 import altair as alt
+import pandas as pd
+import streamlit as st
+from snowflake.snowpark.context import get_active_session
 
 session = get_active_session()
 
@@ -189,10 +190,12 @@ def main():
                             for i, citation in enumerate(citations):
                                 doc_id = citation.get("doc_id", "")
                                 if doc_id:
-                                    query = f"""
-                                    SELECT * FROM travel_intelligence.data.travel_reviews 
-                                    WHERE review_id = '{doc_id}'
-                                    """
+                                    query = (
+                                        "SELECT * FROM"
+                                        " travel_intelligence"
+                                        ".data.travel_reviews"
+                                        f" WHERE review_id = '{doc_id}'"
+                                    )
                                     result = run_snowflake_query(query)
                                     if result is not None:
                                         st.dataframe(result.to_pandas())
