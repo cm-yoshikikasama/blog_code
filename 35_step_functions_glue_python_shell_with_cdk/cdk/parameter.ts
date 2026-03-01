@@ -1,4 +1,4 @@
-import { Environment } from "aws-cdk-lib";
+import type { Environment } from 'aws-cdk-lib';
 
 // Parameters for Application
 export interface AppParameter {
@@ -9,8 +9,8 @@ export interface AppParameter {
 
 // Example
 export const devParameter: AppParameter = {
-  envName: "dev",
-  projectName: "cm-kasama",
+  envName: 'dev',
+  projectName: 'cm-kasama',
   env: {},
   // env: { account: "xxxxxx", region: "ap-northeast-1" },
 };

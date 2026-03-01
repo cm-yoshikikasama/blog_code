@@ -1,16 +1,17 @@
 from __future__ import annotations
 
-import os
-import base64
 import asyncio
-import sounddevice as sd
+import base64
+import os
 from typing import Any, cast
+
+import sounddevice as sd
 from dotenv import load_dotenv
 
 # .envファイルの読み込み
 load_dotenv()
 
-from openai import AsyncOpenAI
+from openai import AsyncOpenAI  # noqa: E402
 
 # OpenAI APIキーの取得
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -77,7 +78,10 @@ async def transcribe_audio():
         await conn.session.update(
             session={
                 "modalities": ["text", "audio"],
-                "instructions": "あなたは優秀な通訳者です。ユーザーの発言をすべてそのまま英語に翻訳してください",
+                "instructions": (
+                    "あなたは優秀な通訳者です。"
+                    "ユーザーの発言をすべてそのまま英語に翻訳してください"
+                ),
                 "input_audio_transcription": {"model": "whisper-1"},
                 "turn_detection": {
                     "type": "server_vad",

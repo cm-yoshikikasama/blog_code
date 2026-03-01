@@ -1,3 +1,4 @@
+-- noqa: disable=all
 -- Insert data from source account to target account
 -- Using registered Athena Data Catalog to access cross-account Glue Catalog
 INSERT INTO ${TARGET_DATABASE}.sales_copy

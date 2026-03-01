@@ -1,20 +1,20 @@
-import * as appflow from "aws-cdk-lib/aws-appflow";
-import * as events from "aws-cdk-lib/aws-events";
-import * as targets from "aws-cdk-lib/aws-events-targets";
-import type * as s3 from "aws-cdk-lib/aws-s3";
-import type * as sns from "aws-cdk-lib/aws-sns";
-import { Construct } from "constructs";
+import * as appflow from 'aws-cdk-lib/aws-appflow';
+import * as events from 'aws-cdk-lib/aws-events';
+import * as targets from 'aws-cdk-lib/aws-events-targets';
+import type * as s3 from 'aws-cdk-lib/aws-s3';
+import type * as sns from 'aws-cdk-lib/aws-sns';
+import { Construct } from 'constructs';
 
 // フロー設定
 const FLOW_CONFIG = {
-  objectName: "Account",
-  flowStatus: "Suspended",
+  objectName: 'Account',
+  flowStatus: 'Suspended',
   schedule: {
-    startTime: "2099-01-01T00:00:00+09:00",
-    expression: "rate(1days)",
+    startTime: '2099-01-01T00:00:00+09:00',
+    expression: 'rate(1days)',
     offset: 0,
   },
-  s3Prefix: "sf-account-flow",
+  s3Prefix: 'sf-account-flow',
 };
 export interface SalesforceFlowProps {
   envName: string;
@@ -31,22 +31,22 @@ export class SalesforceAccountFlow extends Construct {
     // AppFlowのフロー名
     const appFlowName = `${props.projectName}-${props.envName}-${FLOW_CONFIG.s3Prefix}`;
     // AppFlowのフロー定義
-    const flow = new appflow.CfnFlow(this, "SalesforceAccountFlow", {
+    const flow = new appflow.CfnFlow(this, 'SalesforceAccountFlow', {
       flowName: appFlowName,
       destinationFlowConfigList: [
         {
-          connectorType: "S3",
+          connectorType: 'S3',
           destinationConnectorProperties: {
             s3: {
               bucketName: props.outDataBucket.bucketName,
               s3OutputFormatConfig: {
-                fileType: "PARQUET",
+                fileType: 'PARQUET',
                 aggregationConfig: {
-                  aggregationType: "None",
+                  aggregationType: 'None',
                 },
                 prefixConfig: {
-                  prefixType: "PATH",
-                  prefixFormat: "DAY",
+                  prefixType: 'PATH',
+                  prefixFormat: 'DAY',
                 },
                 preserveSourceDataTyping: true,
               },
@@ -55,7 +55,7 @@ export class SalesforceAccountFlow extends Construct {
         },
       ],
       sourceFlowConfig: {
-        connectorType: "Salesforce",
+        connectorType: 'Salesforce',
         connectorProfileName: props.salesforceConnectorProfile,
         sourceConnectorProperties: {
           salesforce: {
@@ -66,39 +66,37 @@ export class SalesforceAccountFlow extends Construct {
           },
         },
         incrementalPullConfig: {
-          datetimeTypeFieldName: "LastModifiedDate",
+          datetimeTypeFieldName: 'LastModifiedDate',
         },
       },
       tasks: [
         {
-          taskType: "Map_all",
+          taskType: 'Map_all',
           sourceFields: [],
           taskProperties: [],
         },
       ],
       triggerConfig: {
-        triggerType: "Scheduled",
+        triggerType: 'Scheduled',
         triggerProperties: {
-          scheduleStartTime: Math.floor(
-            new Date(FLOW_CONFIG.schedule.startTime).getTime() / 1000
-          ),
+          scheduleStartTime: Math.floor(new Date(FLOW_CONFIG.schedule.startTime).getTime() / 1000),
           scheduleExpression: FLOW_CONFIG.schedule.expression,
-          timeZone: "Asia/Tokyo",
+          timeZone: 'Asia/Tokyo',
           scheduleOffset: FLOW_CONFIG.schedule.offset,
-          dataPullMode: "Incremental",
+          dataPullMode: 'Incremental',
         },
       },
       flowStatus: FLOW_CONFIG.flowStatus,
     });
 
     // AppFlow Failure EventBridgeルールの作成
-    const appFlowFailureRule = new events.Rule(this, "AppFlowFailureRule", {
+    const appFlowFailureRule = new events.Rule(this, 'AppFlowFailureRule', {
       eventPattern: {
-        source: ["aws.appflow"],
-        detailType: ["AppFlow End Flow Run Report"],
+        source: ['aws.appflow'],
+        detailType: ['AppFlow End Flow Run Report'],
         detail: {
-          "flow-name": [appFlowName],
-          status: ["Execution Failed"],
+          'flow-name': [appFlowName],
+          status: ['Execution Failed'],
         },
       },
     });

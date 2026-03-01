@@ -1,11 +1,11 @@
-CREATE EXTERNAL TABLE cm_kasama_db.test_table(
-  id STRING,
-  name STRING
-  )
+CREATE EXTERNAL TABLE cm_kasama_db.test_table (
+    id STRING,
+    name STRING  -- noqa: RF04
+)
 PARTITIONED BY (
-    year string,
-    month string,
-    day string
+    year STRING,  -- noqa: RF04
+    month STRING,  -- noqa: RF04
+    day STRING  -- noqa: RF04
 )
 STORED AS PARQUET
 LOCATION 's3://<your-s3-bucket>/test_table/'

@@ -1,7 +1,7 @@
 SELECT PARSE_JSON(
-  SNOWFLAKE.CORTEX.SEARCH_PREVIEW(
-      'travel_intelligence.data.travel_review_search',
-      '{
+    SNOWFLAKE.CORTEX.SEARCH_PREVIEW(
+        'travel_intelligence.data.travel_review_search',
+        '{
         "query": "富士山の景色が見える高級旅館",
         "columns": [
             "review_id",
@@ -13,5 +13,5 @@ SELECT PARSE_JSON(
         ],
         "limit": 3
       }'
-  )
-)['results'] as results;
+    )
+)['results'] AS results;

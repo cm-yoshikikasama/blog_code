@@ -1,3 +1,4 @@
+-- noqa: disable=all
 -- cSpell:words TBLPROPERTIES
 -- Glue Database と Iceberg テーブル作成
 -- Athena で実行してください

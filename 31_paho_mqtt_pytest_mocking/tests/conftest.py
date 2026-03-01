@@ -1,5 +1,5 @@
-import pytest
 import paho.mqtt.client as mqtt
+import pytest
 
 
 def pytest_runtest_setup(item):

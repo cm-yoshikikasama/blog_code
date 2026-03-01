@@ -12,7 +12,7 @@ Parameters:
     Type: String
     Description: S3 bucket name for Lake Formation data
   RolePrefixName:
-    Type: String  
+    Type: String
     Description: Role prefix name
 
 Resources:

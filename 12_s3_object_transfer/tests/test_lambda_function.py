@@ -1,14 +1,15 @@
-import pytest
-from moto import mock_s3
-import boto3
-from botocore.exceptions import ClientError
 import csv
 import sys
 from io import StringIO
 
+import boto3
+import pytest
+from botocore.exceptions import ClientError
+from moto import mock_s3
+
 sys.path.append("../")
 
-from handler import get_csv_file, get_file_names, check_s3_objects_existence, log_result
+from handler import check_s3_objects_existence, get_csv_file, get_file_names, log_result
 
 
 @pytest.fixture
@@ -60,7 +61,8 @@ def test_check_s3_objects_existence_error(s3_client):
 
     with pytest.raises(ClientError):
         check_s3_objects_existence(
-            file_names=["test_a.pdf", "test_b.pdf", "test_c.pdf"], bucket_name="test-bucket-dummy"
+            file_names=["test_a.pdf", "test_b.pdf", "test_c.pdf"],
+            bucket_name="test-bucket-dummy",
         )
 
 

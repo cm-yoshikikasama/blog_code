@@ -44,7 +44,7 @@ pip install openpyxl
 (blog_env) kasama.yoshiki@ 22_image_to_excel % python image_to_excel.py test_evidence.xlsx No.2
 test_evidence.xlsx
 Insert Images to Excel
-(blog_env) kasama.yoshiki@ 22_image_to_excel % 
+(blog_env) kasama.yoshiki@ 22_image_to_excel %
 ```
 
 help
@@ -59,5 +59,5 @@ positional arguments:
 
 options:
   -h, --help       show this help message and exit
-(blog_env) kasama.yoshiki@ 22_image_to_excel % 
+(blog_env) kasama.yoshiki@ 22_image_to_excel %
 ```

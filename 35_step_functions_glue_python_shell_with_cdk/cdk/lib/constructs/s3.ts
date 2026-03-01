@@ -1,10 +1,6 @@
-import * as cdk from "aws-cdk-lib";
-import {
-  Bucket,
-  BlockPublicAccess,
-  BucketEncryption,
-} from "aws-cdk-lib/aws-s3";
-import { Construct } from "constructs";
+import * as cdk from 'aws-cdk-lib';
+import { BlockPublicAccess, Bucket, BucketEncryption } from 'aws-cdk-lib/aws-s3';
+import { Construct } from 'constructs';
 
 export interface S3ConstructProps {
   envName: string;
@@ -18,7 +14,7 @@ export class S3Construct extends Construct {
   constructor(scope: Construct, id: string, props: S3ConstructProps) {
     super(scope, id);
 
-    this.dataSourceBucket = new Bucket(this, "DataSourceBucket", {
+    this.dataSourceBucket = new Bucket(this, 'DataSourceBucket', {
       bucketName: `${props.projectName}-${props.envName}-data-source`,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
@@ -26,14 +22,14 @@ export class S3Construct extends Construct {
       versioned: true,
       eventBridgeEnabled: true,
     });
-    this.dataStoreBucket = new Bucket(this, "DataStoreBucket", {
+    this.dataStoreBucket = new Bucket(this, 'DataStoreBucket', {
       bucketName: `${props.projectName}-${props.envName}-data-store`,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
       encryption: BucketEncryption.KMS_MANAGED,
       versioned: true,
     });
-    this.sysBucket = new Bucket(this, "SysBucket", {
+    this.sysBucket = new Bucket(this, 'SysBucket', {
       bucketName: `${props.projectName}-${props.envName}-sys`,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
@@ -42,10 +38,10 @@ export class S3Construct extends Construct {
       eventBridgeEnabled: true,
     });
     // Glue スクリプトを S3 バケットにデプロイ
-    new cdk.aws_s3_deployment.BucketDeployment(this, "DeployGlueScript", {
-      sources: [cdk.aws_s3_deployment.Source.asset("../resources")],
+    new cdk.aws_s3_deployment.BucketDeployment(this, 'DeployGlueScript', {
+      sources: [cdk.aws_s3_deployment.Source.asset('../resources')],
       destinationBucket: this.sysBucket,
-      destinationKeyPrefix: "glue-jobs",
+      destinationKeyPrefix: 'glue-jobs',
     });
   }
 }

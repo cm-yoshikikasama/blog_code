@@ -1,0 +1,206 @@
+<mxfile host="65bd71144e">
+    <diagram id="diagram-1" name="1. Sample ETL Pipeline">
+        <mxGraphModel dx="778" dy="309" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="600" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="title" value="Diagram 1: Sample ETL Pipeline (EventBridge &amp;rarr; Step Functions &amp;rarr; Iceberg)" style="text;html=1;fontSize=28;fontStyle=1;fontColor=#232F3E;align=center;" parent="1" vertex="1">
+                    <mxGeometry x="198" y="24" width="900" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="account" value="AWS Account" style="sketch=0;outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=16;fontStyle=1;shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_account;strokeColor=#CD2264;fillColor=none;verticalAlign=top;align=left;spacingLeft=30;fontColor=#CD2264;dashed=0;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="80" width="1320" height="530" as="geometry"/>
+                </mxCell>
+                <mxCell id="region" value="ap-northeast-1" style="sketch=0;outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=16;fontStyle=1;shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_region;strokeColor=#00A4A6;fillColor=none;verticalAlign=top;align=left;spacingLeft=30;fontColor=#00A4A6;dashed=1;" parent="1" vertex="1">
+                    <mxGeometry x="60" y="120" width="1280" height="470" as="geometry"/>
+                </mxCell>
+                <mxCell id="eb" value="EventBridge&lt;br&gt;Schedule" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=16;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.eventbridge" parent="1" vertex="1">
+                    <mxGeometry x="100" y="310" width="78" height="78" as="geometry"/>
+                </mxCell>
+                <mxCell id="sfn" value="Step Functions" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=16;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.step_functions" parent="1" vertex="1">
+                    <mxGeometry x="310" y="310" width="78" height="78" as="geometry"/>
+                </mxCell>
+                <mxCell id="lambda" value="Lambda&lt;br&gt;(Python 3.13)" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#ED7100;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=16;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.lambda" parent="1" vertex="1">
+                    <mxGeometry x="540" y="310" width="78" height="78" as="geometry"/>
+                </mxCell>
+                <mxCell id="duckdb_box" value="DuckDB Lambda Layer&lt;br&gt;(CSV &amp;rarr; Parquet conversion)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF3E0;strokeColor=#ED7100;strokeWidth=1;fontSize=16;fontColor=#232F3E;arcSize=10;verticalAlign=middle;align=center;" parent="1" vertex="1">
+                    <mxGeometry x="475" y="450" width="220" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="s3_source" value="S3 Source&lt;br&gt;(CSV files)" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#3F8624;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=16;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.s3" parent="1" vertex="1">
+                    <mxGeometry x="540" y="150" width="78" height="78" as="geometry"/>
+                </mxCell>
+                <mxCell id="iceberg_group" value="Iceberg Table" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F3E5F5;strokeColor=#8C4FFF;strokeWidth=2;dashed=1;dashPattern=8 4;arcSize=8;verticalAlign=top;fontStyle=1;fontSize=20;fontColor=#8C4FFF;spacingTop=2;" parent="1" vertex="1">
+                    <mxGeometry x="895" y="125" width="180" height="340" as="geometry"/>
+                </mxCell>
+                <mxCell id="s3_target" value="S3 Target&lt;br&gt;(Iceberg data)" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#3F8624;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=16;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.s3" parent="1" vertex="1">
+                    <mxGeometry x="945" y="161" width="78" height="78" as="geometry"/>
+                </mxCell>
+                <mxCell id="glue_catalog" value="Glue Data Catalog&lt;br&gt;(Iceberg metadata)" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#8C4FFF;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=16;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.glue_data_catalog" parent="1" vertex="1">
+                    <mxGeometry x="945" y="310" width="78" height="78" as="geometry"/>
+                </mxCell>
+                <mxCell id="athena" value="Athena&lt;br&gt;(query)" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#8C4FFF;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=16;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.s3" parent="1" vertex="1">
+                    <mxGeometry x="1160" y="310" width="78" height="78" as="geometry"/>
+                </mxCell>
+                <mxCell id="archive_label" value="archive/" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F5E9;strokeColor=#3F8624;strokeWidth=1;fontSize=16;fontColor=#3F8624;arcSize=50;fontStyle=2;" parent="1" vertex="1">
+                    <mxGeometry x="350" y="178" width="100" height="32" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_eb_sfn" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#545B64;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" parent="1" source="eb" target="sfn" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_eb_sfn_label" value="trigger" style="edgeLabel;html=1;fontSize=18;fontColor=#545B64;labelBackgroundColor=#FFFFFF;" parent="a_eb_sfn" connectable="0" vertex="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_sfn_lambda" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#545B64;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" parent="1" source="sfn" target="lambda" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_sfn_lambda_label" value="invoke" style="edgeLabel;html=1;fontSize=18;fontColor=#545B64;labelBackgroundColor=#FFFFFF;" parent="a_sfn_lambda" connectable="0" vertex="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_lambda_s3src" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#3F8624;strokeWidth=2;dashed=1;exitX=0.5;exitY=0;entryX=0.5;entryY=1;" parent="1" source="lambda" target="s3_source" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_lambda_s3src_label" value="read CSV" style="edgeLabel;html=1;fontSize=18;fontColor=#3F8624;labelBackgroundColor=#FFFFFF;" parent="a_lambda_s3src" connectable="0" vertex="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="45" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="a_lambda_s3tgt" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#3F8624;strokeWidth=2;exitX=1;exitY=0.25;entryX=0;entryY=0.5;" parent="1" source="lambda" target="s3_target" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="750" y="330"/>
+                            <mxPoint x="750" y="200"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="a_lambda_s3tgt_label" value="write Parquet" style="edgeLabel;html=1;fontSize=18;fontColor=#3F8624;labelBackgroundColor=#FFFFFF;" parent="a_lambda_s3tgt" connectable="0" vertex="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_lambda_glue" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#8C4FFF;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" parent="1" source="lambda" target="glue_catalog" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_lambda_glue_label" value="DELETE + INSERT" style="edgeLabel;html=1;fontSize=18;fontColor=#8C4FFF;labelBackgroundColor=#FFFFFF;" parent="a_lambda_glue" connectable="0" vertex="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_lambda_archive" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#3F8624;strokeWidth=2;dashed=1;exitX=0;exitY=0.25;entryX=1;entryY=0.5;" parent="1" source="lambda" target="archive_label" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="470" y="330"/>
+                            <mxPoint x="470" y="194"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="a_lambda_archive_label" value="move to archive" style="edgeLabel;html=1;fontSize=18;fontColor=#3F8624;fontStyle=2;labelBackgroundColor=#FFFFFF;" parent="a_lambda_archive" connectable="0" vertex="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-60" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="a_lambda_duckdb" style="rounded=1;orthogonalLoop=1;html=1;strokeColor=#ED7100;strokeWidth=1;dashed=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" parent="1" source="lambda" target="duckdb_box" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_athena_glue" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#8C4FFF;strokeWidth=2;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" parent="1" source="athena" target="glue_catalog" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_athena_glue_label" value="query" style="edgeLabel;html=1;fontSize=18;fontColor=#8C4FFF;labelBackgroundColor=#FFFFFF;" parent="a_athena_glue" connectable="0" vertex="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram id="diagram-2" name="2. Ralph Loop - Single Invocation">
+        <mxGraphModel dx="778" dy="309" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1150" pageHeight="570" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="title" value="Diagram 2: Ralph Loop - Single Invocation Workflow Pattern" style="text;html=1;fontSize=28;fontStyle=1;fontColor=#202124;align=center;" parent="1" vertex="1">
+                    <mxGeometry x="175" y="10" width="800" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="p1_box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F0FE;strokeColor=#4285F4;strokeWidth=2;arcSize=6;dashed=1;" parent="1" vertex="1">
+                    <mxGeometry x="20" y="60" width="280" height="280" as="geometry"/>
+                </mxCell>
+                <mxCell id="p1_label" value="Phase 1: Preparation" style="text;html=1;fontSize=20;fontStyle=1;fontColor=#4285F4;align=center;" parent="1" vertex="1">
+                    <mxGeometry x="30" y="70" width="260" height="28" as="geometry"/>
+                </mxCell>
+                <mxCell id="p1_mode" value="(Interactive)" style="text;html=1;fontSize=16;fontColor=#5F6368;fontStyle=2;align=center;" parent="1" vertex="1">
+                    <mxGeometry x="30" y="98" width="260" height="24" as="geometry"/>
+                </mxCell>
+                <mxCell id="p1_skill" value="/prepare-integration-test" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#4285F4;fontSize=15;fontColor=#4285F4;fontFamily=monospace;arcSize=50;" parent="1" vertex="1">
+                    <mxGeometry x="30" y="132" width="260" height="36" as="geometry"/>
+                </mxCell>
+                <mxCell id="p1_arrow_label" value="generates" style="text;html=1;fontSize=16;fontColor=#5F6368;fontStyle=2;align=center;" parent="1" vertex="1">
+                    <mxGeometry x="60" y="176" width="160" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="p1_out1" value="test-plan.md" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#DADCE0;fontSize=14;fontColor=#202124;fontFamily=monospace;arcSize=50;" parent="1" vertex="1">
+                    <mxGeometry x="30" y="206" width="130" height="34" as="geometry"/>
+                </mxCell>
+                <mxCell id="p1_out2" value="workflow.json" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF7E0;strokeColor=#FBBC05;fontSize=14;fontColor=#202124;fontFamily=monospace;arcSize=50;" parent="1" vertex="1">
+                    <mxGeometry x="165" y="206" width="130" height="34" as="geometry"/>
+                </mxCell>
+                <mxCell id="p1_approve" value="User reviews and approves" style="text;html=1;fontSize=16;fontColor=#5F6368;align=center;" parent="1" vertex="1">
+                    <mxGeometry x="30" y="252" width="260" height="24" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_phase" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#34A853;strokeWidth=3;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" parent="1" source="p1_box" target="shell" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_phase_label" value="new&lt;div&gt;terminal&lt;/div&gt;" style="edgeLabel;html=1;fontSize=16;fontColor=#34A853;fontStyle=1;labelBackgroundColor=#FFFFFF;" parent="a_phase" connectable="0" vertex="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-39" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="p2_box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F5E9;strokeColor=#34A853;strokeWidth=2;arcSize=4;" parent="1" vertex="1">
+                    <mxGeometry x="380" y="60" width="750" height="480" as="geometry"/>
+                </mxCell>
+                <mxCell id="p2_label" value="Phase 2: Execution (Automated)" style="text;html=1;fontSize=20;fontStyle=1;fontColor=#34A853;align=left;" parent="1" vertex="1">
+                    <mxGeometry x="400" y="72" width="380" height="28" as="geometry"/>
+                </mxCell>
+                <mxCell id="shell" value="run-integration-test.sh" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#34A853;strokeWidth=2;fontSize=17;fontColor=#34A853;fontFamily=monospace;fontStyle=1;arcSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="400" y="120" width="300" height="44" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_invoke" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#4285F4;strokeWidth=3;" parent="1" source="shell" target="claude" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_invoke_label" value="single invocation" style="edgeLabel;html=1;fontSize=16;fontColor=#4285F4;fontStyle=1;labelBackgroundColor=#FFFFFF;" parent="a_invoke" connectable="0" vertex="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-5" y="-16" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="claude" value="claude -p&lt;br&gt;&lt;font style=&quot;font-size:16px;font-weight:normal;color:#5F6368&quot;&gt;Executes ALL steps in sequence&lt;br&gt;(auth, run job, poll, verify, evidence)&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F0FE;strokeColor=#4285F4;strokeWidth=2;fontSize=20;fontColor=#4285F4;fontStyle=1;arcSize=6;" parent="1" vertex="1">
+                    <mxGeometry x="400" y="220" width="360" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="wf" value="workflow.json&lt;br&gt;&lt;font style=&quot;font-size:15px;font-weight:normal;color:#5F6368&quot;&gt;status / output / retry per step&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF7E0;strokeColor=#FBBC05;strokeWidth=2;fontSize=18;fontColor=#F9AB00;fontStyle=1;arcSize=8;" parent="1" vertex="1">
+                    <mxGeometry x="400" y="380" width="260" height="65" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_wf_down" style="rounded=1;strokeColor=#FBBC05;strokeWidth=2;exitX=0.2;exitY=1;entryX=0.2;entryY=0;" parent="1" source="claude" target="wf" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_wf_up" style="rounded=1;strokeColor=#FBBC05;strokeWidth=2;exitX=0.8;exitY=0;entryX=0.8;entryY=1;" parent="1" source="wf" target="claude" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_wf_label" value="read / write" style="text;html=1;fontSize=16;fontColor=#F9AB00;fontStyle=1;align=center;" parent="1" vertex="1">
+                    <mxGeometry x="460" y="342" width="110" height="24" as="geometry"/>
+                </mxCell>
+                <mxCell id="aws" value="AWS&lt;br&gt;&lt;font style=&quot;font-size:15px;font-weight:normal;color:#5F6368&quot;&gt;(via --allowedTools + IAM)&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF8E1;strokeColor=#ED7100;strokeWidth=2;fontSize=18;fontColor=#ED7100;fontStyle=1;arcSize=8;dashed=1;" parent="1" vertex="1">
+                    <mxGeometry x="872" y="225" width="210" height="65" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_aws" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#ED7100;strokeWidth=2;exitX=1;exitY=0.4;entryX=0;entryY=0.5;" parent="1" source="claude" target="aws" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_aws_label" value="AWS CLI" style="edgeLabel;html=1;fontSize=16;fontColor=#ED7100;fontStyle=1;labelBackgroundColor=#FFFFFF;" parent="a_aws" connectable="0" vertex="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-22" y="2" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="out" value="Output&lt;br&gt;&lt;font style=&quot;font-size:15px;font-weight:normal;color:#5F6368&quot;&gt;test-outputs/test-plan.md&lt;br&gt;test-outputs/evidences/*.md&lt;br&gt;test-outputs/.workflow-log&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#34A853;strokeWidth=2;fontSize=18;fontColor=#34A853;fontStyle=1;arcSize=8;" parent="1" vertex="1">
+                    <mxGeometry x="860" y="330" width="210" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_out" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#34A853;strokeWidth=2;exitX=1;exitY=0.8;entryX=0;entryY=0.3;" parent="1" source="claude" target="out" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a_out_label" value="write" style="edgeLabel;html=1;fontSize=16;fontColor=#34A853;fontStyle=1;labelBackgroundColor=#FFFFFF;" parent="a_out" connectable="0" vertex="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="resume" value="Interrupt (Ctrl+C) &amp;rarr; re-run same command &amp;rarr; resumes from last completed step" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FCE4EC;strokeColor=#EA4335;strokeWidth=1;fontSize=15;fontColor=#EA4335;arcSize=50;dashed=1;" parent="1" vertex="1">
+                    <mxGeometry x="400" y="465" width="600" height="36" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

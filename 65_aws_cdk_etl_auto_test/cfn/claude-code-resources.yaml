@@ -1,0 +1,76 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Claude Code operator IAM role and shared resources
+
+Parameters:
+  ProjectName:
+    Type: String
+    Description: Project name in kebab-case (e.g. cm-kasama). Used for resource names like Athena WorkGroup.
+  RoleNamePrefix:
+    Type: String
+    Description: Project name in PascalCase (e.g. CmKasama). Used for IAM role name.
+  TrustedPrincipalArns:
+    Type: CommaDelimitedList
+    Description: Comma-separated IAM ARNs (e.g. arn:aws:iam::123456789012:user/alice,arn:aws:iam::123456789012:user/bob)
+
+Resources:
+  ClaudeCodeOperatorRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub ${RoleNamePrefix}ClaudeCodeOperatorRole
+      MaxSessionDuration: 3600
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !Ref TrustedPrincipalArns
+            Action: sts:AssumeRole
+            Condition:
+              Bool:
+                aws:MultiFactorAuthPresent: "true"
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/ReadOnlyAccess
+      Policies:
+        - PolicyName: ClaudeCodeJobExecution
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Sid: StepFunctionsExecution
+                Effect: Allow
+                Action:
+                  - states:StartExecution
+                Resource: "*"
+              - Sid: GlueJobExecution
+                Effect: Allow
+                Action:
+                  - glue:StartJobRun
+                Resource: "*"
+              - Sid: EventBridgePutEvents
+                Effect: Allow
+                Action:
+                  - events:PutEvents
+                Resource: "*"
+              - Sid: AthenaQueryExecution
+                Effect: Allow
+                Action:
+                  - athena:StartQueryExecution
+                  - athena:StopQueryExecution
+                  - athena:GetQueryExecution
+                  - athena:GetQueryResults
+                Resource: "*"
+              - Sid: S3TestDataSetup
+                Effect: Allow
+                Action:
+                  - s3:PutObject
+                Resource: "arn:aws:s3:::*/*"
+
+  ClaudeCodeAthenaWorkGroup:
+    Type: AWS::Athena::WorkGroup
+    Properties:
+      Name: !Sub ${ProjectName}-claude-code
+      Description: Athena workgroup for Claude Code with managed query results
+      State: ENABLED
+      WorkGroupConfiguration:
+        EnforceWorkGroupConfiguration: true
+        ManagedQueryResultsConfiguration:
+          Enabled: true

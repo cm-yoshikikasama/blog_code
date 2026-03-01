@@ -1,6 +1,7 @@
+import json
 import os
 import time
-import json
+
 import duckdb
 
 
@@ -30,7 +31,7 @@ def lambda_handler(event, context):
 
         # CSVをParquetに変換（圧縮指定あり）
         con.execute(f"""
-            COPY (SELECT * FROM read_csv_auto('{source_path}', parallel=True)) 
+            COPY (SELECT * FROM read_csv_auto('{source_path}', parallel=True))
             TO '{destination_path}' (FORMAT PARQUET, COMPRESSION 'SNAPPY');
         """)
         con.close()
@@ -42,7 +43,9 @@ def lambda_handler(event, context):
             "statusCode": 200,
             "body": json.dumps(
                 {
-                    "message": "CSV to Parquet conversion completed successfully with DuckDB",
+                    "message": (
+                        "CSV to Parquet conversion completed successfully with DuckDB"
+                    ),
                     "execution_time": execution_time,
                     "source": source_path,
                     "destination": destination_path,

@@ -1,5 +1,6 @@
-import sys
 import json
+import sys
+
 import duckdb
 from awsglue.utils import getResolvedOptions
 
@@ -142,22 +143,22 @@ def generate_and_upload_data(s3_path, rows):
     COPY (
         SELECT
             'CUST-' || (random() * 89999 + 10000)::INTEGER::VARCHAR AS customer_id,
-            (SELECT name FROM first_names ORDER BY random() LIMIT 1) || ' ' || 
+            (SELECT name FROM first_names ORDER BY random() LIMIT 1) || ' ' ||
             (SELECT name FROM last_names ORDER BY random() LIMIT 1) AS full_name,
-            'user' || (random() * 899 + 100)::INTEGER::VARCHAR || '@' || 
+            'user' || (random() * 899 + 100)::INTEGER::VARCHAR || '@' ||
             (SELECT name FROM email_domains ORDER BY random() LIMIT 1) AS email,
             '+' || (random() * 8 + 1)::INTEGER::VARCHAR || '-' ||
             (random() * 899 + 100)::INTEGER::VARCHAR || '-' ||
             (random() * 899 + 100)::INTEGER::VARCHAR || '-' ||
             (random() * 8999 + 1000)::INTEGER::VARCHAR AS phone,
             (SELECT name FROM companies ORDER BY random() LIMIT 1) AS company,
-            '$' || (random() * 990 + 10)::INTEGER::VARCHAR || '.' || 
+            '$' || (random() * 990 + 10)::INTEGER::VARCHAR || '.' ||
             lpad((random() * 99)::INTEGER::VARCHAR, 2, '0') AS purchase_amount,
             (SELECT name FROM categories ORDER BY random() LIMIT 1) AS category,
             (SELECT name FROM countries ORDER BY random() LIMIT 1) AS country,
             (SELECT name FROM cities ORDER BY random() LIMIT 1) AS city,
             (SELECT name FROM statuses ORDER BY random() LIMIT 1) AS status
-        FROM 
+        FROM
             generate_series(1, {rows})
     ) TO '{s3_path}' WITH (FORMAT CSV, HEADER);
     """

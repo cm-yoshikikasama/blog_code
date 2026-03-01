@@ -1,5 +1,8 @@
 def make_column_definition(file_info):
-    sql_line = f"    {file_info.column_name:<{file_info.max_column_length}} {file_info.data_type}"
+    sql_line = (
+        f"    {file_info.column_name:<{file_info.max_column_length}}"
+        f" {file_info.data_type}"
+    )
 
     # Add digits and decimal part if needed
     if file_info.digits != "-":

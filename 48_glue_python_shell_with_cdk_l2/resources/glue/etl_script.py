@@ -1,4 +1,5 @@
 import sys
+
 from awsglue.utils import getResolvedOptions
 
 # 引数を取得

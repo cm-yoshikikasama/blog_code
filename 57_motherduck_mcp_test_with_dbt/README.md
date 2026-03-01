@@ -1,6 +1,6 @@
 # README: MCP Server × DuckDB × Cursor × dbt で異常値入り Parquet データを活用した AI データパイプライン構築
 
-この README は、**異常値を含む`users_abnormal.parquet`と正常な`orders_normal.parquet`を使い、MCP Server（DuckDB）と Cursor を組み合わせて、AI が dbt モデルを自律的に生成・検証・整備する手順**をまとめたものです。  
+この README は、**異常値を含む`users_abnormal.parquet`と正常な`orders_normal.parquet`を使い、MCP Server（DuckDB）と Cursor を組み合わせて、AI が dbt モデルを自律的に生成・検証・整備する手順**をまとめたものです。
 MotherDuck 公式ブログ「Close the Loop: Faster Data Pipelines with MCP, DuckDB & AI」の実践ガイドを、ローカル Parquet データに合わせて再構成しています。
 
 ---

@@ -8,7 +8,7 @@ sql_file_exts = .sql
 large_file_skip_byte_limit = 0
 
 # ルールの中から取り除くものを選ぶ
-exclude_rules = 
+exclude_rules =
     # sqlfluff fixでカラムの順序を変えないようにするための設定
     structure.column_order
     ,ambiguous.column_count
@@ -23,9 +23,9 @@ tab_space_size = 4
 [sqlfluff:rules:layout.long_lines]
 # コメント行は長くても可とする。URLなどが入るため
 # 行の長さに関してコメント行は無視する
-ignore_comment_lines = True 
+ignore_comment_lines = True
 # 行の長さに関してコメント句は無視する
-ignore_comment_clauses = True 
+ignore_comment_clauses = True
 
 [sqlfluff:layout:type:comma]
 # 先頭のカンマの強制

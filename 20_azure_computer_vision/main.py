@@ -1,10 +1,12 @@
 import os
 import time
-from azure.cognitiveservices.vision.computervision import ComputerVisionClient
-from msrest.authentication import CognitiveServicesCredentials
-from azure.cognitiveservices.vision.computervision.models import OperationStatusCodes
-from azure.cognitiveservices.vision.computervision.models import ComputerVisionOcrErrorException
 
+from azure.cognitiveservices.vision.computervision import ComputerVisionClient
+from azure.cognitiveservices.vision.computervision.models import (
+    ComputerVisionOcrErrorException,
+    OperationStatusCodes,
+)
+from msrest.authentication import CognitiveServicesCredentials
 
 key = os.environ["ACCOUNT_KEY"]
 endpoint = os.environ["END_POINT"]
@@ -12,10 +14,14 @@ image_path = "img/PXL_20230523_135425927.MP.jpg"  # ローカルの画像パス
 
 
 def main(image_path):
-    computervision_client = ComputerVisionClient(endpoint, CognitiveServicesCredentials(key))
+    computervision_client = ComputerVisionClient(
+        endpoint, CognitiveServicesCredentials(key)
+    )
     local_image = open(image_path, "rb")
     try:
-        recognize_results = computervision_client.read_in_stream(local_image, language="ja", raw=True)
+        recognize_results = computervision_client.read_in_stream(
+            local_image, language="ja", raw=True
+        )
     except ComputerVisionOcrErrorException as e:
         print("errors:", e.response)
         raise e

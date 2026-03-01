@@ -1,7 +1,8 @@
-import pandas as pd
-import random
 import os
+import random
 import sys
+
+import pandas as pd
 
 
 def create_sample_csv(filename="sample_data.csv", rows=1000000):
@@ -100,7 +101,10 @@ def create_sample_csv(filename="sample_data.csv", rows=1000000):
     data = {
         "customer_id": [f"CUST-{random.randint(10000, 99999)}" for _ in range(rows)],
         "full_name": [
-            f"{random.choice(['John', 'Jane', 'Robert', 'Mary', 'David', 'Sarah', 'Michael', 'Lisa', 'James', 'Emily'])} {random.choice(['Smith', 'Johnson', 'Williams', 'Jones', 'Brown', 'Davis', 'Miller', 'Wilson', 'Moore', 'Taylor', 'Anderson', 'Thomas', 'Jackson', 'White'])}"
+            (
+                f"{random.choice(['John', 'Jane', 'Robert', 'Mary', 'David', 'Sarah', 'Michael', 'Lisa', 'James', 'Emily'])}"  # noqa: E501
+                f" {random.choice(['Smith', 'Johnson', 'Williams', 'Jones', 'Brown', 'Davis', 'Miller', 'Wilson', 'Moore', 'Taylor', 'Anderson', 'Thomas', 'Jackson', 'White'])}"  # noqa: E501
+            )
             for _ in range(rows)
         ],
         "email": [
@@ -108,7 +112,10 @@ def create_sample_csv(filename="sample_data.csv", rows=1000000):
             for _ in range(rows)
         ],
         "phone": [
-            f"+{random.randint(1, 9)}-{random.randint(100, 999)}-{random.randint(100, 999)}-{random.randint(1000, 9999)}"
+            (
+                f"+{random.randint(1, 9)}-{random.randint(100, 999)}"
+                f"-{random.randint(100, 999)}-{random.randint(1000, 9999)}"
+            )
             for _ in range(rows)
         ],
         "company": [random.choice(companies) for _ in range(rows)],

@@ -169,4 +169,3 @@ function saveToFolder_(folder, fileName, content) {
 function sanitizeFileName_(name) {
   return name.replace(/[\/\\?%*:|"<>\s]/g, '_').trim();
 }
-

@@ -1,6 +1,7 @@
 import json
-import paho.mqtt.client as mqtt  # MQTTのライブラリをインポート
 import logging
+
+import paho.mqtt.client as mqtt  # MQTTのライブラリをインポート
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -35,7 +36,8 @@ def on_message(client, userdata, msg):
     payload = json.loads(msg.payload.decode())
     topic = str(msg.topic)
     logger.info(
-        f"Received payload:{str(payload)}, topic: {topic},  with QoS: {str(msg.qos)}, userdata: {str(userdata)}"
+        f"Received payload:{str(payload)}, topic: {topic}, "
+        f" with QoS: {str(msg.qos)}, userdata: {str(userdata)}"
     )
     if "drone/" in topic:
         dron_num = topic.split("/")[1]

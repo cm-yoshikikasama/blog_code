@@ -50,9 +50,8 @@ pytest -o log_cli=true -o log_cli_level=DEBUG -s
 
 ## 参考
 
-- https://qiita.com/hsgucci/items/6461d8555ea1245ef6c2 
-- https://marketplace.visualstudio.com/items?itemName=LittleFoxTeam.vscode-python-test-adapter 
-- https://marketplace.visualstudio.com/items?itemName=LittleFoxTeam.vscode-python-test-adapter 
-- https://github.com/eclipse/paho.mqtt.python/tree/master 
+- https://qiita.com/hsgucci/items/6461d8555ea1245ef6c2
+- https://marketplace.visualstudio.com/items?itemName=LittleFoxTeam.vscode-python-test-adapter
+- https://marketplace.visualstudio.com/items?itemName=LittleFoxTeam.vscode-python-test-adapter
+- https://github.com/eclipse/paho.mqtt.python/tree/master
 - https://github.com/audreyfeldroy/cookiecutter-pypackage
-

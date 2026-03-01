@@ -1,0 +1,4 @@
+order_id,customer_id,product_name,quantity,unit_price,order_date
+ORD-006,CUST-105,Widget B,1,800.50,2025-12-03
+ORD-007,CUST-102,Widget E,4,3500.00,2025-12-03
+ORD-008,CUST-106,Widget A,6,1200.00,2025-12-03

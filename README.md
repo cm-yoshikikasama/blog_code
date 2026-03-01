@@ -10,6 +10,31 @@ Repository for publishing source code introduced in blog posts.
 
 ## Development Environment
 
+### Pre-commit
+
+This repository uses [pre-commit](https://pre-commit.com/) to run automated checks on every commit.
+
+Setup:
+
+```bash
+brew install pre-commit gitleaks
+pre-commit install
+```
+
+Included hooks:
+
+- check-json, check-yaml, trailing-whitespace, end-of-file-fixer (general)
+- gitleaks (secret leak detection)
+- biome-check (TypeScript/JavaScript)
+- ruff, ruff-format (Python)
+- sqlfluff-lint (SQL)
+
+To run all hooks manually:
+
+```bash
+pre-commit run --all-files
+```
+
 ### Auto Format and Lint (Claude Code)
 
 This repository automatically executes format and lint on file edit via Claude Code hooks feature.

@@ -1,5 +1,5 @@
-import sys
 import logging
+import sys
 
 
 class GetLogger:
@@ -8,7 +8,8 @@ class GetLogger:
         self.logger.setLevel(logging.DEBUG)
 
         formatter = logging.Formatter(
-            "%(asctime)s - %(levelname)s - %(name)s - %(funcName)s  - line:%(lineno)d - %(message)s"
+            "%(asctime)s - %(levelname)s - %(name)s - %(funcName)s "
+            " - line:%(lineno)d - %(message)s"
         )
 
         console_handler = logging.StreamHandler(sys.stdout)

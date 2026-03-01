@@ -1,8 +1,9 @@
+import glob
+import os
+
 import pandas as pd
 import pyarrow as pa
 import pyarrow.parquet as pq
-import glob
-import os
 
 # 出力ディレクトリを作成
 output_dir = "parquet"
