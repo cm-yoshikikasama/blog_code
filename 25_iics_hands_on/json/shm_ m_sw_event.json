@@ -1,46 +1,46 @@
 {
-    "Columns": [
-        {
-            "Name": "eventid",
-            "Type": "string",
-            "Precision": "10",
-            "Scale": "0",
-            "nullableField": "TRUE"
-        },
-        {
-            "Name": "venueid",
-            "Type": "string",
-            "Precision": "10",
-            "Scale": "0",
-            "nullableField": "TRUE"
-        },
-        {
-            "Name": "catid",
-            "Type": "string",
-            "Precision": "10",
-            "Scale": "0",
-            "nullableField": "TRUE"
-        },
-        {
-            "Name": "dateid",
-            "Type": "string",
-            "Precision": "10",
-            "Scale": "0",
-            "nullableField": "TRUE"
-        },
-        {
-            "Name": "eventname",
-            "Type": "string",
-            "Precision": "200",
-            "Scale": "0",
-            "nullableField": "TRUE"
-        },
-        {
-            "Name": "starttime",
-            "Type": "string",
-            "Precision": "29",
-            "Scale": "0",
-            "nullableField": "TRUE"
-        }
-    ]
+  "Columns": [
+    {
+      "Name": "eventid",
+      "Type": "string",
+      "Precision": "10",
+      "Scale": "0",
+      "nullableField": "TRUE"
+    },
+    {
+      "Name": "venueid",
+      "Type": "string",
+      "Precision": "10",
+      "Scale": "0",
+      "nullableField": "TRUE"
+    },
+    {
+      "Name": "catid",
+      "Type": "string",
+      "Precision": "10",
+      "Scale": "0",
+      "nullableField": "TRUE"
+    },
+    {
+      "Name": "dateid",
+      "Type": "string",
+      "Precision": "10",
+      "Scale": "0",
+      "nullableField": "TRUE"
+    },
+    {
+      "Name": "eventname",
+      "Type": "string",
+      "Precision": "200",
+      "Scale": "0",
+      "nullableField": "TRUE"
+    },
+    {
+      "Name": "starttime",
+      "Type": "string",
+      "Precision": "29",
+      "Scale": "0",
+      "nullableField": "TRUE"
+    }
+  ]
 }

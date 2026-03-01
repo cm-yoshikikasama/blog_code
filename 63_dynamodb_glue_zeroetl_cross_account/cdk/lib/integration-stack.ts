@@ -18,24 +18,19 @@ export class IntegrationStack extends cdk.Stack {
     // ========================================
     // Zero-ETL Integration
     // ========================================
-    const zeroEtlIntegration = new glue.CfnIntegration(
-      this,
-      'ZeroETLIntegration',
-      {
-        integrationName: `${parameter.projectName}-${parameter.envName}-integration`,
-        sourceArn: sourceTableArn,
-        targetArn: targetDatabaseArn,
-        description:
-          'DynamoDB to SageMaker Lakehouse Zero-ETL Integration (Cross-Account)',
-        integrationConfig: {
-          refreshInterval: `${parameter.refreshIntervalMinutes}`,
-        },
-        tags: [
-          { key: 'Environment', value: parameter.envName },
-          { key: 'Project', value: parameter.projectName },
-        ],
-      }
-    );
+    const zeroEtlIntegration = new glue.CfnIntegration(this, 'ZeroETLIntegration', {
+      integrationName: `${parameter.projectName}-${parameter.envName}-integration`,
+      sourceArn: sourceTableArn,
+      targetArn: targetDatabaseArn,
+      description: 'DynamoDB to SageMaker Lakehouse Zero-ETL Integration (Cross-Account)',
+      integrationConfig: {
+        refreshInterval: `${parameter.refreshIntervalMinutes}`,
+      },
+      tags: [
+        { key: 'Environment', value: parameter.envName },
+        { key: 'Project', value: parameter.projectName },
+      ],
+    });
 
     // ========================================
     // Outputs

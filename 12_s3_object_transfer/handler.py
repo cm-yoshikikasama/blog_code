@@ -1,4 +1,5 @@
 import os
+
 import boto3
 from aws_lambda_powertools import Logger
 from aws_lambda_powertools.utilities.typing import LambdaContext
@@ -8,7 +9,6 @@ from lib.s3_operations import s3_objects_existence
 logger = Logger()
 
 s3_client = boto3.client("s3")
-
 
 
 @logger.inject_lambda_context(log_event=True)
@@ -29,4 +29,6 @@ def handler(event, context: LambdaContext):
     csv_content = get_csv_file(csv_bucket_name, csv_prefix, s3_client)
     csv_to_file_names = get_file_names_from_csv(csv_content, file_name_colum)
     logger.info(csv_to_file_names)
-    s3_objects_existence(csv_to_file_names, target_bucket_name, target_prefix, s3_client)
+    s3_objects_existence(
+        csv_to_file_names, target_bucket_name, target_prefix, s3_client
+    )

@@ -1,5 +1,6 @@
+import logging
+import logging.handlers
 import os
-import logging, logging.handlers
 
 
 class DebugFilter(logging.Filter):
@@ -19,7 +20,8 @@ class MyLogger:
         self.logger.setLevel(logging.DEBUG)
 
         formatter = logging.Formatter(
-            "%(asctime)s - %(levelname)s - %(name)s - %(funcName)s  - line:%(lineno)d - %(message)s"
+            "%(asctime)s - %(levelname)s - %(name)s - %(funcName)s "
+            " - line:%(lineno)d - %(message)s"
         )
 
         debug_file_path = "log/debug.log"

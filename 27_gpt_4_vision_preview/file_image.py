@@ -1,5 +1,6 @@
-import os
 import base64
+import os
+
 import requests
 
 # OpenAI API Key
@@ -28,14 +29,24 @@ payload = {
             "content": [
                 {
                     "type": "text",
-                    "text": "Output the details of the objects in the image as JSON data. The resulting JSON file should start with 'start--' and end with '--end'.",
+                    "text": (
+                        "Output the details of the objects in the"
+                        " image as JSON data. The resulting JSON"
+                        " file should start with 'start--' and"
+                        " end with '--end'."
+                    ),
                 },
-                {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{base64_image}"}},
+                {
+                    "type": "image_url",
+                    "image_url": {"url": f"data:image/jpeg;base64,{base64_image}"},
+                },
             ],
         }
     ],
     "max_tokens": 300,
 }
-response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=payload)
+response = requests.post(
+    "https://api.openai.com/v1/chat/completions", headers=headers, json=payload
+)
 
 print(response.json())

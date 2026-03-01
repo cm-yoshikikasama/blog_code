@@ -1,7 +1,8 @@
-import sys
 import pkgutil
-import boto3
+import sys
 import traceback
+
+import boto3
 
 
 def print_importable_modules():
@@ -12,16 +13,20 @@ def print_importable_modules():
 
 print_importable_modules()
 
-from common.data_processing import process_data, get_current_time, read_csv_from_s3, write_csv_to_s3
-from common.get_logger import setup_logging
-from awsglue.utils import getResolvedOptions
+from awsglue.utils import getResolvedOptions  # noqa: E402
+from common.data_processing import (  # noqa: E402
+    get_current_time,
+    process_data,
+    read_csv_from_s3,
+    write_csv_to_s3,
+)
+from common.get_logger import setup_logging  # noqa: E402
 
 logger = setup_logging()
 
 
 def main():
     try:
-
         args = getResolvedOptions(
             sys.argv,
             [
@@ -47,7 +52,9 @@ def main():
         current_time = get_current_time().strftime("%Y-%m-%d-%H-%M-%S")
         output_filename = f"{s3_output_key}output_{current_time}.csv"
 
-        logger.info(f"Writing processed data to s3://{s3_output_bucket}/{output_filename}")
+        logger.info(
+            f"Writing processed data to s3://{s3_output_bucket}/{output_filename}"
+        )
         write_csv_to_s3(s3_client, processed_data, s3_output_bucket, output_filename)
 
         logger.info("ETL process completed successfully")

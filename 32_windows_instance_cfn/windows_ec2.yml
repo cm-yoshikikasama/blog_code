@@ -10,7 +10,7 @@ Parameters:
     Default: a
   LatestWindowsAmiId :
     Type : 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
-    AllowedValues: 
+    AllowedValues:
       - '/aws/service/ami-windows-latest/Windows_Server-2016-Japanese-Full-Base'
       - '/aws/service/ami-windows-latest/Windows_Server-2016-English-Full-Base'
       - '/aws/service/ami-windows-latest/Windows_Server-2019-Japanese-Full-Base'

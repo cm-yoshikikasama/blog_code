@@ -1,5 +1,5 @@
-import pandas as pd
 import numpy as np
+import pandas as pd
 
 # usersデータ（異常値・型揺らぎあり）
 users_data = {
@@ -38,7 +38,14 @@ orders_data = {
         "2024-03-11",
         "2024-03-12",
     ],
-    "status": ["completed", "cancelled", "completed", "completed", "completed", "completed"],
+    "status": [
+        "completed",
+        "cancelled",
+        "completed",
+        "completed",
+        "completed",
+        "completed",
+    ],
     "coupon_used": [True, False, False, False, True, False],
     "extra_info": ["", "gift", "", "", "", ""],
 }

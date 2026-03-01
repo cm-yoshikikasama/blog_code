@@ -23,7 +23,7 @@ Resources:
                 Resource: "*"
                 Action:
                   - sns:Publish
-              
+
   EventBridgeStateMachineExecuteRole:
     Type: "AWS::IAM::Role"
     Properties:

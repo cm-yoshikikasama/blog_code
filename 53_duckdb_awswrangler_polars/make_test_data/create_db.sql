@@ -1,1 +1,1 @@
-create database cm_kasama_sample;
+CREATE DATABASE cm_kasama_sample;

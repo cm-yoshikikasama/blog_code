@@ -1,5 +1,5 @@
 {
-    "properties" : {
-        "target_table" : {"type" : "string"}
-    }
+  "properties": {
+    "target_table": { "type": "string" }
+  }
 }

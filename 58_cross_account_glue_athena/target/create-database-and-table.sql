@@ -1,3 +1,4 @@
+-- noqa: disable=all
 -- Create Glue Database for Target Account
 CREATE DATABASE IF NOT EXISTS cm_kasama_cross_account_target_db
 COMMENT 'Target database for cross-account data copy'

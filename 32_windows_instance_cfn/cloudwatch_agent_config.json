@@ -1,87 +1,56 @@
 {
-	"metrics": {
-		"namespace": "CWAgent",
-		"append_dimensions": {
-            "InstanceId": "${aws:InstanceId}",
-            "InstanceType": "${aws:InstanceType}"
-        },
-		"metrics_collected": {
-			"Processor": {
-				"measurement": [
-					"% Idle Time",
-					"% Interrupt Time",
-					"% Privileged Time",
-					"% User Time"
-				],
-				"metrics_collection_interval": 60,
-				"resources": [
-					"*"
-				],
-				"totalcpu": true
-			},
-			"LogicalDisk": {
-				"measurement": [
-					"% Free Space"
-				],
-				"drop_device": true,
-				"metrics_collection_interval": 60,
-				"resources": [
-					"*"
-				]
-			},
-			"Memory": {
-				"measurement": [
-					"% Committed Bytes In Use"
-				],
-				"metrics_collection_interval": 60
-			}
-		}
-	},
-	"logs": {
-		"logs_collected": {
-			"windows_events": {
-				"collect_list": [
-					{
-						"event_format": "xml",
-						"event_levels": [
-							"VERBOSE",
-							"INFORMATION",
-							"WARNING",
-							"ERROR",
-							"CRITICAL"
-						],
-						"event_name": "System",
-						"log_group_name": "CWAgentSystem",
-						"log_stream_name": "{instance_id}"
-					},
-					{
-						"event_format": "xml",
-						"event_levels": [
-							"VERBOSE",
-							"INFORMATION",
-							"WARNING",
-							"ERROR",
-							"CRITICAL"
-						],
-						"event_name": "Application",
-						"log_group_name": "CWAgentApplication",
-						"log_stream_name": "{instance_id}"
-					},
-					{
-						"event_format": "xml",
-						"event_levels": [
-							"VERBOSE",
-							"INFORMATION",
-							"WARNING",
-							"ERROR",
-							"CRITICAL"
-						],
-						"event_name": "Security",
-						"log_group_name": "CWAgentSecurity",
-						"log_stream_name": "{instance_id}"
-					}
-				]
-			}
-		}
-	}
+  "metrics": {
+    "namespace": "CWAgent",
+    "append_dimensions": {
+      "InstanceId": "${aws:InstanceId}",
+      "InstanceType": "${aws:InstanceType}"
+    },
+    "metrics_collected": {
+      "Processor": {
+        "measurement": ["% Idle Time", "% Interrupt Time", "% Privileged Time", "% User Time"],
+        "metrics_collection_interval": 60,
+        "resources": ["*"],
+        "totalcpu": true
+      },
+      "LogicalDisk": {
+        "measurement": ["% Free Space"],
+        "drop_device": true,
+        "metrics_collection_interval": 60,
+        "resources": ["*"]
+      },
+      "Memory": {
+        "measurement": ["% Committed Bytes In Use"],
+        "metrics_collection_interval": 60
+      }
+    }
+  },
+  "logs": {
+    "logs_collected": {
+      "windows_events": {
+        "collect_list": [
+          {
+            "event_format": "xml",
+            "event_levels": ["VERBOSE", "INFORMATION", "WARNING", "ERROR", "CRITICAL"],
+            "event_name": "System",
+            "log_group_name": "CWAgentSystem",
+            "log_stream_name": "{instance_id}"
+          },
+          {
+            "event_format": "xml",
+            "event_levels": ["VERBOSE", "INFORMATION", "WARNING", "ERROR", "CRITICAL"],
+            "event_name": "Application",
+            "log_group_name": "CWAgentApplication",
+            "log_stream_name": "{instance_id}"
+          },
+          {
+            "event_format": "xml",
+            "event_levels": ["VERBOSE", "INFORMATION", "WARNING", "ERROR", "CRITICAL"],
+            "event_name": "Security",
+            "log_group_name": "CWAgentSecurity",
+            "log_stream_name": "{instance_id}"
+          }
+        ]
+      }
+    }
+  }
 }

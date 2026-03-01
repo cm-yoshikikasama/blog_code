@@ -1,10 +1,11 @@
 import os
-import boto3
 import traceback
-import pandas as pd
-from io import StringIO
 from datetime import datetime
+from io import StringIO
 from zoneinfo import ZoneInfo
+
+import boto3
+import pandas as pd
 from lib.get_logger import GetLogger
 
 get_logger = GetLogger(__name__)
@@ -35,7 +36,9 @@ def main(event, context):
         output_csv = input_data.to_csv(index=False)
         output_file = StringIO(output_csv)
 
-        current_time = datetime.now(ZoneInfo("Asia/Tokyo")).strftime("%Y-%m-%d-%H-%M-%S")
+        current_time = datetime.now(ZoneInfo("Asia/Tokyo")).strftime(
+            "%Y-%m-%d-%H-%M-%S"
+        )
         # 現在の日時を取得し、ファイル名を生成
         output_filename = f"{s3_output_key}output_{current_time}.csv"
 
@@ -46,7 +49,10 @@ def main(event, context):
             Body=output_file.getvalue(),
         )
         logger.info(f"Successful put {s3_output_bucket}/{output_filename}")
-        return {"statusCode": 200, "body": f"Successful put {s3_output_bucket}/{output_filename}"}
+        return {
+            "statusCode": 200,
+            "body": f"Successful put {s3_output_bucket}/{output_filename}",
+        }
     except Exception as e:
         tb = traceback.format_exc()
         logger.error(f"Unexpected error: {str(e)}\nTraceback: {tb}")

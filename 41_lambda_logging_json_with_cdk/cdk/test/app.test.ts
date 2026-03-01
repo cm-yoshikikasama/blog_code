@@ -1,11 +1,11 @@
-import * as cdk from "aws-cdk-lib";
-import { Template } from "aws-cdk-lib/assertions";
-import { LambdaStack } from "../lib/lambda-logging-json-stack";
-import { devParameter } from "../parameter";
+import * as cdk from 'aws-cdk-lib';
+import { Template } from 'aws-cdk-lib/assertions';
+import { LambdaStack } from '../lib/lambda-logging-json-stack';
+import { devParameter } from '../parameter';
 
-test("Snapshot test for ServerlessApi Stack", () => {
+test('Snapshot test for ServerlessApi Stack', () => {
   const app = new cdk.App();
-  const stack = new LambdaStack(app, "ETL", {
+  const stack = new LambdaStack(app, 'ETL', {
     description: `${devParameter.projectName}-${devParameter.envName}-test-tag`,
     env: {
       account: devParameter.env?.account || process.env.CDK_DEFAULT_ACCOUNT,

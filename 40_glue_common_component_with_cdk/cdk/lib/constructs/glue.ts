@@ -1,6 +1,6 @@
-import { Construct } from "constructs";
-import * as glue from "aws-cdk-lib/aws-glue";
-import * as iam from "aws-cdk-lib/aws-iam";
+import * as glue from 'aws-cdk-lib/aws-glue';
+import * as iam from 'aws-cdk-lib/aws-iam';
+import { Construct } from 'constructs';
 
 export interface GlueConstructProps {
   envName: string;
@@ -15,30 +15,21 @@ export class GlueConstruct extends Construct {
   constructor(scope: Construct, id: string, props: GlueConstructProps) {
     super(scope, id);
 
-    const glueJobRole = new iam.Role(this, "GlueJobRole", {
-      assumedBy: new iam.ServicePrincipal("glue.amazonaws.com"),
-      description: "Role for Glue Job execution",
+    const glueJobRole = new iam.Role(this, 'GlueJobRole', {
+      assumedBy: new iam.ServicePrincipal('glue.amazonaws.com'),
+      description: 'Role for Glue Job execution',
       roleName: `${props.projectName}-${props.envName}-etl-glue-execution-role`,
     });
 
     glueJobRole.addToPolicy(
       new iam.PolicyStatement({
-        resources: ["arn:aws:logs:*:*:*:/aws-glue/*"],
-        actions: [
-          "logs:CreateLogGroup",
-          "logs:CreateLogStream",
-          "logs:PutLogEvents",
-        ],
+        resources: ['arn:aws:logs:*:*:*:/aws-glue/*'],
+        actions: ['logs:CreateLogGroup', 'logs:CreateLogStream', 'logs:PutLogEvents'],
       })
     );
     glueJobRole.addToPolicy(
       new iam.PolicyStatement({
-        actions: [
-          "s3:ListBucket",
-          "s3:GetObject",
-          "s3:PutObject",
-          "s3:CopyObject",
-        ],
+        actions: ['s3:ListBucket', 's3:GetObject', 's3:PutObject', 's3:CopyObject'],
         resources: [
           `arn:aws:s3:::${props.dataSourceBucketName}`,
           `arn:aws:s3:::${props.dataSourceBucketName}/*`,
@@ -53,24 +44,24 @@ export class GlueConstruct extends Construct {
     this.glueJobName = `${props.projectName}-${props.envName}-glue-job`;
 
     // Glue Jobの定義
-    new glue.CfnJob(this, "GlueJob", {
+    new glue.CfnJob(this, 'GlueJob', {
       name: this.glueJobName,
       role: glueJobRole.roleArn,
       command: {
-        name: "pythonshell",
-        pythonVersion: "3.9",
+        name: 'pythonshell',
+        pythonVersion: '3.9',
         scriptLocation: `s3://${props.sysBucketName}/glue-jobs/etl_script.py`,
       },
       executionProperty: {
         maxConcurrentRuns: 5,
       },
       defaultArguments: {
-        "--TempDir": `s3://${props.sysBucketName}/tmp`,
-        "--job-language": "python",
-        "--extra-py-files": `s3://${props.sysBucketName}/common/common-0.1-py3-none-any.whl`,
+        '--TempDir': `s3://${props.sysBucketName}/tmp`,
+        '--job-language': 'python',
+        '--extra-py-files': `s3://${props.sysBucketName}/common/common-0.1-py3-none-any.whl`,
         // "--extra-py-files": `s3://${props.sysBucketName}/common/data_processing.py,s3://${props.sysBucketName}/common/get_logger.py`,
-        "--S3_OUTPUT_BUCKET": props.dataStoreBucketName,
-        "--S3_OUTPUT_KEY": `output/`,
+        '--S3_OUTPUT_BUCKET': props.dataStoreBucketName,
+        '--S3_OUTPUT_KEY': 'output/',
       },
     });
   }

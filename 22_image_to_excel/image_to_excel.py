@@ -1,12 +1,13 @@
 ## image_to_excel.py
-import os
 import argparse
+import os
+
 import openpyxl
 from openpyxl.drawing.image import Image
 from openpyxl.utils import get_column_letter
 
 
-def main(excel_file_name, sheet_name): 
+def main(excel_file_name, sheet_name):
     # Check if the input file exists in the current directory
     if not os.path.isfile(excel_file_name):
         print(f"エラー： '{excel_file_name}' は存在しません。")
@@ -30,8 +31,9 @@ def main(excel_file_name, sheet_name):
         row += 3
         # Iterate through the image files in the directory
         for image_file in sorted(os.listdir(directory)):
-            if image_file.lower().endswith(".png") or image_file.lower().endswith(".jpg"):
-
+            if image_file.lower().endswith(".png") or image_file.lower().endswith(
+                ".jpg"
+            ):
                 img = Image(os.path.join(directory, image_file))
 
                 # Get the original width and height of the image
@@ -68,7 +70,8 @@ def main(excel_file_name, sheet_name):
 
     print("Insert Images to Excel")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("excel_file_name", help="使用する既存のExcelファイル名")
     parser.add_argument("sheet_name", help="作成するシート名")

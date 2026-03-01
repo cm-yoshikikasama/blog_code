@@ -1,5 +1,4 @@
 import json
-
 import sys
 from pathlib import Path
 
@@ -7,10 +6,8 @@ from pathlib import Path
 current_dir = Path(__file__).parent
 root_dir = current_dir.parent
 sys.path.append(str(root_dir))
-import pytest
-
-
-import main  # sub.pyの内容をインポート
+import main  # noqa: E402
+import pytest  # noqa: E402
 
 
 def test_on_connect(mock_client):

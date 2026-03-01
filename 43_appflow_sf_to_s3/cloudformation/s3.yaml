@@ -44,4 +44,3 @@ Outputs:
     Value: !Ref S3SalesforceRawDataBucket
     Export:
       Name: <your-s3-bucket-name>
-

@@ -1,15 +1,21 @@
 import glob
-import warnings
 import traceback
-from lib.table_info import TableInfo
+import warnings
+
 from lib.environments import get_env
-from lib.excel_processing import extract_schema_table_name_from_excel, extract_table_data_from_excel
+from lib.excel_processing import (
+    extract_schema_table_name_from_excel,
+    extract_table_data_from_excel,
+)
 from lib.sql_processing import make_column_definition
+from lib.table_info import TableInfo
 
 # Excelファイルにデータ検証(Data Validation)の拡張が含まれているけど、
 # その拡張は openpyxl ライブラリでサポートされていないという意味です。
 # そのため、読み込むExcelファイルがこの拡張を必要としない場合には問題ありません。
-warnings.filterwarnings("ignore", message="Data Validation extension is not supported and will be removed")
+warnings.filterwarnings(
+    "ignore", message="Data Validation extension is not supported and will be removed"
+)
 
 
 def write_to_file(s_name: str, t_name: str, ddl: str) -> None:
@@ -28,7 +34,9 @@ def main():
         for file in files:
             schema_name, table_name = extract_schema_table_name_from_excel(file, env)
             extract_table_data = extract_table_data_from_excel(file, env)
-            column_lengths = extract_table_data[env["COLUMN_NAME"]].apply(lambda x: len(str(x)))
+            column_lengths = extract_table_data[env["COLUMN_NAME"]].apply(
+                lambda x: len(str(x))
+            )
             max_column_length = max(column_lengths)
             ddl = f"CREATE TABLE IF NOT EXISTS {schema_name}.{table_name}(\n"
             table_info = TableInfo(ddl, max_column_length)
@@ -56,10 +64,17 @@ def main():
                     make_column_definition(table_info)
                 else:
                     print("error record:", vars(table_info))
-                    raise ValueError("There is no data type. Tracking your self or  ask the administorator")
+                    raise ValueError(
+                        "There is no data type. Tracking your"
+                        " self or  ask the administorator"
+                    )
             if table_info.primary_key_list != []:
-                table_info.ddl += "    PRIMARY KEY (" + ", ".join(table_info.primary_key_list) + ")\n"
-            table_info.ddl = table_info.ddl.rstrip(",\n") + "\n)\nDISTSTYLE AUTO\nSORTKEY AUTO;"
+                table_info.ddl += (
+                    "    PRIMARY KEY (" + ", ".join(table_info.primary_key_list) + ")\n"
+                )
+            table_info.ddl = (
+                table_info.ddl.rstrip(",\n") + "\n)\nDISTSTYLE AUTO\nSORTKEY AUTO;"
+            )
             write_to_file(schema_name, table_name, table_info.ddl)
         print("successfull")
     except Exception:

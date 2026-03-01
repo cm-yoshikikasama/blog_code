@@ -83,11 +83,7 @@ export class TargetStack extends cdk.Stack {
     targetRole.addToPolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
-        actions: [
-          'logs:CreateLogGroup',
-          'logs:CreateLogStream',
-          'logs:PutLogEvents',
-        ],
+        actions: ['logs:CreateLogGroup', 'logs:CreateLogStream', 'logs:PutLogEvents'],
         resources: [
           `arn:aws:logs:${this.region}:${this.account}:log-group:/aws-glue/*`,
           `arn:aws:logs:${this.region}:${this.account}:log-group:/aws-glue/*:*`,

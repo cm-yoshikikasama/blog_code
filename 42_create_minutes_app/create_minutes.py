@@ -1,11 +1,11 @@
-import os
-import ffmpeg
-import shutil
 import logging
-import vertexai
-from vertexai.generative_models import GenerativeModel, Part
-from dotenv import load_dotenv
+import os
+import shutil
 
+import ffmpeg
+import vertexai
+from dotenv import load_dotenv
+from vertexai.generative_models import GenerativeModel, Part
 
 # .envファイルの読み込み
 load_dotenv()

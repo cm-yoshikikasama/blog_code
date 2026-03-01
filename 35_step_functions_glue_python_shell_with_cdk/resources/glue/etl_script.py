@@ -1,10 +1,11 @@
 import sys
 import traceback
+from datetime import datetime
+from io import StringIO
+from zoneinfo import ZoneInfo
+
 import boto3
 import pandas as pd
-from io import StringIO
-from datetime import datetime
-from zoneinfo import ZoneInfo
 from awsglue.utils import getResolvedOptions
 
 
@@ -40,7 +41,9 @@ def main():
         output_csv = input_data.to_csv(index=False)
         output_file = StringIO(output_csv)
 
-        current_time = datetime.now(ZoneInfo("Asia/Tokyo")).strftime("%Y-%m-%d-%H-%M-%S")
+        current_time = datetime.now(ZoneInfo("Asia/Tokyo")).strftime(
+            "%Y-%m-%d-%H-%M-%S"
+        )
         # 現在の日時を取得し、ファイル名を生成
         output_filename = f"{s3_output_key}output_{current_time}.csv"
 

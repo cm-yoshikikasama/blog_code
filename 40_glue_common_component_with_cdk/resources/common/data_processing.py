@@ -1,6 +1,8 @@
+from io import StringIO
+
 import pandas as pd
 import pendulum
-from io import StringIO
+
 from common.get_logger import setup_logging
 
 logger = setup_logging()
@@ -41,7 +43,9 @@ def process_data(df):
 
     if "arrival_date" in df.columns:
         # 到着からの経過年数を計算
-        df["years_since_arrival"] = df["arrival_date"].apply(lambda x: calculate_years_since_arrival(x, now))
+        df["years_since_arrival"] = df["arrival_date"].apply(
+            lambda x: calculate_years_since_arrival(x, now)
+        )
         logger.info("Added years since arrival")
 
     logger.info(f"Processed data shape: {df.shape}")

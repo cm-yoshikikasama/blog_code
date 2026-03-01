@@ -1,74 +1,74 @@
 {
-    "Columns": [
-        {
-            "Name": "salesid",
-            "Type": "string",
-            "Precision": "10",
-            "Scale": "0",
-            "nullableField": "TRUE"
-        },
-        {
-            "Name": "listid",
-            "Type": "string",
-            "Precision": "10",
-            "Scale": "0",
-            "nullableField": "TRUE"
-        },
-        {
-            "Name": "sellerid",
-            "Type": "string",
-            "Precision": "10",
-            "Scale": "0",
-            "nullableField": "TRUE"
-        },
-        {
-            "Name": "buyerid",
-            "Type": "string",
-            "Precision": "10",
-            "Scale": "0",
-            "nullableField": "TRUE"
-        },
-        {
-            "Name": "eventid",
-            "Type": "string",
-            "Precision": "10",
-            "Scale": "0",
-            "nullableField": "TRUE"
-        },
-        {
-            "Name": "dateid",
-            "Type": "string",
-            "Precision": "10",
-            "Scale": "0",
-            "nullableField": "TRUE"
-        },
-        {
-            "Name": "qtysold",
-            "Type": "string",
-            "Precision": "10",
-            "Scale": "0",
-            "nullableField": "TRUE"
-        },
-        {
-            "Name": "pricepaid",
-            "Type": "string",
-            "Precision": "8",
-            "Scale": "2",
-            "nullableField": "TRUE"
-        },
-        {
-            "Name": "commission",
-            "Type": "string",
-            "Precision": "8",
-            "Scale": "2",
-            "nullableField": "TRUE"
-        },
-        {
-            "Name": "saletime",
-            "Type": "string",
-            "Precision": "29",
-            "Scale": "0",
-            "nullableField": "TRUE"
-        }
-    ]
+  "Columns": [
+    {
+      "Name": "salesid",
+      "Type": "string",
+      "Precision": "10",
+      "Scale": "0",
+      "nullableField": "TRUE"
+    },
+    {
+      "Name": "listid",
+      "Type": "string",
+      "Precision": "10",
+      "Scale": "0",
+      "nullableField": "TRUE"
+    },
+    {
+      "Name": "sellerid",
+      "Type": "string",
+      "Precision": "10",
+      "Scale": "0",
+      "nullableField": "TRUE"
+    },
+    {
+      "Name": "buyerid",
+      "Type": "string",
+      "Precision": "10",
+      "Scale": "0",
+      "nullableField": "TRUE"
+    },
+    {
+      "Name": "eventid",
+      "Type": "string",
+      "Precision": "10",
+      "Scale": "0",
+      "nullableField": "TRUE"
+    },
+    {
+      "Name": "dateid",
+      "Type": "string",
+      "Precision": "10",
+      "Scale": "0",
+      "nullableField": "TRUE"
+    },
+    {
+      "Name": "qtysold",
+      "Type": "string",
+      "Precision": "10",
+      "Scale": "0",
+      "nullableField": "TRUE"
+    },
+    {
+      "Name": "pricepaid",
+      "Type": "string",
+      "Precision": "8",
+      "Scale": "2",
+      "nullableField": "TRUE"
+    },
+    {
+      "Name": "commission",
+      "Type": "string",
+      "Precision": "8",
+      "Scale": "2",
+      "nullableField": "TRUE"
+    },
+    {
+      "Name": "saletime",
+      "Type": "string",
+      "Precision": "29",
+      "Scale": "0",
+      "nullableField": "TRUE"
+    }
+  ]
 }

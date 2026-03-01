@@ -1,6 +1,7 @@
+import json
 import os
 import time
-import json
+
 import polars as pl
 
 
@@ -38,7 +39,10 @@ def lambda_handler(event, context):
             "statusCode": 200,
             "body": json.dumps(
                 {
-                    "message": "CSV to Parquet conversion completed successfully with Polars LazyFrame",
+                    "message": (
+                        "CSV to Parquet conversion completed"
+                        " successfully with Polars LazyFrame"
+                    ),
                     "execution_time": execution_time,
                     "source": source_path,
                     "destination": destination_path,
