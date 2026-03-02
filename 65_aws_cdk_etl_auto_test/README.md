@@ -23,7 +23,7 @@ for detailed diagrams.
 .
 ├── .claude/                                 # Claude Code config (copy to your project root)
 │   ├── credential-process-mfa.sh           #   credential_process for MFA + assume-role
-│   ├── validate-bash.sh                    #   PreToolUse hook (default-deny policy)
+│   ├── validate_commands.py                #   PreToolUse hook (default-deny policy)
 │   ├── settings.local.json.example         #   Hook/env config template
 │   └── skills/                             #   Claude Code skills
 │       ├── prepare-integration-test/       #     Test preparation
@@ -36,8 +36,8 @@ for detailed diagrams.
 │           └── references/
 │               └── INSTRUCTIONS.md         #       Execution orchestration steps
 ├── drawio/                                  # Architecture diagrams
-│   ├── architecture_etl_pipeline.drawio
-│   └── architecture_ralph_loop.drawio
+│   ├── etl_pipeline.drawio
+│   └── skills_hooks_automation.drawio
 ├── cfn/                                     # CloudFormation templates
 │   └── claude-code-resources.yaml          #   IAM role + Athena WorkGroup
 └── eventbridge-sfn-iceberg/                 # CDK sample project
@@ -181,7 +181,7 @@ Safety is restored by the combination of:
 
 1. `CLAUDE_STRICT_HOOKS=1` environment variable,
    which activates the PreToolUse hook
-2. `validate-bash.sh` hook script,
+2. `validate_commands.py` hook script,
    which enforces a default-deny policy on Bash commands
 
 The hook validates every Bash tool call against allow-lists:
@@ -252,7 +252,7 @@ Resume behavior on interruption:
 | --- | --- | --- |
 | Skill (Phase 1) | `.claude/skills/prepare-integration-test/` | Test preparation (test spec + prerequisites + workflow.json generation) |
 | Skill (Phase 2) | `.claude/skills/run-integration-test/` | Test execution orchestration |
-| PreToolUse Hook | `.claude/validate-bash.sh` | Default-deny safety policy for Bash commands |
+| PreToolUse Hook | `.claude/validate_commands.py` | Default-deny safety policy for Bash commands |
 | IAM Role | `cfn/claude-code-resources.yaml` | Server-side AWS API restrictions |
 | Settings | `.claude/settings.local.json.example` | Hook configuration and permissions template |
 | Credential Helper | `.claude/credential-process-mfa.sh` | MFA + assume-role via 1Password CLI |
