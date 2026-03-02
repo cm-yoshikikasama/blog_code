@@ -4,6 +4,7 @@ description: Integration test preparation. Create test specs, verify prerequisit
 argument-hint: "[project-path]"
 model: sonnet
 allowed-tools: Read, Write, Edit, Bash, Glob, Grep, AskUserQuestion
+disable-model-invocation: true
 ---
 
 The project directory path is: $ARGUMENTS

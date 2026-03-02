@@ -4,6 +4,7 @@ description: Execute integration tests from workflow.json. Must run in --dangero
 argument-hint: "[project-path]"
 model: sonnet
 allowed-tools: Read, Write, Edit, Bash, Glob, Grep
+disable-model-invocation: true
 ---
 
 The project directory path is: $ARGUMENTS
