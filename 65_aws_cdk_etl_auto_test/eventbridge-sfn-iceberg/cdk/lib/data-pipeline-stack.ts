@@ -150,6 +150,11 @@ export class DataPipelineStack extends cdk.Stack {
     });
 
     // Step Functions
+    const waitBeforeProcess = new sfn.Wait(this, 'WaitBeforeProcess', {
+      time: sfn.WaitTime.duration(cdk.Duration.minutes(10)),
+      comment: 'Simulate a long-running pipeline for polling/resume testing',
+    });
+
     const processTask = new tasks.LambdaInvoke(this, 'ProcessAndLoadTask', {
       lambdaFunction: processAndLoadLambda,
       outputPath: '$.Payload',
@@ -158,8 +163,8 @@ export class DataPipelineStack extends cdk.Stack {
 
     const stateMachine = new sfn.StateMachine(this, 'DataPipelineStateMachine', {
       stateMachineName: `${prefix}-pipeline`,
-      definitionBody: sfn.DefinitionBody.fromChainable(processTask),
-      timeout: cdk.Duration.minutes(10),
+      definitionBody: sfn.DefinitionBody.fromChainable(waitBeforeProcess.next(processTask)),
+      timeout: cdk.Duration.minutes(15),
     });
 
     // EventBridge Schedule
