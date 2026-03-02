@@ -58,7 +58,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash .claude/validate-bash.sh"
+            "command": "python3 .claude/validate_commands.py"
           }
         ]
       }
