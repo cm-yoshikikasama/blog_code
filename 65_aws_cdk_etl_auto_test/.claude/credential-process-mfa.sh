@@ -6,7 +6,7 @@
 #
 # Usage (in ~/.aws/config):
 #   [profile claude-code-dev]
-#   credential_process = /path/to/credential-process-mfa.sh <role_arn> <mfa_serial> <source_profile>
+#   credential_process = /path/to/credential-process-mfa.sh <role_arn> <mfa_serial> <source_profile> [op_item_name]
 #
 # Temporary credentials are cached and reused while still valid
 # Expired cache is overwritten on next invocation (self-managed lifecycle)
@@ -17,9 +17,10 @@ set -euo pipefail
 
 CACHE_DIR="${HOME}/.aws/cli/cache"
 
-ROLE_ARN="${1:?Usage: credential-process-mfa.sh <role_arn> <mfa_serial> <source_profile>}"
-MFA_SERIAL="${2:?Usage: credential-process-mfa.sh <role_arn> <mfa_serial> <source_profile>}"
-SOURCE_PROFILE="${3:?Usage: credential-process-mfa.sh <role_arn> <mfa_serial> <source_profile>}"
+ROLE_ARN="${1:?Usage: credential-process-mfa.sh <role_arn> <mfa_serial> <source_profile> [op_item_name]}"
+MFA_SERIAL="${2:?Usage: credential-process-mfa.sh <role_arn> <mfa_serial> <source_profile> [op_item_name]}"
+SOURCE_PROFILE="${3:?Usage: credential-process-mfa.sh <role_arn> <mfa_serial> <source_profile> [op_item_name]}"
+OP_ITEM_NAME="${4:-AWS}"
 
 # --- Cache ---
 
@@ -49,7 +50,7 @@ fi
 
 # --- MFA Token ---
 
-OTP=$(op item get "AWS" --otp 2>/dev/null) || {
+OTP=$(op item get "$OP_ITEM_NAME" --otp 2>/dev/null) || {
   echo "Error: Failed to get OTP from 1Password CLI" >&2
   echo "Ensure 1Password CLI is signed in (run: eval \$(op signin))" >&2
   exit 1
