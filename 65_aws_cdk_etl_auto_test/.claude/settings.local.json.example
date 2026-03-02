@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "env": {
+    "BASH_DEFAULT_TIMEOUT_MS": "120000",
+    "BASH_MAX_TIMEOUT_MS": "900000"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(ls *)",
+      "Bash(cat *)",
+      "Bash(find *)",
+      "Bash(tree *)",
+      "Bash(head *)",
+      "Bash(tail *)",
+      "Bash(echo *)",
+      "Bash(pwd)",
+      "Bash(cd *)",
+      "Bash(mkdir *)",
+      "Bash(mv *)",
+      "Bash(cp *)",
+      "Bash(touch *)",
+      "Bash(which *)",
+      "Bash(env)",
+      "Bash(date)",
+      "Bash(grep *)",
+      "Bash(git *)",
+      "Bash(aws configure *)",
+      "Bash(aws sts assume-role *)",
+      "Bash(aws s3api:*)",
+      "Bash(aws athena:*)",
+      "Read(./**)",
+      "Edit(./**)",
+      "Grep(./**)",
+      "Glob(./**)",
+      "LS(./**)",
+      "Write(./**)",
+      "Skill(*)",
+      "WebFetch(domain:docs.aws.amazon.com)",
+      "WebSearch"
+    ],
+    "deny": [
+      "Bash(git push *)",
+      "Bash(git pull *)",
+      "Bash(git merge *)",
+      "Bash(git rebase *)",
+      "Bash(git reset *)",
+      "Bash(rm -rf *)",
+      "Bash(rm /*)",
+      "Bash(sudo *)",
+      "Bash(* cdk deploy *)",
+      "Bash(* cdk destroy *)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/validate-bash.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
