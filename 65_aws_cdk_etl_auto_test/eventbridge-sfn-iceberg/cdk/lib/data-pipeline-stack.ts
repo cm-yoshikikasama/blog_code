@@ -151,7 +151,7 @@ export class DataPipelineStack extends cdk.Stack {
 
     // Step Functions
     const waitBeforeProcess = new sfn.Wait(this, 'WaitBeforeProcess', {
-      time: sfn.WaitTime.duration(cdk.Duration.minutes(10)),
+      time: sfn.WaitTime.duration(cdk.Duration.minutes(5)),
       comment: 'Simulate a long-running pipeline for polling/resume testing',
     });
 
