@@ -1,6 +1,6 @@
 ---
 name: prepare-integration-test
-description: Integration test preparation and re-test. Create test specifications from design docs/CDK code, verify prerequisites (credentials, infrastructure, test data), upload missing test data to S3, and generate workflow.json for Ralph Loop execution. Also supports re-test workflow generation after code fixes based on summary findings.
+description: Integration test preparation. Create test specs, verify prerequisites, upload test data, generate workflow.json.
 argument-hint: "[project-path]"
 model: sonnet
 allowed-tools: Read, Write, Edit, Bash, Glob, Grep, AskUserQuestion
