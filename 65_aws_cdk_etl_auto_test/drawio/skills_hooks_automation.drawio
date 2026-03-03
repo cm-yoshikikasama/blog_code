@@ -1,115 +1,112 @@
-<mxfile host="65bd71144e">
-    <diagram id="diagram-2" name="Skills + Hooks - Test Automation">
-        <mxGraphModel dx="1240" dy="575" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="700" math="0" shadow="0">
+<mxfile host="app.diagrams.net">
+    <diagram id="skills-hooks-mechanism" name="Skills + Hooks - Two Phase Architecture">
+        <mxGraphModel dx="1422" dy="762" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="700" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
-                <mxCell id="title" value="Diagram 2: Skills + Hooks - Test Automation Workflow" style="text;html=1;fontSize=30;fontStyle=1;fontColor=#202124;align=center;" parent="1" vertex="1">
-                    <mxGeometry x="250" y="12" width="900" height="44" as="geometry"/>
+
+                <!-- Title -->
+                <mxCell id="title" value="Skills + Hooks: Two-Phase Automated Testing" style="text;html=1;fontSize=30;fontStyle=1;fontColor=#202124;align=center;" parent="1" vertex="1">
+                    <mxGeometry x="250" y="12" width="1100" height="44" as="geometry"/>
                 </mxCell>
-                <mxCell id="p1_box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F0FE;strokeColor=#4285F4;strokeWidth=2;arcSize=6;dashed=1;" parent="1" vertex="1">
-                    <mxGeometry x="20" y="68" width="340" height="330" as="geometry"/>
+
+                <!-- ========== Phase 1 ========== -->
+                <mxCell id="phase1" value="" style="rounded=1;whiteSpace=wrap;fillColor=#E8F0FE;strokeColor=#4285F4;strokeWidth=2;arcSize=4;dashed=1;" parent="1" vertex="1">
+                    <mxGeometry x="20" y="68" width="520" height="530" as="geometry"/>
                 </mxCell>
-                <mxCell id="p1_label" value="Phase 1: Preparation" style="text;html=1;fontSize=24;fontStyle=1;fontColor=#4285F4;align=center;" parent="1" vertex="1">
-                    <mxGeometry x="30" y="78" width="320" height="34" as="geometry"/>
+                <mxCell id="p1_h" value="Phase 1: Test Preparation" style="text;html=1;fontSize=24;fontStyle=1;fontColor=#4285F4;align=center;" parent="1" vertex="1">
+                    <mxGeometry x="30" y="78" width="500" height="34" as="geometry"/>
                 </mxCell>
-                <mxCell id="p1_mode" value="(Interactive)" style="text;html=1;fontSize=20;fontColor=#5F6368;fontStyle=2;align=center;" parent="1" vertex="1">
-                    <mxGeometry x="30" y="112" width="320" height="28" as="geometry"/>
+                <mxCell id="p1_mode" value="(Interactive session)" style="text;html=1;fontSize=20;fontColor=#5F6368;fontStyle=2;align=center;" parent="1" vertex="1">
+                    <mxGeometry x="30" y="112" width="500" height="28" as="geometry"/>
                 </mxCell>
-                <mxCell id="p1_skill" value="/prepare-integration-test" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#4285F4;fontSize=19;fontColor=#4285F4;fontFamily=monospace;arcSize=50;" parent="1" vertex="1">
-                    <mxGeometry x="35" y="152" width="310" height="42" as="geometry"/>
+                <mxCell id="p1_skill" value="/prepare-integration-test" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#4285F4;fontSize=22;fontColor=#4285F4;fontFamily=monospace;fontStyle=1;arcSize=50;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="152" width="480" height="46" as="geometry"/>
                 </mxCell>
-                <mxCell id="p1_arrow_label" value="generates" style="text;html=1;fontSize=20;fontColor=#5F6368;fontStyle=2;align=center;" parent="1" vertex="1">
-                    <mxGeometry x="80" y="204" width="200" height="26" as="geometry"/>
+                <mxCell id="p1_steps" value="&lt;div style='text-align:left;font-size:20px;color:#202124;line-height:1.8'&gt;1. Interview (AWS profile, test scope)&lt;br&gt;2. Create test plan&lt;br&gt;3. User review&lt;br&gt;4. Verify prerequisites &amp;amp; prepare test data&lt;br&gt;5. Generate workflow.json + evidence templates&lt;br&gt;6. Present Phase 2 instructions&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#DADCE0;arcSize=5;align=left;spacingLeft=14;spacingRight=8;" parent="1" vertex="1">
+                    <mxGeometry x="35" y="214" width="490" height="260" as="geometry"/>
                 </mxCell>
-                <mxCell id="p1_out1" value="test-plan.md" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#DADCE0;fontSize=18;fontColor=#202124;fontFamily=monospace;arcSize=50;" parent="1" vertex="1">
-                    <mxGeometry x="35" y="240" width="150" height="40" as="geometry"/>
+                <mxCell id="p1_out1" value="test-plan.md" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#DADCE0;fontSize=18;fontFamily=monospace;fontColor=#202124;arcSize=50;" parent="1" vertex="1">
+                    <mxGeometry x="35" y="496" width="155" height="40" as="geometry"/>
                 </mxCell>
-                <mxCell id="p1_out2" value="workflow.json" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF7E0;strokeColor=#FBBC05;fontSize=18;fontColor=#202124;fontFamily=monospace;arcSize=50;" parent="1" vertex="1">
-                    <mxGeometry x="195" y="240" width="155" height="40" as="geometry"/>
+                <mxCell id="p1_out2" value="workflow.json" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF7E0;strokeColor=#FBBC05;strokeWidth=2;fontSize=18;fontFamily=monospace;fontColor=#F9AB00;fontStyle=1;arcSize=50;" parent="1" vertex="1">
+                    <mxGeometry x="200" y="496" width="165" height="40" as="geometry"/>
                 </mxCell>
-                <mxCell id="p1_approve" value="User reviews and approves" style="text;html=1;fontSize=20;fontColor=#5F6368;align=center;" parent="1" vertex="1">
-                    <mxGeometry x="35" y="300" width="320" height="28" as="geometry"/>
+                <mxCell id="p1_out3" value="evidences/*.md" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#DADCE0;fontSize=18;fontFamily=monospace;fontColor=#202124;arcSize=50;" parent="1" vertex="1">
+                    <mxGeometry x="375" y="496" width="155" height="40" as="geometry"/>
                 </mxCell>
-                <mxCell id="a_phase" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#34A853;strokeWidth=3;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" parent="1" source="p1_box" target="session" edge="1">
+                <mxCell id="p1_out_label" value="Outputs" style="text;html=1;fontSize=20;fontColor=#5F6368;fontStyle=2;align=left;" parent="1" vertex="1">
+                    <mxGeometry x="35" y="546" width="120" height="28" as="geometry"/>
+                </mxCell>
+
+                <!-- ========== workflow.json (center) ========== -->
+                <mxCell id="wf_center" value="workflow.json&lt;br&gt;&lt;font style=&quot;font-size:18px;font-weight:normal;color:#5F6368&quot;&gt;steps[]: id, status, output,&lt;br&gt;retry, prompt&lt;br&gt;State management for interrupt/resume&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF7E0;strokeColor=#FBBC05;strokeWidth=3;fontSize=22;fontColor=#F9AB00;fontStyle=1;arcSize=8;" parent="1" vertex="1">
+                    <mxGeometry x="575" y="370" width="340" height="130" as="geometry"/>
+                </mxCell>
+
+                <!-- ========== Phase 2 ========== -->
+                <mxCell id="phase2" value="" style="rounded=1;whiteSpace=wrap;fillColor=#E8F5E9;strokeColor=#34A853;strokeWidth=2;arcSize=4;" parent="1" vertex="1">
+                    <mxGeometry x="960" y="68" width="610" height="600" as="geometry"/>
+                </mxCell>
+                <mxCell id="p2_h" value="Phase 2: Test Execution (Automated)" style="text;html=1;fontSize=24;fontStyle=1;fontColor=#34A853;align=center;" parent="1" vertex="1">
+                    <mxGeometry x="970" y="78" width="590" height="34" as="geometry"/>
+                </mxCell>
+                <mxCell id="p2_mode" value="(Restricted session)" style="text;html=1;fontSize=20;fontColor=#5F6368;fontStyle=2;align=center;" parent="1" vertex="1">
+                    <mxGeometry x="970" y="112" width="590" height="28" as="geometry"/>
+                </mxCell>
+                <mxCell id="p2_cmd" value="CLAUDE_STRICT_HOOKS=1 claude --dangerously-skip-permissions" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#34A853;strokeWidth=2;fontSize=18;fontColor=#34A853;fontFamily=monospace;fontStyle=1;arcSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="980" y="152" width="570" height="48" as="geometry"/>
+                </mxCell>
+                <mxCell id="p2_skill" value="/run-integration-test" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#34A853;fontSize=22;fontColor=#34A853;fontFamily=monospace;fontStyle=1;arcSize=50;" parent="1" vertex="1">
+                    <mxGeometry x="1000" y="220" width="480" height="46" as="geometry"/>
+                </mxCell>
+                <mxCell id="p2_steps" value="&lt;div style='text-align:left;font-size:20px;color:#202124;line-height:1.8'&gt;1. Load workflow.json&lt;br&gt;2. Execute steps sequentially (execute → check)&lt;br&gt;3. Poll async jobs&lt;br&gt;4. Retry on failure (up to max_retries)&lt;br&gt;5. Collect &amp;amp; record evidence&lt;br&gt;6. Generate summary → update test-plan.md&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#DADCE0;arcSize=5;align=left;spacingLeft=14;spacingRight=8;" parent="1" vertex="1">
+                    <mxGeometry x="978" y="284" width="574" height="260" as="geometry"/>
+                </mxCell>
+                <mxCell id="p2_resume" value="Interrupt (Ctrl+C) → re-run /run-integration-test → resumes from last completed step" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FCE4EC;strokeColor=#EA4335;strokeWidth=1;fontSize=18;fontColor=#EA4335;arcSize=50;dashed=1;" parent="1" vertex="1">
+                    <mxGeometry x="978" y="580" width="574" height="44" as="geometry"/>
+                </mxCell>
+
+                <!-- ========== Arrows ========== -->
+
+                <!-- Phase transition: Phase 1 right → Phase 2 left -->
+                <mxCell id="a_phase" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#34A853;strokeWidth=3;endArrow=blockThin;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="phase1" target="p2_cmd" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="a_phase_label" value="new&lt;div&gt;terminal&lt;/div&gt;" style="edgeLabel;html=1;fontSize=19;fontColor=#34A853;fontStyle=1;labelBackgroundColor=#FFFFFF;" parent="a_phase" connectable="0" vertex="1">
+                <mxCell id="a_phase_l" value="new&lt;div&gt;terminal&lt;/div&gt;" style="edgeLabel;html=1;fontSize=20;fontColor=#34A853;fontStyle=1;labelBackgroundColor=#FFFFFF;" parent="a_phase" connectable="0" vertex="1">
                     <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="-42" as="offset"/>
+                        <mxPoint x="-52" as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="p2_box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F5E9;strokeColor=#34A853;strokeWidth=2;arcSize=4;" parent="1" vertex="1">
-                    <mxGeometry x="450" y="68" width="930" height="560" as="geometry"/>
-                </mxCell>
-                <mxCell id="p2_label" value="Phase 2: Execution (Automated)" style="text;html=1;fontSize=24;fontStyle=1;fontColor=#34A853;align=left;" parent="1" vertex="1">
-                    <mxGeometry x="470" y="80" width="440" height="34" as="geometry"/>
-                </mxCell>
-                <mxCell id="session" value="CLAUDE_STRICT_HOOKS=1 claude --dangerously-skip-permissions" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#34A853;strokeWidth=2;fontSize=18;fontColor=#34A853;fontFamily=monospace;fontStyle=1;arcSize=12;" parent="1" vertex="1">
-                    <mxGeometry x="470" y="122" width="620" height="48" as="geometry"/>
-                </mxCell>
-                <mxCell id="a_invoke" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#4285F4;strokeWidth=3;exitX=0.25;exitY=1;entryX=0.25;entryY=0;" parent="1" source="session" target="skill" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="a_invoke_label" value="runs skill" style="edgeLabel;html=1;fontSize=19;fontColor=#4285F4;fontStyle=1;labelBackgroundColor=#FFFFFF;" parent="a_invoke" connectable="0" vertex="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="-55" as="offset"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="skill" value="/run-integration-test&lt;br&gt;&lt;font style=&quot;font-size:18px;font-weight:normal;color:#5F6368&quot;&gt;Executes ALL steps in sequence&lt;br&gt;(run job, poll, verify, evidence)&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F0FE;strokeColor=#4285F4;strokeWidth=2;fontSize=22;fontColor=#4285F4;fontStyle=1;arcSize=6;" parent="1" vertex="1">
-                    <mxGeometry x="470" y="240" width="300" height="120" as="geometry"/>
-                </mxCell>
-                <mxCell id="wf" value="workflow.json&lt;br&gt;&lt;font style=&quot;font-size:18px;font-weight:normal;color:#5F6368&quot;&gt;status / output / retry&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF7E0;strokeColor=#FBBC05;strokeWidth=2;fontSize=20;fontColor=#F9AB00;fontStyle=1;arcSize=8;" parent="1" vertex="1">
-                    <mxGeometry x="470" y="430" width="260" height="68" as="geometry"/>
-                </mxCell>
-                <mxCell id="a_wf_down" style="rounded=1;strokeColor=#FBBC05;strokeWidth=2;exitX=0.2;exitY=1;entryX=0.2;entryY=0;" parent="1" source="skill" target="wf" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="a_wf_up" style="rounded=1;strokeColor=#FBBC05;strokeWidth=2;exitX=0.8;exitY=0;entryX=0.8;entryY=1;" parent="1" source="wf" target="skill" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="a_wf_label" value="read / write" style="text;html=1;fontSize=18;fontColor=#F9AB00;fontStyle=1;align=center;" parent="1" vertex="1">
-                    <mxGeometry x="473" y="378" width="120" height="28" as="geometry"/>
-                </mxCell>
-                <mxCell id="hooks" value="validate-commands.py&lt;br&gt;&lt;font style=&quot;font-weight: normal; font-size: 17px; color: rgb(95, 99, 104);&quot;&gt;PreToolUse hook&lt;br&gt;(default-deny)&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FDE7E7;strokeColor=#EA4335;strokeWidth=2;fontSize=20;fontColor=#EA4335;fontStyle=1;arcSize=8;" parent="1" vertex="1">
-                    <mxGeometry x="894" y="236" width="210" height="92" as="geometry"/>
-                </mxCell>
-                <mxCell id="a_hooks" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#EA4335;strokeWidth=2;exitX=1;exitY=0.35;entryX=0;entryY=0.5;" parent="1" source="skill" target="hooks" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="a_hooks_label" value="Bash calls" style="edgeLabel;html=1;fontSize=18;fontColor=#EA4335;fontStyle=1;labelBackgroundColor=#FFFFFF;" parent="a_hooks" connectable="0" vertex="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="-50" y="-1" as="offset"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="aws" value="AWS&lt;br&gt;&lt;font style=&quot;font-size:18px;font-weight:normal;color:#5F6368&quot;&gt;(IAM role)&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF8E1;strokeColor=#ED7100;strokeWidth=2;fontSize=22;fontColor=#ED7100;fontStyle=1;arcSize=8;dashed=1;" parent="1" vertex="1">
-                    <mxGeometry x="1164" y="243" width="210" height="78" as="geometry"/>
-                </mxCell>
-                <mxCell id="a_aws" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#ED7100;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" parent="1" source="hooks" target="aws" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="a_aws_label" value="allow" style="edgeLabel;html=1;fontSize=18;fontColor=#ED7100;fontStyle=1;labelBackgroundColor=#FFFFFF;" parent="a_aws" connectable="0" vertex="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="-25" as="offset"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="out" value="Output&lt;br&gt;&lt;font style=&quot;font-size:18px;font-weight:normal;color:#5F6368&quot;&gt;test-plan.md&lt;br&gt;evidences/*.md&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#34A853;strokeWidth=2;fontSize=20;fontColor=#34A853;fontStyle=1;arcSize=8;" parent="1" vertex="1">
-                    <mxGeometry x="850" y="398" width="240" height="90" as="geometry"/>
-                </mxCell>
-                <mxCell id="a_out" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#34A853;strokeWidth=2;exitX=1;exitY=0.8;entryX=0;entryY=0.4;" parent="1" source="skill" target="out" edge="1">
+
+                <!-- generates: p1_out2 → wf_center (route below outputs) -->
+                <mxCell id="a_p1_wf" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#FBBC05;strokeWidth=2;endArrow=blockThin;endFill=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=1;entryDx=0;entryDy=0;" parent="1" source="p1_out2" target="wf_center" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <Array as="points">
-                            <mxPoint x="800" y="336"/>
-                            <mxPoint x="800" y="434"/>
+                            <mxPoint x="283" y="618"/>
+                            <mxPoint x="575" y="618"/>
                         </Array>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="a_out_label" value="write" style="edgeLabel;html=1;fontSize=18;fontColor=#34A853;fontStyle=1;labelBackgroundColor=#FFFFFF;" parent="a_out" connectable="0" vertex="1">
+                <mxCell id="a_p1_wf_l" value="generates" style="edgeLabel;html=1;fontSize=20;fontColor=#F9AB00;fontStyle=2;" parent="a_p1_wf" connectable="0" vertex="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="resume" value="Interrupt (Ctrl+C) &amp;rarr; re-run /run-integration-test &amp;rarr; resumes from last completed step" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FCE4EC;strokeColor=#EA4335;strokeWidth=1;fontSize=18;fontColor=#EA4335;arcSize=50;dashed=1;" parent="1" vertex="1">
-                    <mxGeometry x="470" y="540" width="740" height="44" as="geometry"/>
+
+                <!-- reads: wf_center → p2_skill (route through gap) -->
+                <mxCell id="a_wf_p2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#FBBC05;strokeWidth=2;endArrow=blockThin;endFill=1;exitX=1;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="wf_center" target="p2_skill" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="940" y="370"/>
+                            <mxPoint x="940" y="243"/>
+                        </Array>
+                    </mxGeometry>
                 </mxCell>
+                <mxCell id="a_wf_p2_l" value="reads" style="edgeLabel;html=1;fontSize=20;fontColor=#F9AB00;fontStyle=2;" parent="a_wf_p2" connectable="0" vertex="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-65" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+
             </root>
         </mxGraphModel>
     </diagram>
