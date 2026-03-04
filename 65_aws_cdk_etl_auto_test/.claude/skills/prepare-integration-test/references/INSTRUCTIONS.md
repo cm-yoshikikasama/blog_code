@@ -219,7 +219,7 @@ After generating workflow.json, inform the user in the following format.
 ```text
 Test preparation is complete. To execute the tests, run the following in a separate terminal:
 
-CLAUDE_STRICT_HOOKS=1 claude --dangerously-skip-permissions
+claude --dangerously-skip-permissions
 
 Then in that session, run:
 

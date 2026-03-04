@@ -16,13 +16,17 @@ Two skills work together to automate the full test lifecycle:
 
 ## Architecture
 
-See `drawio/etl_pipeline.drawio` and `drawio/skills_hooks_automation.drawio`
-for detailed diagrams.
+### ETL Pipeline
+
+![ETL Pipeline](drawio/etl_pipeline.drawio.png)
+
+### Skills and Hooks Automation
+
+![Skills and Hooks Automation](drawio/skills_hooks_automation.drawio.png)
 
 ```text
 .
 ├── .claude/                                 # Claude Code config (copy to your project root)
-│   ├── credential-process-mfa.sh           #   credential_process for MFA + assume-role
 │   ├── validate_commands.py                #   PreToolUse hook (default-deny policy)
 │   ├── settings.local.json.example         #   Hook/env config template
 │   └── skills/                             #   Claude Code skills
@@ -56,15 +60,13 @@ for detailed diagrams.
 - Node.js 18+ and pnpm
 - An AWS account with permission to deploy CloudFormation stacks
 - IAM user with MFA device configured
-- `~/.aws/config` with a `credential_process` profile
-  for the target account (handles MFA + assume-role)
+- aws-vault + 1Password CLI (or any `credential_process` that returns valid credentials)
 
 The IAM role deployed in Setup requires MFA (`aws:MultiFactorAuthPresent`),
 so assume-role without MFA will be rejected.
-Authentication is handled by AWS CLI's `credential_process` mechanism.
-A reference implementation using 1Password CLI is provided in `.claude/credential-process-mfa.sh`,
-but any `credential_process` script (or SSO profile)
-that returns valid credentials will work.
+Authentication is handled by aws-vault's `credential_process` mechanism.
+See the [environment setup guide](https://github.com/classmethod-da-bs/claude-code-plugins/blob/main/docs/01-env-setup.md)
+for aws-vault + 1Password CLI configuration.
 
 ## Setup
 
@@ -142,7 +144,7 @@ The PreToolUse hook enforces a default-deny policy,
 allowing only the AWS CLI and shell commands required for test execution.
 
 ```bash
-CLAUDE_STRICT_HOOKS=1 claude --dangerously-skip-permissions
+claude --dangerously-skip-permissions
 ```
 
 Then run `/run-integration-test <project-path>`.
@@ -179,8 +181,8 @@ This approach replaced the earlier Ralph Loop pattern
 `--dangerously-skip-permissions` alone would allow all tool calls unconditionally.
 Safety is restored by the combination of:
 
-1. `CLAUDE_STRICT_HOOKS=1` environment variable,
-   which activates the PreToolUse hook
+1. Per-skill hooks defined in SKILL.md frontmatter,
+   which activate the PreToolUse hook only during skill execution
 2. `validate_commands.py` hook script,
    which enforces a default-deny policy on Bash commands
 
@@ -196,9 +198,8 @@ The hook validates every Bash tool call against allow-lists:
 Commands not on the allow-list are blocked with an error message.
 This provides defense-in-depth alongside the IAM role's server-side restrictions.
 
-In normal mode (without `CLAUDE_STRICT_HOOKS=1`),
-the hook is a no-op and `permissions.deny` in `settings.local.json`
-handles safety instead.
+In normal mode, per-skill hooks are not active,
+and `permissions.deny` in `settings.local.json` handles safety instead.
 
 ### AWS Operations Design
 
@@ -255,4 +256,4 @@ Resume behavior on interruption:
 | PreToolUse Hook | `.claude/validate_commands.py` | Default-deny safety policy for Bash commands |
 | IAM Role | `cfn/claude-code-resources.yaml` | Server-side AWS API restrictions |
 | Settings | `.claude/settings.local.json.example` | Hook configuration and permissions template |
-| Credential Helper | `.claude/credential-process-mfa.sh` | MFA + assume-role via 1Password CLI |
+| Credential Helper | aws-vault + 1Password CLI | MFA + assume-role via credential_process |
