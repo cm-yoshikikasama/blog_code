@@ -4,15 +4,14 @@
 Receives a JSON object on stdin:
   {"tool_name":"Bash","tool_input":{"command":"..."}}
 
-Only active when CLAUDE_STRICT_HOOKS=1 (i.e. --dangerously-skip-permissions mode).
-In normal mode, permissions.deny handles safety so this hook is a no-op.
+Called via per-skill hooks defined in SKILL.md frontmatter.
+Only active during /run-integration-test skill execution.
 
 Outputs a Claude Code hook response on stdout when denying.
 Exits 0 silently when the command is allowed.
 """
 
 import json
-import os
 import re
 import shlex
 import sys
@@ -116,6 +115,9 @@ def split_segments(tokens: list) -> list:
 
 def validate_segment(tokens: list) -> None:
     """Validate a single command segment."""
+    # Strip whitespace-only tokens (e.g. newline after && from shlex)
+    tokens = [t for t in tokens if t.strip()]
+
     # Strip leading variable assignments (KEY=value)
     while tokens and re.match(r"^[A-Za-z_][A-Za-z0-9_]*=", tokens[0]):
         tokens = tokens[1:]
@@ -139,9 +141,6 @@ def validate_segment(tokens: list) -> None:
 
 
 def main() -> None:
-    if os.environ.get("CLAUDE_STRICT_HOOKS") != "1":
-        sys.exit(0)
-
     data = json.load(sys.stdin)
 
     if data.get("tool_name") != "Bash":
