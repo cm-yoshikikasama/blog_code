@@ -5,6 +5,12 @@ argument-hint: "[project-path]"
 model: sonnet
 allowed-tools: Read, Write, Edit, Bash, Glob, Grep
 disable-model-invocation: true
+hooks:
+  PreToolUse:
+    - matcher: Bash
+      hooks:
+        - type: command
+          command: python3 .claude/validate_commands.py
 ---
 
 The project directory path is: $ARGUMENTS
