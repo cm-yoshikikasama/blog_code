@@ -34,6 +34,8 @@ BLOG_TEMPLATE.md
 memo.md
 .claude/
 !65_aws_cdk_etl_auto_test/.claude/
+!66_aws_cost_analysis_skill/.claude/
+66_aws_cost_analysis_skill/.claude/skills/aws-cost-analysis/config.yaml
 .tmp/
 .workflow-log
 workflow.json

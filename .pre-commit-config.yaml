@@ -36,3 +36,4 @@ repos:
     rev: 3.3.1
     hooks:
       - id: sqlfluff-lint
+        exclude: ^66_aws_cost_analysis_skill/
