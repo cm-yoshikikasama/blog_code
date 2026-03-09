@@ -1,0 +1,75 @@
+<mxfile host="65bd71144e">
+    <diagram id="diagram-1" name="Page-1">
+        <mxGraphModel dx="1600" dy="900" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1000" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="User" style="outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#232F3E;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=18;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.user;" parent="1" vertex="1">
+                    <mxGeometry x="420" y="15" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="&lt;b style=&#39;font-size:22px&#39;&gt;Claude Code&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:17px;color:#666&#39;&gt;/aws-cost-analysis&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5DDD3;strokeColor=#D97757;strokeWidth=2;fontColor=#232F3E;fontSize=18;arcSize=10;" parent="1" vertex="1">
+                    <mxGeometry x="300" y="145" width="310" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="&lt;b style=&#39;font-size:19px&#39;&gt;config.yaml&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:16px;color:#666&#39;&gt;Account settings&lt;/font&gt;" style="shape=document;whiteSpace=wrap;html=1;rounded=0;fillColor=#F5F5F5;strokeColor=#666666;fontColor=#232F3E;fontSize=16;size=0.15;" parent="1" vertex="1">
+                    <mxGeometry x="730" y="148" width="220" height="85" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="Per-Account Agent (parallel execution)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#879196;strokeWidth=2;dashed=1;dashPattern=8 4;verticalAlign=top;fontSize=19;fontStyle=1;fontColor=#879196;spacingTop=10;arcSize=5;" parent="1" vertex="1">
+                    <mxGeometry x="50" y="340" width="1050" height="280" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="" style="sketch=0;outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=16;fontStyle=1;shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_aws_cloud;strokeColor=#232F3E;fillColor=none;verticalAlign=top;align=left;spacingLeft=30;fontColor=#232F3E;dashed=0;" parent="1" vertex="1">
+                    <mxGeometry x="370" y="390" width="690" height="215" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="&lt;b style=&#39;font-size:20px&#39;&gt;DuckDB CLI&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:16px;color:#666&#39;&gt;Local query engine&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFDE7;strokeColor=#FDD835;strokeWidth=2;fontColor=#232F3E;fontSize=16;arcSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="80" y="460" width="240" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="S3&lt;br&gt;&lt;font style=&#39;font-size:16px&#39;&gt;CUR 2.0 (Parquet)&lt;/font&gt;" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#3F8624;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=18;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.s3" parent="1" vertex="1">
+                    <mxGeometry x="470" y="430" width="70" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="CloudTrail&lt;br&gt;&lt;font style=&#39;font-size:16px&#39;&gt;lookup-events&lt;/font&gt;" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=18;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloudtrail" parent="1" vertex="1">
+                    <mxGeometry x="790" y="430" width="70" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value="&lt;b style=&#39;font-size:20px&#39;&gt;generate_report.py&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:16px;color:#666&#39;&gt;Combine account data&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8EAF6;strokeColor=#5C6BC0;strokeWidth=2;fontColor=#232F3E;fontSize=16;arcSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="290" y="730" width="310" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value="&lt;b style=&#39;font-size:20px&#39;&gt;HTML Report&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-size:16px;color:#888&#39;&gt;Chart.js + Tab UI&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#616161;strokeWidth=2;fontColor=#232F3E;fontSize=16;arcSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="750" y="727" width="280" height="85" as="geometry"/>
+                </mxCell>
+                <mxCell id="20" value="&lt;font style=&#39;font-size:17px;color:#232F3E&#39;&gt;&lt;b&gt;①&lt;/b&gt;&lt;/font&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#545B64;strokeWidth=1.5;dashed=1;dashPattern=6 3;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;labelPosition=left;verticalLabelPosition=middle;align=right;" parent="1" source="2" target="3" edge="1">
+                    <mxGeometry x="-0.2" y="-20" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="21" value="&lt;font style=&#39;font-size:17px;color:#232F3E&#39;&gt;&lt;b&gt;②&lt;/b&gt; reads&lt;/font&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#545B64;strokeWidth=1.5;dashed=1;dashPattern=6 3;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;verticalAlign=bottom;" parent="1" source="3" target="4" edge="1">
+                    <mxGeometry x="-0.1" y="-12" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="22" value="&lt;font style=&#39;font-size:17px;color:#232F3E&#39;&gt;&lt;b&gt;③&lt;/b&gt; spawns agents&lt;/font&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#545B64;strokeWidth=1.5;dashed=1;dashPattern=6 3;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.3;entryY=0;entryDx=0;entryDy=0;labelPosition=right;verticalLabelPosition=middle;align=left;" parent="1" source="3" target="5" edge="1">
+                    <mxGeometry x="-0.2" y="12" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="23" value="&lt;font style=&#39;font-size:17px;color:#232F3E&#39;&gt;&lt;b&gt;④&lt;/b&gt; query&lt;/font&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#545B64;strokeWidth=1.5;dashed=1;dashPattern=6 3;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;verticalAlign=bottom;" parent="1" source="7" target="8" edge="1">
+                    <mxGeometry x="-0.1" y="-12" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="26" value="&lt;font style=&#39;font-size:17px;color:#232F3E&#39;&gt;&lt;b&gt;④&lt;/b&gt; lookup&lt;/font&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#545B64;strokeWidth=1.5;dashed=1;dashPattern=6 3;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;verticalAlign=bottom;" parent="1" source="8" target="9" edge="1">
+                    <mxGeometry x="-0.1" y="-12" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="24" value="&lt;font style=&#39;font-size:17px;color:#232F3E&#39;&gt;&lt;b&gt;⑤&lt;/b&gt; JSON results&lt;/font&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#545B64;strokeWidth=1.5;dashed=1;dashPattern=6 3;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;labelPosition=right;verticalLabelPosition=middle;align=left;" parent="1" source="5" target="11" edge="1">
+                    <mxGeometry x="-0.2" y="12" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="25" value="&lt;font style=&#39;font-size:17px;color:#232F3E&#39;&gt;&lt;b&gt;⑥&lt;/b&gt; generate&lt;/font&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#545B64;strokeWidth=1.5;dashed=1;dashPattern=6 3;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;verticalAlign=bottom;" parent="1" source="11" target="12" edge="1">
+                    <mxGeometry x="-0.1" y="-12" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AWS Cost Report - {{REPORT_PERIOD}}</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-deep: #06090f;
+    --bg-base: #0b1018;
+    --bg-card: #111827;
+    --bg-card-hover: #162030;
+    --bg-elevated: #1a2540;
+    --bg-input: #0d1320;
+    --border: rgba(255,255,255,0.05);
+    --border-hover: rgba(255,255,255,0.1);
+    --border-accent: rgba(56,189,248,0.25);
+    --text: #e2e8f0;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --text-dim: #475569;
+    --accent: #38bdf8;
+    --accent-bright: #7dd3fc;
+    --accent-glow: rgba(56,189,248,0.12);
+    --accent-glow-strong: rgba(56,189,248,0.25);
+    --danger: #f87171;
+    --danger-glow: rgba(248,113,113,0.1);
+    --success: #34d399;
+    --success-glow: rgba(52,211,153,0.1);
+    --warning: #fbbf24;
+    --warning-glow: rgba(251,191,36,0.1);
+    --font-display: 'DM Sans', 'Noto Sans JP', system-ui, sans-serif;
+    --font-body: 'Noto Sans JP', 'DM Sans', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
+    --radius: 14px;
+    --radius-sm: 8px;
+    --radius-xs: 5px;
+    --shadow-card: 0 1px 3px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.15);
+    --shadow-glow: 0 0 20px rgba(56,189,248,0.08);
+    --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-spring: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--bg-deep);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Noise texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    opacity: 0.025;
+    pointer-events: none;
+    z-index: 9999;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 256px 256px;
+  }
+
+  /* Ambient gradient orbs */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background:
+      radial-gradient(ellipse 70% 50% at 20% -10%, rgba(56,189,248,0.06), transparent 70%),
+      radial-gradient(ellipse 50% 40% at 85% 110%, rgba(139,92,246,0.04), transparent 70%),
+      radial-gradient(ellipse 40% 30% at 50% 50%, rgba(56,189,248,0.02), transparent 70%);
+  }
+
+  .container {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 40px 32px;
+    position: relative;
+    z-index: 1;
+  }
+
+  @media (max-width: 768px) {
+    .container { padding: 24px 16px; }
+  }
+
+  /* Header */
+  header {
+    margin-bottom: 28px;
+    animation: fadeSlideIn 0.5s ease-out;
+  }
+
+  .header-top {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 10px;
+  }
+
+  .header-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-sm);
+    background: linear-gradient(135deg, var(--accent), #818cf8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 700;
+    flex-shrink: 0;
+    box-shadow: 0 0 24px rgba(56,189,248,0.2), inset 0 1px 0 rgba(255,255,255,0.15);
+    font-family: var(--font-mono);
+    color: #fff;
+  }
+
+  header h1 {
+    font-family: var(--font-display);
+    font-size: 1.625rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: #f1f5f9;
+  }
+
+  .header-meta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    color: var(--text-muted);
+    font-size: 0.8125rem;
+    font-family: var(--font-mono);
+    letter-spacing: 0.01em;
+  }
+
+  .header-meta .separator {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--text-dim);
+  }
+
+  /* Account Tabs */
+  .tab-bar {
+    display: flex;
+    gap: 2px;
+    margin-bottom: 32px;
+    padding: 5px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    position: relative;
+    box-shadow: var(--shadow-card);
+    animation: fadeSlideIn 0.5s ease-out 0.05s backwards;
+  }
+
+  .tab-slider {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    height: calc(100% - 10px);
+    border-radius: calc(var(--radius) - 4px);
+    background: linear-gradient(135deg, rgba(56,189,248,0.08), rgba(129,140,248,0.06));
+    border: 1px solid var(--border-accent);
+    box-shadow: var(--shadow-glow);
+    transition: transform var(--transition-spring), width var(--transition-smooth);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .tab-btn {
+    flex: 1;
+    padding: 12px 20px;
+    background: transparent;
+    border: none;
+    border-radius: calc(var(--radius) - 4px);
+    color: var(--text-muted);
+    font-family: var(--font-display);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color var(--transition-fast);
+    position: relative;
+    z-index: 1;
+    text-align: center;
+  }
+
+  .tab-btn:hover {
+    color: var(--text-secondary);
+  }
+
+  .tab-btn.active {
+    color: var(--accent-bright);
+    font-weight: 600;
+  }
+
+  .tab-btn .tab-cost {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    margin-top: 3px;
+    opacity: 0.6;
+    transition: opacity var(--transition-fast);
+    letter-spacing: -0.01em;
+  }
+
+  .tab-btn.active .tab-cost {
+    opacity: 1;
+    color: var(--accent);
+  }
+
+  .tab-btn .tab-change {
+    font-size: 0.625rem;
+    font-family: var(--font-mono);
+    font-weight: 600;
+    margin-left: 4px;
+  }
+
+  /* Content transition wrapper */
+  .content-area {
+    transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+  }
+
+  .content-area.switching {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  /* Summary Cards */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+
+  @media (max-width: 900px) {
+    .summary-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 500px) {
+    .summary-grid { grid-template-columns: 1fr; }
+  }
+
+  .summary-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color var(--transition-smooth), transform var(--transition-fast), box-shadow var(--transition-smooth);
+    box-shadow: var(--shadow-card);
+  }
+
+  .summary-card:hover {
+    border-color: var(--border-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-card), var(--shadow-glow);
+  }
+
+  .summary-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0;
+    transition: opacity var(--transition-smooth);
+  }
+
+  .summary-card:hover::before { opacity: 0.5; }
+
+  .summary-card .label {
+    font-size: 0.6875rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 500;
+    font-family: var(--font-display);
+  }
+
+  .summary-card .value {
+    font-family: var(--font-mono);
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-top: 10px;
+    letter-spacing: -0.03em;
+    color: #f1f5f9;
+  }
+
+  .summary-card .change {
+    font-size: 0.75rem;
+    margin-top: 8px;
+    font-family: var(--font-mono);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+
+  .change-up { color: var(--danger); }
+  .change-down { color: var(--success); }
+
+  /* Sections */
+  .section {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    margin-bottom: 18px;
+    transition: border-color var(--transition-smooth);
+    box-shadow: var(--shadow-card);
+  }
+
+  .section:hover {
+    border-color: var(--border-hover);
+  }
+
+  .section h2 {
+    font-family: var(--font-display);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    margin-bottom: 22px;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section h2::before {
+    content: '';
+    width: 3px;
+    height: 16px;
+    background: linear-gradient(180deg, var(--accent), rgba(56,189,248,0.3));
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  .hint {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    font-style: italic;
+    margin-top: 10px;
+  }
+
+  .section-desc {
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    margin: -8px 0 16px 0;
+  }
+
+  .activity-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    font-family: var(--font-mono);
+  }
+
+  .activity-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .activity-dot.active {
+    background: var(--success);
+    box-shadow: 0 0 6px rgba(52,211,153,0.4);
+  }
+
+  .activity-dot.stopped {
+    background: var(--text-dim);
+  }
+
+  .activity-label {
+    color: var(--text-secondary);
+  }
+
+  .activity-detail {
+    font-size: 0.6875rem;
+    color: var(--text-dim);
+  }
+
+  .resource-group-header td {
+    font-weight: 600;
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+    background: rgba(56, 189, 248, 0.06);
+    border-left: 3px solid var(--accent);
+    padding: 8px 12px;
+    letter-spacing: 0.02em;
+  }
+
+  .resource-group-header .group-total {
+    font-family: var(--font-mono);
+    font-weight: 500;
+  }
+
+  /* Charts */
+  .chart-container { position: relative; height: 380px; margin-bottom: 20px; }
+  .chart-container-wide { position: relative; height: 420px; margin-bottom: 16px; }
+
+  /* Tables */
+  .table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8125rem;
+  }
+
+  thead th {
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.6875rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border-bottom: 1px solid var(--border);
+    background: rgba(255,255,255,0.015);
+    position: sticky;
+    top: 0;
+    font-family: var(--font-display);
+  }
+
+  td {
+    padding: 11px 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    transition: background var(--transition-fast);
+  }
+
+  tr:hover td {
+    background: rgba(56,189,248,0.03);
+  }
+
+  td.num {
+    text-align: right;
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+
+  th.num { text-align: right; }
+
+  td code {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    background: rgba(56,189,248,0.06);
+    padding: 3px 7px;
+    border-radius: var(--radius-xs);
+    color: var(--accent);
+    word-break: break-all;
+    border: 1px solid rgba(56,189,248,0.08);
+  }
+
+  /* Badges */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: var(--radius-xs);
+    font-size: 0.5625rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-family: var(--font-mono);
+  }
+
+  .badge-new {
+    background: var(--success-glow);
+    color: var(--success);
+    border: 1px solid rgba(52,211,153,0.15);
+  }
+
+  /* badge-alert removed: anomalies shown via row highlight + legend */
+
+  /* Recommendations */
+  .rec-item {
+    border-left: 2px solid var(--text-dim);
+    padding: 16px 20px;
+    margin-bottom: 10px;
+    background: rgba(255,255,255,0.015);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    transition: background var(--transition-fast), border-color var(--transition-fast);
+  }
+
+  .rec-item:hover {
+    background: rgba(255,255,255,0.03);
+  }
+
+  .rec-item.priority-high { border-left-color: var(--danger); }
+  .rec-item.priority-medium { border-left-color: var(--warning); }
+  .rec-item.priority-low { border-left-color: var(--text-dim); }
+
+  .rec-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.875rem;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .rec-priority {
+    font-size: 0.5625rem;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 2px 7px;
+    border-radius: var(--radius-xs);
+  }
+
+  .rec-priority-high { color: var(--danger); background: var(--danger-glow); }
+  .rec-priority-medium { color: var(--warning); background: var(--warning-glow); }
+  .rec-priority-low { color: var(--text-muted); background: rgba(100,116,139,0.12); }
+
+  .rec-meta {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+    font-family: var(--font-mono);
+  }
+
+  .rec-meta code {
+    background: rgba(255,255,255,0.06);
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 0.7rem;
+  }
+
+  .rec-desc {
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+
+  .rec-saving {
+    font-size: 0.8125rem;
+    color: var(--success);
+    font-family: var(--font-mono);
+    font-weight: 600;
+    margin-top: 6px;
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 0.6875rem;
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    font-family: var(--font-mono);
+    letter-spacing: 0.03em;
+  }
+
+  /* Animations */
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .stagger-in > * {
+    animation: fadeSlideIn 0.4s ease-out backwards;
+  }
+  .stagger-in > *:nth-child(1) { animation-delay: 0.05s; }
+  .stagger-in > *:nth-child(2) { animation-delay: 0.1s; }
+  .stagger-in > *:nth-child(3) { animation-delay: 0.15s; }
+  .stagger-in > *:nth-child(4) { animation-delay: 0.2s; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--bg-elevated); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
+
+  /* Anomaly row highlight */
+  .anomaly-row td {
+    background: rgba(248,113,113,0.06);
+  }
+  .anomaly-row:hover td {
+    background: rgba(248,113,113,0.10);
+  }
+
+  .table-legend {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    font-size: 0.6875rem;
+    color: var(--text-dim);
+    font-family: var(--font-mono);
+  }
+
+  .table-legend .legend-swatch {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  /* Empty state */
+  .empty-state {
+    text-align: center;
+    color: var(--text-dim);
+    padding: 32px;
+    font-size: 0.8125rem;
+    font-style: italic;
+  }
+
+  /* Keyboard hint */
+  .kbd-hint {
+    position: fixed;
+    bottom: 20px;
+    right: 24px;
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    color: var(--text-dim);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 6px 10px;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+    z-index: 100;
+    box-shadow: var(--shadow-card);
+  }
+
+  .kbd-hint.visible { opacity: 1; }
+
+  kbd {
+    display: inline-block;
+    padding: 1px 5px;
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-hover);
+    border-radius: 3px;
+    margin: 0 2px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <div class="header-top">
+    <div class="header-icon">$</div>
+    <h1>AWS Cost Report</h1>
+  </div>
+  <div class="header-meta">
+    <span>{{REPORT_PERIOD}}</span>
+    <span class="separator"></span>
+    <span>{{GENERATED_AT}}</span>
+  </div>
+</header>
+
+<div class="tab-bar" id="tabBar">
+  <div class="tab-slider" id="tabSlider"></div>
+</div>
+
+<div class="content-area" id="contentArea">
+
+<div class="summary-grid stagger-in" id="summaryGrid"></div>
+
+<div class="section">
+  <h2>Cost by Service</h2>
+  <p class="section-desc">Total cost per AWS service. See "Cost by Resource" below for per-resource breakdown.</p>
+  <div class="chart-container"><canvas id="serviceCostChart"></canvas></div>
+  <div class="table-wrap">
+  <table id="serviceCostTable">
+    <thead id="serviceCostTableHead"></thead>
+    <tbody></tbody>
+  </table>
+  <div class="table-legend" id="serviceCostLegend" style="display:none">
+    <span class="legend-swatch" style="background:rgba(248,113,113,0.15)"></span>
+    <span>Services with +50% or more increase vs. previous same period</span>
+  </div>
+  </div>
+</div>
+
+<div class="section" id="dailyCostSection" style="display:none">
+  <h2>Daily Cost Trend</h2>
+  <div class="chart-container-wide"><canvas id="dailyCostChart"></canvas></div>
+  <p class="hint">Click legend items to show/hide individual services</p>
+</div>
+
+<div class="section">
+  <h2>Cost by Resource (Top 20)</h2>
+  <p class="section-desc">Breakdown of the service costs above. Shows cost and creator per individual resource.</p>
+  <div class="table-wrap">
+  <table id="resourceTable">
+    <thead>
+      <tr><th>Resource ID</th><th class="num">Cost (USD)</th><th>Activity</th><th>Creator</th><th>Tags</th></tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  </div>
+</div>
+
+<div class="section">
+  <h2>Recommendations</h2>
+  <div id="recommendations"></div>
+</div>
+
+</div><!-- /content-area -->
+
+<footer>
+  aws-cost-analysis // auto-generated report
+</footer>
+
+</div>
+
+<div class="kbd-hint" id="kbdHint">
+  <kbd>&larr;</kbd> <kbd>&rarr;</kbd> to switch accounts
+</div>
+
+<script>
+// ACCOUNTS: array of { name, data } objects
+// Single account backward compat: if REPORT_DATA is not an array, wrap it
+const RAW = {{REPORT_DATA}};
+const ACCOUNTS = Array.isArray(RAW) ? RAW : [{ name: 'Account', data: RAW }];
+
+const ANOMALY_THRESHOLD_PCT = 50;
+
+// Chart.js global dark theme
+Chart.defaults.color = '#64748b';
+Chart.defaults.borderColor = 'rgba(255,255,255,0.05)';
+Chart.defaults.font.family = "'DM Sans', 'Noto Sans JP', system-ui, sans-serif";
+Chart.defaults.font.size = 11;
+
+const fmtUsd = v => '$' + v.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+
+// HTML escape to prevent XSS via user-controlled values (tags, resource names, etc.)
+const esc = s => {
+  if (s == null) return '';
+  const d = document.createElement('div');
+  d.textContent = String(s);
+  return d.innerHTML;
+};
+
+let activeCharts = [];
+let activeTab = 0;
+let isTransitioning = false;
+
+// Cache static DOM elements
+const tabBar = document.getElementById('tabBar');
+const tabSlider = document.getElementById('tabSlider');
+const contentArea = document.getElementById('contentArea');
+const kbdHint = document.getElementById('kbdHint');
+const $summaryGrid = document.getElementById('summaryGrid');
+const $serviceCostTableHead = document.getElementById('serviceCostTableHead');
+const $serviceCostTbody = document.querySelector('#serviceCostTable tbody');
+const $serviceCostLegend = document.getElementById('serviceCostLegend');
+const $resourceTbody = document.querySelector('#resourceTable tbody');
+const $dailyCostSection = document.getElementById('dailyCostSection');
+const $recommendations = document.getElementById('recommendations');
+
+// Build tabs
+ACCOUNTS.forEach((acct, i) => {
+  const btn = document.createElement('button');
+  btn.className = 'tab-btn' + (i === 0 ? ' active' : '');
+  const s = acct.data.summary;
+  const hasPct = s.costChangePercent != null;
+  const changeSign = hasPct && s.costChangePercent >= 0 ? '+' : '';
+  const changeClass = hasPct && s.costChangePercent >= 0 ? 'change-up' : 'change-down';
+  const changeTxt = hasPct ? `<span class="tab-change ${changeClass}">${changeSign}${s.costChangePercent.toFixed(1)}%</span>` : '';
+  btn.innerHTML = `${esc(acct.name)}<span class="tab-cost">${fmtUsd(s.totalCost)} ${changeTxt}</span>`;
+  btn.addEventListener('click', () => switchTab(i));
+  tabBar.appendChild(btn);
+});
+
+// Hide tab bar + keyboard hint if only one account
+if (ACCOUNTS.length <= 1) {
+  tabBar.style.display = 'none';
+  kbdHint.remove();
+} else {
+  // Show keyboard hint briefly
+  setTimeout(() => kbdHint.classList.add('visible'), 1500);
+  setTimeout(() => kbdHint.classList.remove('visible'), 5000);
+}
+
+// Position the slider on the active tab
+function updateSlider(index, animate) {
+  const buttons = tabBar.querySelectorAll('.tab-btn');
+  if (!buttons[index]) return;
+  const btn = buttons[index];
+  const barRect = tabBar.getBoundingClientRect();
+  const btnRect = btn.getBoundingClientRect();
+  const offsetLeft = btnRect.left - barRect.left;
+  tabSlider.style.width = btnRect.width + 'px';
+  tabSlider.style.transform = `translateX(${offsetLeft - 5}px)`;
+  if (!animate) {
+    tabSlider.style.transition = 'none';
+    requestAnimationFrame(() => {
+      tabSlider.style.transition = '';
+    });
+  }
+}
+
+// Initial slider position (no animation)
+requestAnimationFrame(() => updateSlider(0, false));
+
+function switchTab(index) {
+  if (index === activeTab || isTransitioning) return;
+  isTransitioning = true;
+  activeTab = index;
+
+  // Update tab buttons
+  tabBar.querySelectorAll('.tab-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', i === index);
+  });
+
+  // Slide indicator
+  updateSlider(index, true);
+
+  // Fade out content
+  contentArea.classList.add('switching');
+
+  setTimeout(() => {
+    renderAccount(ACCOUNTS[index].data);
+    // Fade in
+    requestAnimationFrame(() => {
+      contentArea.classList.remove('switching');
+      isTransitioning = false;
+    });
+  }, 200);
+}
+
+// Keyboard navigation
+document.addEventListener('keydown', e => {
+  if (ACCOUNTS.length <= 1) return;
+  if (e.key === 'ArrowLeft' && activeTab > 0) {
+    switchTab(activeTab - 1);
+  } else if (e.key === 'ArrowRight' && activeTab < ACCOUNTS.length - 1) {
+    switchTab(activeTab + 1);
+  }
+});
+
+const CHART_TOOLTIP = {
+  backgroundColor: 'rgba(17,24,39,0.95)',
+  borderColor: 'rgba(255,255,255,0.08)',
+  borderWidth: 1,
+  titleFont: { family: "'DM Sans', sans-serif", weight: '600', size: 12 },
+  bodyFont: { family: "'JetBrains Mono', monospace", size: 11 },
+  padding: 14,
+  cornerRadius: 10,
+  boxPadding: 4,
+  titleMarginBottom: 8
+};
+
+function renderAccount(DATA) {
+  // Destroy existing charts
+  activeCharts.forEach(c => c.destroy());
+  activeCharts = [];
+
+  const s = DATA.summary;
+  const hasCostPct = s.costChangePercent != null;
+  const changeDir = hasCostPct ? (s.costChangePercent >= 0 ? 'up' : 'down') : null;
+  const changeSign = hasCostPct && s.costChangePercent >= 0 ? '+' : '';
+
+  // Compute month info once (reused by summary cards and daily chart)
+  const sortedMonths = DATA.dailyCosts
+    ? [...new Set(DATA.dailyCosts.map(d => d.month))].sort()
+    : [];
+  const currentMonthStr = sortedMonths.length > 0 ? sortedMonths[sortedMonths.length - 1] : '';
+  const prevMonthStr = sortedMonths.length > 1 ? sortedMonths[sortedMonths.length - 2] : null;
+  const [fY, fM] = currentMonthStr ? currentMonthStr.split('-').map(Number) : [0, 0];
+  const totalDaysInMonth = fM > 0 ? new Date(fY, fM, 0).getDate() : 30;
+  const dailyCostDays = currentMonthStr
+    ? new Set(DATA.dailyCosts.filter(d => d.month === currentMonthStr).map(d => d.day)).size
+    : 0;
+  const isPartialMonth = s.dataAsOf && s.dataAsOf < totalDaysInMonth;
+  const forecast = dailyCostDays > 0 ? Math.round(s.totalCost / dailyCostDays * totalDaysInMonth * 100) / 100 : 0;
+  const budgetPct = s.budget > 0 ? Math.round(forecast / s.budget * 100) : 0;
+  const hasPrev = s.prevPeriodCost > 0;
+
+  // Summary cards
+  $summaryGrid.innerHTML = '';
+  const cards = [
+    { label: 'Monthly Total', value: fmtUsd(s.totalCost),
+      change: hasPrev && hasCostPct ? `${changeSign}${s.costChangePercent.toFixed(1)}% vs prev period` : 'No previous data', dir: changeDir },
+    { label: isPartialMonth ? `Prev Period (1-${s.dataAsOf}d)` : 'Previous Month',
+      value: hasPrev ? fmtUsd(s.prevPeriodCost) : 'N/A', change: '', dir: null },
+    { label: 'Forecast', value: forecast > 0 ? fmtUsd(forecast) : 'N/A',
+      change: s.budget > 0 ? `Budget ${fmtUsd(s.budget)} = ${budgetPct}%` : '', dir: budgetPct > 100 ? 'up' : 'down' },
+    { label: 'Prev Month Total', value: s.prevFullCost > 0 ? fmtUsd(s.prevFullCost) : 'N/A', change: '', dir: null }
+  ];
+  cards.forEach(c => {
+    const div = document.createElement('div');
+    div.className = 'summary-card';
+    div.innerHTML = `<div class="label">${c.label}</div><div class="value">${c.value}</div>`
+      + (c.change && c.dir ? `<div class="change change-${c.dir}">${c.change}</div>` : c.change ? `<div class="change">${c.change}</div>` : '');
+    $summaryGrid.appendChild(div);
+  });
+
+  // Service cost chart - horizontal bar
+  const sc = DATA.serviceCosts.slice(0, 15);
+  const svcChart = new Chart(document.getElementById('serviceCostChart'), {
+    type: 'bar',
+    data: {
+      labels: sc.map(d => d.service),
+      datasets: [
+        {
+          label: 'Current',
+          data: sc.map(d => d.cost),
+          backgroundColor: 'rgba(56,189,248,0.55)',
+          borderColor: 'rgba(56,189,248,0.8)',
+          borderWidth: 1,
+          borderRadius: 4,
+          borderSkipped: false
+        },
+        {
+          label: isPartialMonth ? 'Prev Period' : 'Previous',
+          data: sc.map(d => d.prevPeriodCost || 0),
+          backgroundColor: 'rgba(100,116,139,0.18)',
+          borderColor: 'rgba(100,116,139,0.3)',
+          borderWidth: 1,
+          borderRadius: 4,
+          borderSkipped: false
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+      plugins: {
+        legend: {
+          position: 'top',
+          labels: { boxWidth: 10, padding: 16, usePointStyle: true, pointStyle: 'rectRounded' }
+        },
+        tooltip: {
+          ...CHART_TOOLTIP,
+          callbacks: { label: ctx => ` ${ctx.dataset.label}: ${fmtUsd(ctx.parsed.x)}` }
+        }
+      },
+      scales: {
+        x: {
+          beginAtZero: true,
+          grid: { color: 'rgba(255,255,255,0.03)' },
+          ticks: { callback: v => '$' + v, font: { family: "'JetBrains Mono', monospace", size: 10 } }
+        },
+        y: {
+          grid: { display: false },
+          ticks: { font: { size: 11 } }
+        }
+      }
+    }
+  });
+  activeCharts.push(svcChart);
+
+  // Service cost table
+  const periodLabel = isPartialMonth ? `Prev Period 1-${s.dataAsOf}d (USD)` : 'Prev (USD)';
+  $serviceCostTableHead.innerHTML = `<tr><th>Service</th><th class="num">Cost (USD)</th><th class="num">${periodLabel}</th><th class="num">Change (%)</th><th class="num">Prev Full (USD)</th></tr>`;
+  let hasAnomaly = false;
+  const svcRows = DATA.serviceCosts.map(d => {
+    const hasPeriod = d.prevPeriodCost > 0;
+    const changeClass = d.change >= 0 ? 'change-up' : 'change-down';
+    const sign = d.change >= 0 ? '+' : '';
+    const isAnomaly = hasPeriod && d.change >= ANOMALY_THRESHOLD_PCT;
+    if (isAnomaly) hasAnomaly = true;
+    const changeCell = hasPeriod
+      ? `<span class="${changeClass}">${sign}${(d.change || 0).toFixed(1)}%</span>`
+      : '-';
+    return `<tr${isAnomaly ? ' class="anomaly-row"' : ''}>
+      <td>${esc(d.service)}</td>
+      <td class="num">$${d.cost.toFixed(2)}</td>
+      <td class="num">${hasPeriod ? '$' + d.prevPeriodCost.toFixed(2) : '-'}</td>
+      <td class="num">${changeCell}</td>
+      <td class="num">${d.prevFullCost > 0 ? '$' + d.prevFullCost.toFixed(2) : '-'}</td>
+    </tr>`;
+  });
+  $serviceCostTbody.innerHTML = svcRows.join('');
+  $serviceCostLegend.style.display = hasAnomaly ? '' : 'none';
+
+  // Resource table (grouped by service)
+  if (DATA.topResources.length === 0) {
+    $resourceTbody.innerHTML = '<tr><td colspan="5" class="empty-state">No resource data available</td></tr>';
+  } else {
+    const grouped = {};
+    DATA.topResources.forEach(d => {
+      if (!grouped[d.service]) grouped[d.service] = [];
+      grouped[d.service].push(d);
+    });
+    const resRows = [];
+    Object.entries(grouped).forEach(([service, resources]) => {
+      const groupTotal = resources.reduce((sum, r) => sum + r.cost, 0);
+      const count = resources.length;
+      resRows.push(`<tr class="resource-group-header">
+        <td colspan="5">${esc(service)}<span class="group-total" style="margin-left:12px">$${groupTotal.toFixed(2)}</span><span style="margin-left:8px;font-weight:400;font-size:0.75rem;color:var(--text-dim)">(${count} resources)</span></td>
+      </tr>`);
+      resources.forEach(d => {
+        let activityHtml;
+        if (d.activeDays != null) {
+          const dotClass = d.isActive ? 'active' : 'stopped';
+          const label = d.isActive ? 'Running' : 'Stopped';
+          const detail = d.isActive
+            ? `${d.activeDays}d continuous`
+            : `Last: ${d.lastSeen}`;
+          activityHtml = `<span class="activity-status"><span class="activity-dot ${dotClass}"></span><span class="activity-label">${label}</span><span class="activity-detail">${detail}</span></span>`;
+        } else {
+          activityHtml = esc(d.status) || '-';
+        }
+        resRows.push(`<tr>
+          <td><code>${esc(d.resourceId)}</code></td>
+          <td class="num">$${d.cost.toFixed(2)}</td>
+          <td>${activityHtml}</td>
+          <td>${esc(d.creator) || '-'}</td>
+          <td>${esc(d.tags) || '-'}</td>
+        </tr>`);
+      });
+    });
+    $resourceTbody.innerHTML = resRows.join('');
+  }
+
+  // Daily cost trend chart
+  if (DATA.dailyCosts && DATA.dailyCosts.length > 0) {
+    $dailyCostSection.style.display = '';
+    const services = [...new Set(DATA.dailyCosts.filter(d => d.month === currentMonthStr).map(d => d.service))];
+    const days = Array.from({length: totalDaysInMonth}, (_, i) => i + 1);
+
+    const palette = [
+      '#38bdf8', '#818cf8', '#f472b6', '#34d399',
+      '#fbbf24', '#fb923c', '#a78bfa', '#2dd4bf',
+      '#f87171', '#94a3b8', '#e879f9', '#22d3ee'
+    ];
+
+    const datasets = services.map((svc, i) => {
+      const curData = DATA.dailyCosts.filter(d => d.month === currentMonthStr && d.service === svc);
+      const curByDay = {};
+      curData.forEach(d => { curByDay[d.day] = d.cost; });
+      const color = palette[i % palette.length];
+      return {
+        label: svc,
+        data: days.map(dy => curByDay[dy] || 0),
+        backgroundColor: color + '99',
+        borderColor: color,
+        borderWidth: 1,
+        borderRadius: 2,
+        stack: 'current',
+        type: 'bar'
+      };
+    });
+
+    if (prevMonthStr) {
+      const prevTotal = {};
+      DATA.dailyCosts.filter(d => d.month === prevMonthStr).forEach(d => {
+        prevTotal[d.day] = (prevTotal[d.day] || 0) + d.cost;
+      });
+      datasets.push({
+        label: 'Prev Month Total',
+        data: days.map(dy => Math.round((prevTotal[dy] || 0) * 100) / 100),
+        borderColor: '#64748b',
+        backgroundColor: 'transparent',
+        borderWidth: 2,
+        borderDash: [6, 3],
+        pointRadius: 0,
+        pointHoverRadius: 4,
+        pointHoverBackgroundColor: '#64748b',
+        type: 'line',
+        fill: false,
+        order: 0
+      });
+    }
+
+    const dailyChart = new Chart(document.getElementById('dailyCostChart'), {
+      type: 'bar',
+      data: { labels: days.map(d => d + 'd'), datasets },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: {
+            position: 'top',
+            labels: { boxWidth: 10, padding: 12, font: { size: 10 }, usePointStyle: true, pointStyle: 'rectRounded' }
+          },
+          tooltip: {
+            ...CHART_TOOLTIP,
+            callbacks: {
+              footer: items => {
+                const barItems = items.filter(it => it.dataset.type !== 'line');
+                const total = barItems.reduce((sum, it) => sum + it.parsed.y, 0);
+                return 'Current Total: ' + fmtUsd(total);
+              },
+              label: ctx => ` ${ctx.dataset.label}: ${fmtUsd(ctx.parsed.y)}`
+            }
+          }
+        },
+        scales: {
+          x: {
+            stacked: true,
+            grid: { color: 'rgba(255,255,255,0.02)' },
+            ticks: { font: { family: "'JetBrains Mono', monospace", size: 9 } }
+          },
+          y: {
+            stacked: true, beginAtZero: true,
+            grid: { color: 'rgba(255,255,255,0.03)' },
+            ticks: { callback: v => '$' + v, font: { family: "'JetBrains Mono', monospace", size: 10 } }
+          }
+        }
+      }
+    });
+    activeCharts.push(dailyChart);
+  } else {
+    $dailyCostSection.style.display = 'none';
+  }
+
+  // Recommendations
+  const priorityLabels = { high: 'High', medium: 'Medium', low: 'Low' };
+  if (DATA.recommendations && DATA.recommendations.length > 0) {
+    const recItems = DATA.recommendations.map(r => {
+      const label = priorityLabels[r.priority] || '';
+      const priorityClass = r.priority || 'low';
+      const ownerHtml = r.owner ? `<span class="rec-owner">Owner: ${esc(r.owner)}</span>` : '';
+      const resourceHtml = r.resourceId ? `<span class="rec-resource">Resource: <code>${esc(r.resourceId)}</code></span>` : '';
+      const metaHtml = (ownerHtml || resourceHtml) ? `<div class="rec-meta">${ownerHtml}${ownerHtml && resourceHtml ? ' / ' : ''}${resourceHtml}</div>` : '';
+      return `<div class="rec-item priority-${priorityClass}">
+        <div class="rec-title">${esc(r.title)} <span class="rec-priority rec-priority-${priorityClass}">${label}</span></div>
+        ${metaHtml}
+        <div class="rec-desc">${esc(r.description)}</div>
+        ${r.estimatedSaving ? '<div class="rec-saving">Est. saving: ' + fmtUsd(r.estimatedSaving) + '/mo</div>' : ''}
+      </div>`;
+    });
+    $recommendations.innerHTML = recItems.join('');
+  } else {
+    $recommendations.innerHTML = '<p class="empty-state">No recommendations</p>';
+  }
+}
+
+// Initial render
+renderAccount(ACCOUNTS[0].data);
+</script>
+</body>
+</html>

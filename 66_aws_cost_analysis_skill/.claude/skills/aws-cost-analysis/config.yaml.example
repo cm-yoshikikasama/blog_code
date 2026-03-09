@@ -1,0 +1,26 @@
+# AWS Cost Analysis Skill Configuration
+#
+# Setup:
+#   1. Copy this file to config.yaml
+#      cp config.yaml.example config.yaml
+#   2. Edit each account's values for your environment
+#   3. config.yaml is in .gitignore and will not be committed to Git
+
+# S3 path template
+# {projectName} and {env} are replaced with account-specific values
+s3PathPattern: "s3://{projectName}-{env}-cost-notify/cur-reports/{projectName}-{env}-cur-cost-analysis/data"
+
+# Target accounts for analysis
+accounts:
+  - name: my-account           # Display name (used for report tab labels)
+    projectName: my-project    # ProjectName for S3 path generation
+    profile: my-aws-profile    # AWS CLI profile name
+    env: dev                   # Environment name (used for S3 path generation)
+    budget: 500                # Monthly budget (USD)
+
+  # Add more accounts here
+  # - name: another-account
+  #   projectName: another-project
+  #   profile: another-aws-profile
+  #   env: prod
+  #   budget: 1000
