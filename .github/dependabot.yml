@@ -4,7 +4,7 @@ updates:
   - package-ecosystem: "npm"
     directory: "/blog_code/41_lambda_logging_json_with_cdk/cdk"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
     groups:
       all-dependencies:
         patterns:
@@ -14,7 +14,7 @@ updates:
   - package-ecosystem: "pip"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
     groups:
       all-dependencies:
         patterns:
@@ -25,7 +25,7 @@ updates:
   - package-ecosystem: "docker"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
     groups:
       all-dependencies:
         patterns:
@@ -35,7 +35,7 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
     groups:
       all-dependencies:
         patterns:
