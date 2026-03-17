@@ -36,6 +36,7 @@ memo.md
 !65_aws_cdk_etl_auto_test/.claude/
 !66_aws_cost_analysis_skill/.claude/
 66_aws_cost_analysis_skill/.claude/skills/aws-cost-analysis/config.yaml
+!67_cowork_create_minutes/.claude/
 .tmp/
 .workflow-log
 workflow.json

@@ -10,37 +10,37 @@
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg-deep: #06090f;
-    --bg-base: #0b1018;
-    --bg-card: #111827;
-    --bg-card-hover: #162030;
-    --bg-elevated: #1a2540;
-    --bg-input: #0d1320;
-    --border: rgba(255,255,255,0.05);
-    --border-hover: rgba(255,255,255,0.1);
-    --border-accent: rgba(56,189,248,0.25);
-    --text: #e2e8f0;
-    --text-secondary: #94a3b8;
-    --text-muted: #64748b;
-    --text-dim: #475569;
-    --accent: #38bdf8;
-    --accent-bright: #7dd3fc;
-    --accent-glow: rgba(56,189,248,0.12);
-    --accent-glow-strong: rgba(56,189,248,0.25);
-    --danger: #f87171;
-    --danger-glow: rgba(248,113,113,0.1);
-    --success: #34d399;
-    --success-glow: rgba(52,211,153,0.1);
-    --warning: #fbbf24;
-    --warning-glow: rgba(251,191,36,0.1);
+    --bg-deep: #F7F2EA;
+    --bg-base: #F2ECE2;
+    --bg-card: #FEFCF7;
+    --bg-card-hover: #F9F5EF;
+    --bg-elevated: #EDE8DF;
+    --bg-input: #F5F0E8;
+    --border: rgba(28,24,21,0.1);
+    --border-hover: rgba(28,24,21,0.18);
+    --border-accent: rgba(201,75,40,0.25);
+    --text: #1C1815;
+    --text-secondary: #5A544C;
+    --text-muted: #9A9088;
+    --text-dim: #B5AFA8;
+    --accent: #C94B28;
+    --accent-bright: #E8611A;
+    --accent-glow: rgba(201,75,40,0.08);
+    --accent-glow-strong: rgba(201,75,40,0.15);
+    --danger: #B91C1C;
+    --danger-glow: rgba(185,28,28,0.08);
+    --success: #1A7A6E;
+    --success-glow: rgba(26,122,110,0.08);
+    --warning: #A05C10;
+    --warning-glow: rgba(160,92,16,0.08);
     --font-display: 'DM Sans', 'Noto Sans JP', system-ui, sans-serif;
     --font-body: 'Noto Sans JP', 'DM Sans', system-ui, sans-serif;
     --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
     --radius: 14px;
     --radius-sm: 8px;
     --radius-xs: 5px;
-    --shadow-card: 0 1px 3px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.15);
-    --shadow-glow: 0 0 20px rgba(56,189,248,0.08);
+    --shadow-card: 0 1px 4px rgba(28,24,21,.06), 0 6px 20px rgba(28,24,21,.06);
+    --shadow-glow: 0 0 20px rgba(201,75,40,0.06);
     --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-spring: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -78,9 +78,9 @@
     pointer-events: none;
     z-index: 0;
     background:
-      radial-gradient(ellipse 70% 50% at 20% -10%, rgba(56,189,248,0.06), transparent 70%),
-      radial-gradient(ellipse 50% 40% at 85% 110%, rgba(139,92,246,0.04), transparent 70%),
-      radial-gradient(ellipse 40% 30% at 50% 50%, rgba(56,189,248,0.02), transparent 70%);
+      radial-gradient(ellipse 70% 50% at 20% -10%, rgba(201,75,40,0.05), transparent 70%),
+      radial-gradient(ellipse 50% 40% at 85% 110%, rgba(160,92,16,0.03), transparent 70%),
+      radial-gradient(ellipse 40% 30% at 50% 50%, rgba(201,75,40,0.02), transparent 70%);
   }
 
   .container {
@@ -112,7 +112,7 @@
     width: 40px;
     height: 40px;
     border-radius: var(--radius-sm);
-    background: linear-gradient(135deg, var(--accent), #818cf8);
+    background: linear-gradient(135deg, var(--accent), #A05C10);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -129,7 +129,7 @@
     font-size: 1.625rem;
     font-weight: 700;
     letter-spacing: -0.03em;
-    color: #f1f5f9;
+    color: #1C1815;
   }
 
   .header-meta {
@@ -169,7 +169,7 @@
     left: 5px;
     height: calc(100% - 10px);
     border-radius: calc(var(--radius) - 4px);
-    background: linear-gradient(135deg, rgba(56,189,248,0.08), rgba(129,140,248,0.06));
+    background: linear-gradient(135deg, rgba(201,75,40,0.08), rgba(160,92,16,0.06));
     border: 1px solid var(--border-accent);
     box-shadow: var(--shadow-glow);
     transition: transform var(--transition-spring), width var(--transition-smooth);
@@ -297,7 +297,7 @@
     font-weight: 700;
     margin-top: 10px;
     letter-spacing: -0.03em;
-    color: #f1f5f9;
+    color: #1C1815;
   }
 
   .summary-card .change {
@@ -341,7 +341,7 @@
     content: '';
     width: 3px;
     height: 16px;
-    background: linear-gradient(180deg, var(--accent), rgba(56,189,248,0.3));
+    background: linear-gradient(180deg, var(--accent), rgba(201,75,40,0.3));
     border-radius: 2px;
     flex-shrink: 0;
   }
@@ -396,7 +396,7 @@
     font-weight: 600;
     font-size: 0.8125rem;
     color: var(--text-secondary);
-    background: rgba(56, 189, 248, 0.06);
+    background: rgba(201, 75, 40, 0.05);
     border-left: 3px solid var(--accent);
     padding: 8px 12px;
     letter-spacing: 0.02em;
@@ -432,7 +432,7 @@
     text-transform: uppercase;
     letter-spacing: 0.06em;
     border-bottom: 1px solid var(--border);
-    background: rgba(255,255,255,0.015);
+    background: rgba(28,24,21,0.03);
     position: sticky;
     top: 0;
     font-family: var(--font-display);
@@ -440,12 +440,12 @@
 
   td {
     padding: 11px 14px;
-    border-bottom: 1px solid rgba(255,255,255,0.03);
+    border-bottom: 1px solid rgba(28,24,21,0.06);
     transition: background var(--transition-fast);
   }
 
   tr:hover td {
-    background: rgba(56,189,248,0.03);
+    background: rgba(201,75,40,0.04);
   }
 
   td.num {
@@ -461,12 +461,12 @@
   td code {
     font-family: var(--font-mono);
     font-size: 0.6875rem;
-    background: rgba(56,189,248,0.06);
+    background: rgba(201,75,40,0.06);
     padding: 3px 7px;
     border-radius: var(--radius-xs);
     color: var(--accent);
     word-break: break-all;
-    border: 1px solid rgba(56,189,248,0.08);
+    border: 1px solid rgba(201,75,40,0.12);
   }
 
   /* Badges */
@@ -495,13 +495,13 @@
     border-left: 2px solid var(--text-dim);
     padding: 16px 20px;
     margin-bottom: 10px;
-    background: rgba(255,255,255,0.015);
+    background: rgba(28,24,21,0.025);
     border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
     transition: background var(--transition-fast), border-color var(--transition-fast);
   }
 
   .rec-item:hover {
-    background: rgba(255,255,255,0.03);
+    background: rgba(28,24,21,0.04);
   }
 
   .rec-item.priority-high { border-left-color: var(--danger); }
@@ -594,10 +594,10 @@
 
   /* Anomaly row highlight */
   .anomaly-row td {
-    background: rgba(248,113,113,0.06);
+    background: rgba(185,28,28,0.05);
   }
   .anomaly-row:hover td {
-    background: rgba(248,113,113,0.10);
+    background: rgba(185,28,28,0.09);
   }
 
   .table-legend {
@@ -692,7 +692,7 @@
     <tbody></tbody>
   </table>
   <div class="table-legend" id="serviceCostLegend" style="display:none">
-    <span class="legend-swatch" style="background:rgba(248,113,113,0.15)"></span>
+    <span class="legend-swatch" style="background:rgba(185,28,28,0.12)"></span>
     <span>Services with +50% or more increase vs. previous same period</span>
   </div>
   </div>
@@ -743,8 +743,8 @@ const ACCOUNTS = Array.isArray(RAW) ? RAW : [{ name: 'Account', data: RAW }];
 const ANOMALY_THRESHOLD_PCT = 50;
 
 // Chart.js global dark theme
-Chart.defaults.color = '#64748b';
-Chart.defaults.borderColor = 'rgba(255,255,255,0.05)';
+Chart.defaults.color = '#9A9088';
+Chart.defaults.borderColor = 'rgba(28,24,21,0.08)';
 Chart.defaults.font.family = "'DM Sans', 'Noto Sans JP', system-ui, sans-serif";
 Chart.defaults.font.size = 11;
 
@@ -857,8 +857,8 @@ document.addEventListener('keydown', e => {
 });
 
 const CHART_TOOLTIP = {
-  backgroundColor: 'rgba(17,24,39,0.95)',
-  borderColor: 'rgba(255,255,255,0.08)',
+  backgroundColor: 'rgba(28,24,21,0.92)',
+  borderColor: 'rgba(201,75,40,0.15)',
   borderWidth: 1,
   titleFont: { family: "'DM Sans', sans-serif", weight: '600', size: 12 },
   bodyFont: { family: "'JetBrains Mono', monospace", size: 11 },
@@ -923,8 +923,8 @@ function renderAccount(DATA) {
         {
           label: 'Current',
           data: sc.map(d => d.cost),
-          backgroundColor: 'rgba(56,189,248,0.55)',
-          borderColor: 'rgba(56,189,248,0.8)',
+          backgroundColor: 'rgba(201,75,40,0.5)',
+          borderColor: 'rgba(201,75,40,0.8)',
           borderWidth: 1,
           borderRadius: 4,
           borderSkipped: false
@@ -932,8 +932,8 @@ function renderAccount(DATA) {
         {
           label: isPartialMonth ? 'Prev Period' : 'Previous',
           data: sc.map(d => d.prevPeriodCost || 0),
-          backgroundColor: 'rgba(100,116,139,0.18)',
-          borderColor: 'rgba(100,116,139,0.3)',
+          backgroundColor: 'rgba(154,144,136,0.25)',
+          borderColor: 'rgba(154,144,136,0.4)',
           borderWidth: 1,
           borderRadius: 4,
           borderSkipped: false
@@ -955,7 +955,7 @@ function renderAccount(DATA) {
       scales: {
         x: {
           beginAtZero: true,
-          grid: { color: 'rgba(255,255,255,0.03)' },
+          grid: { color: 'rgba(28,24,21,0.06)' },
           ticks: { callback: v => '$' + v, font: { family: "'JetBrains Mono', monospace", size: 10 } }
         },
         y: {
@@ -1038,9 +1038,9 @@ function renderAccount(DATA) {
     const days = Array.from({length: totalDaysInMonth}, (_, i) => i + 1);
 
     const palette = [
-      '#38bdf8', '#818cf8', '#f472b6', '#34d399',
-      '#fbbf24', '#fb923c', '#a78bfa', '#2dd4bf',
-      '#f87171', '#94a3b8', '#e879f9', '#22d3ee'
+      '#C94B28', '#1A7A6E', '#A05C10', '#6B4AC2',
+      '#0F7EC0', '#C97010', '#1A8F6E', '#9B3030',
+      '#4A7CB5', '#7A6E65', '#B55A1A', '#2A8F8F'
     ];
 
     const datasets = services.map((svc, i) => {
@@ -1068,7 +1068,7 @@ function renderAccount(DATA) {
       datasets.push({
         label: 'Prev Month Total',
         data: days.map(dy => Math.round((prevTotal[dy] || 0) * 100) / 100),
-        borderColor: '#64748b',
+        borderColor: '#9A9088',
         backgroundColor: 'transparent',
         borderWidth: 2,
         borderDash: [6, 3],
@@ -1107,12 +1107,12 @@ function renderAccount(DATA) {
         scales: {
           x: {
             stacked: true,
-            grid: { color: 'rgba(255,255,255,0.02)' },
+            grid: { color: 'rgba(28,24,21,0.05)' },
             ticks: { font: { family: "'JetBrains Mono', monospace", size: 9 } }
           },
           y: {
             stacked: true, beginAtZero: true,
-            grid: { color: 'rgba(255,255,255,0.03)' },
+            grid: { color: 'rgba(28,24,21,0.06)' },
             ticks: { callback: v => '$' + v, font: { family: "'JetBrains Mono', monospace", size: 10 } }
           }
         }
