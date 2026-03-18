@@ -1,123 +1,106 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<mxfile host="draw.io" agent="Claude Code" type="device">
-  <diagram id="diagram-1" name="Page-1">
-    <mxGraphModel dx="1100" dy="750" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="750" math="0" shadow="0">
-      <root>
-        <mxCell id="0"/>
-        <mxCell id="1" parent="0"/>
-
-        <!-- Row 1: User -> Claude -> GCal -->
-        <mxCell id="user" value="User" style="sketch=0;outlineConnect=0;fontColor=#232F3E;fillColor=#232F3E;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=18;fontStyle=1;aspect=fixed;shape=mxgraph.aws4.user;fontFamily=Arial;" parent="1" vertex="1">
-          <mxGeometry x="40" y="50" width="50" height="50" as="geometry"/>
-        </mxCell>
-
-        <mxCell id="claude" value="Claude Desktop&lt;br&gt;(Cowork)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5DDD3;strokeColor=#D97757;strokeWidth=2.5;fontColor=#232F3E;fontSize=20;fontStyle=1;verticalAlign=middle;align=center;arcSize=12;fontFamily=Arial;shadow=1;" parent="1" vertex="1">
-          <mxGeometry x="180" y="20" width="220" height="100" as="geometry"/>
-        </mxCell>
-
-        <mxCell id="skill-badge" value="/create-minutes" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#faf9f5;strokeColor=#D97757;strokeWidth=1.5;fontColor=#D97757;fontSize=14;fontStyle=1;verticalAlign=middle;align=center;arcSize=20;fontFamily=Arial;" parent="1" vertex="1">
-          <mxGeometry x="240" y="126" width="110" height="22" as="geometry"/>
-        </mxCell>
-
-        <mxCell id="gcal" value="Google Calendar" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEEFA;strokeColor=#4285F4;strokeWidth=2;fontColor=#232F3E;fontSize=19;fontStyle=1;verticalAlign=middle;align=center;arcSize=12;fontFamily=Arial;" parent="1" vertex="1">
-          <mxGeometry x="700" y="38" width="190" height="55" as="geometry"/>
-        </mxCell>
-
-        <!-- Row 2: GMeet -> GDrive -->
-        <mxCell id="gmeet" value="Google Meet" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E0F2F1;strokeColor=#00897B;strokeWidth=2;fontColor=#232F3E;fontSize=19;fontStyle=1;verticalAlign=middle;align=center;arcSize=12;fontFamily=Arial;" parent="1" vertex="1">
-          <mxGeometry x="560" y="210" width="170" height="50" as="geometry"/>
-        </mxCell>
-
-        <mxCell id="gdrive" value="Google Drive&lt;br&gt;(Gemini memo)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF8E1;strokeColor=#F4B400;strokeWidth=2;fontColor=#232F3E;fontSize=19;fontStyle=1;verticalAlign=middle;align=center;arcSize=12;fontFamily=Arial;" parent="1" vertex="1">
-          <mxGeometry x="800" y="205" width="200" height="60" as="geometry"/>
-        </mxCell>
-
-        <!-- Row 3: template -->
-        <mxCell id="template" value="template" style="shape=document;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=0.27;fillColor=#e8e6dc;strokeColor=#b0aea5;strokeWidth=1.5;fontColor=#232F3E;fontSize=19;fontStyle=1;fontFamily=Arial;" parent="1" vertex="1">
-          <mxGeometry x="620" y="340" width="130" height="60" as="geometry"/>
-        </mxCell>
-
-        <!-- Row 4: output -->
-        <mxCell id="output" value="05_Meetings/&#xa;*.md" style="shape=mxgraph.aws4.folder;whiteSpace=wrap;html=1;fontColor=#232F3E;fillColor=#788c5d;strokeColor=#5f7348;strokeWidth=1.5;fontSize=16;fontStyle=1;fontFamily=Arial;verticalLabelPosition=bottom;verticalAlign=top;align=center;" parent="1" vertex="1">
-          <mxGeometry x="650" y="460" width="50" height="50" as="geometry"/>
-        </mxCell>
-
-        <!-- Row 5: feedback -->
-        <mxCell id="feedback" value="feedback" style="shape=document;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=0.27;fillColor=#e8e6dc;strokeColor=#b0aea5;strokeWidth=1.5;fontColor=#232F3E;fontSize=19;fontStyle=1;fontFamily=Arial;" parent="1" vertex="1">
-          <mxGeometry x="240" y="560" width="130" height="60" as="geometry"/>
-        </mxCell>
-
-        <!-- e1: User -> Claude -->
-        <mxCell id="e1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#545B64;strokeWidth=1.5;dashed=1;dashPattern=6 3;endArrow=block;endFill=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" parent="1" source="user" target="claude" edge="1">
-          <mxGeometry relative="1" as="geometry"/>
-        </mxCell>
-        <mxCell id="e1-label" value="①" style="edgeLabel;fontSize=19;fontColor=#232F3E;fontStyle=1;fontFamily=Arial;" parent="e1" connectable="0" vertex="1">
-          <mxGeometry x="0" relative="1" as="geometry">
-            <mxPoint x="0" y="-12" as="offset"/>
-          </mxGeometry>
-        </mxCell>
-
-        <!-- e2: Claude -> GCal (right) -->
-        <mxCell id="e2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#4285F4;strokeWidth=1.5;dashed=1;dashPattern=6 3;endArrow=block;endFill=1;exitX=1;exitY=0.25;entryX=0;entryY=0.5;" parent="1" source="claude" target="gcal" edge="1">
-          <mxGeometry relative="1" as="geometry"/>
-        </mxCell>
-        <mxCell id="e2-label" value="② gcal_list_events" style="edgeLabel;fontSize=16;fontColor=#232F3E;fontStyle=1;fontFamily=Arial;" parent="e2" connectable="0" vertex="1">
-          <mxGeometry x="-0.3" relative="1" as="geometry">
-            <mxPoint x="0" y="-12" as="offset"/>
-          </mxGeometry>
-        </mxCell>
-
-        <!-- e3: GMeet -> GDrive (right) -->
-        <mxCell id="e3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#b0aea5;strokeWidth=1;dashed=1;dashPattern=6 3;endArrow=block;endFill=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" parent="1" source="gmeet" target="gdrive" edge="1">
-          <mxGeometry relative="1" as="geometry"/>
-        </mxCell>
-        <mxCell id="e3-label" value="③ auto-generated" style="edgeLabel;fontSize=16;fontColor=#b0aea5;fontStyle=1;fontFamily=Arial;" parent="e3" connectable="0" vertex="1">
-          <mxGeometry x="0" relative="1" as="geometry">
-            <mxPoint x="0" y="-12" as="offset"/>
-          </mxGeometry>
-        </mxCell>
-
-        <!-- e4: Claude -> GDrive (down-right) -->
-        <mxCell id="e4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#F4B400;strokeWidth=1.5;dashed=1;dashPattern=6 3;endArrow=block;endFill=1;exitX=0.85;exitY=1;entryX=0.5;entryY=0;" parent="1" source="claude" target="gdrive" edge="1">
-          <mxGeometry relative="1" as="geometry"/>
-        </mxCell>
-        <mxCell id="e4-label" value="④ google_drive_fetch" style="edgeLabel;fontSize=16;fontColor=#232F3E;fontStyle=1;fontFamily=Arial;" parent="e4" connectable="0" vertex="1">
-          <mxGeometry x="-0.5" relative="1" as="geometry">
-            <mxPoint x="15" y="0" as="offset"/>
-          </mxGeometry>
-        </mxCell>
-
-        <!-- e5: Claude -> template (down-right) -->
-        <mxCell id="e5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#545B64;strokeWidth=1.5;dashed=1;dashPattern=6 3;endArrow=block;endFill=1;exitX=0.4;exitY=1;entryX=0;entryY=0.5;" parent="1" source="claude" target="template" edge="1">
-          <mxGeometry relative="1" as="geometry"/>
-        </mxCell>
-        <mxCell id="e5-label" value="⑤ Read" style="edgeLabel;fontSize=16;fontColor=#232F3E;fontStyle=1;fontFamily=Arial;" parent="e5" connectable="0" vertex="1">
-          <mxGeometry x="0.3" relative="1" as="geometry">
-            <mxPoint x="0" y="-12" as="offset"/>
-          </mxGeometry>
-        </mxCell>
-
-        <!-- e6: Claude -> output (down-right) -->
-        <mxCell id="e6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#788c5d;strokeWidth=1.5;dashed=1;dashPattern=6 3;endArrow=block;endFill=1;exitX=0.6;exitY=1;entryX=0;entryY=0.5;" parent="1" source="claude" target="output" edge="1">
-          <mxGeometry relative="1" as="geometry"/>
-        </mxCell>
-        <mxCell id="e6-label" value="⑥ Write .md" style="edgeLabel;fontSize=16;fontColor=#232F3E;fontStyle=1;fontFamily=Arial;" parent="e6" connectable="0" vertex="1">
-          <mxGeometry x="0.3" relative="1" as="geometry">
-            <mxPoint x="0" y="-12" as="offset"/>
-          </mxGeometry>
-        </mxCell>
-
-        <!-- e7: User -> feedback (down-right) -->
-        <mxCell id="e7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#D97757;strokeWidth=1.5;dashed=1;dashPattern=6 3;endArrow=block;endFill=1;exitX=0.5;exitY=1;entryX=0;entryY=0.5;" parent="1" source="user" target="feedback" edge="1">
-          <mxGeometry relative="1" as="geometry"/>
-        </mxCell>
-        <mxCell id="e7-label" value="⑦ Feedback" style="edgeLabel;fontSize=16;fontColor=#D97757;fontStyle=1;fontFamily=Arial;" parent="e7" connectable="0" vertex="1">
-          <mxGeometry x="0.5" relative="1" as="geometry">
-            <mxPoint x="15" y="0" as="offset"/>
-          </mxGeometry>
-        </mxCell>
-
-      </root>
-    </mxGraphModel>
-  </diagram>
+<mxfile host="65bd71144e">
+    <diagram id="diagram-1" name="Page-1">
+        <mxGraphModel dx="901" dy="613" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1000" pageHeight="720" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="user" value="User" style="sketch=0;outlineConnect=0;fontColor=#232F3E;fillColor=#232F3E;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=18;fontStyle=1;aspect=fixed;shape=mxgraph.aws4.user;fontFamily=Arial;" parent="1" vertex="1">
+                    <mxGeometry x="39" y="43" width="50" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="claude" value="Claude Desktop&lt;br&gt;(Cowork)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5DDD3;strokeColor=#D97757;strokeWidth=2.5;fontColor=#232F3E;fontSize=20;fontStyle=1;verticalAlign=middle;align=center;arcSize=12;fontFamily=Arial;shadow=1;" parent="1" vertex="1">
+                    <mxGeometry x="180" y="20" width="220" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="skill-badge" value="/create-minutes" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#faf9f5;strokeColor=#D97757;strokeWidth=1.5;fontColor=#D97757;fontSize=14;fontStyle=1;verticalAlign=middle;align=center;arcSize=20;fontFamily=Arial;" parent="1" vertex="1">
+                    <mxGeometry x="226" y="135" width="110" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="gcal" value="Google Calendar" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEEFA;strokeColor=#4285F4;strokeWidth=2;fontColor=#232F3E;fontSize=19;fontStyle=1;verticalAlign=middle;align=center;arcSize=12;fontFamily=Arial;" parent="1" vertex="1">
+                    <mxGeometry x="680" y="38" width="190" height="55" as="geometry"/>
+                </mxCell>
+                <mxCell id="gmeet" value="Google Meet" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E0F2F1;strokeColor=#00897B;strokeWidth=2;fontColor=#232F3E;fontSize=19;fontStyle=1;verticalAlign=middle;align=center;arcSize=12;fontFamily=Arial;" parent="1" vertex="1">
+                    <mxGeometry x="710" y="170" width="170" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="gdrive" value="Google Drive&lt;br&gt;(Gemini memo)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF8E1;strokeColor=#F4B400;strokeWidth=2;fontColor=#232F3E;fontSize=19;fontStyle=1;verticalAlign=middle;align=center;arcSize=12;fontFamily=Arial;" parent="1" vertex="1">
+                    <mxGeometry x="680" y="300" width="200" height="55" as="geometry"/>
+                </mxCell>
+                <mxCell id="template" value="template" style="shape=document;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=0.27;fillColor=#e8e6dc;strokeColor=#b0aea5;strokeWidth=1.5;fontColor=#232F3E;fontSize=19;fontStyle=1;fontFamily=Arial;" parent="1" vertex="1">
+                    <mxGeometry x="680" y="410" width="130" height="55" as="geometry"/>
+                </mxCell>
+                <mxCell id="output" value="05_Meetings/&#xa;*.md" style="shape=mxgraph.aws4.folder;whiteSpace=wrap;html=1;fontColor=#232F3E;fillColor=#788c5d;strokeColor=#5f7348;strokeWidth=1.5;fontSize=16;fontStyle=1;fontFamily=Arial;verticalLabelPosition=bottom;verticalAlign=top;align=center;" parent="1" vertex="1">
+                    <mxGeometry x="700" y="520" width="50" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="feedback" value="feedback" style="shape=document;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=0.27;fillColor=#e8e6dc;strokeColor=#b0aea5;strokeWidth=1.5;fontColor=#232F3E;fontSize=19;fontStyle=1;fontFamily=Arial;" parent="1" vertex="1">
+                    <mxGeometry x="238" y="573" width="130" height="55" as="geometry"/>
+                </mxCell>
+                <mxCell id="e1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#545B64;strokeWidth=1.5;dashed=1;dashPattern=6 3;endArrow=block;endFill=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" parent="1" source="user" target="claude" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="87" y="70"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e1-label" value="①" style="edgeLabel;fontSize=19;fontColor=#232F3E;fontStyle=1;fontFamily=Arial;" parent="e1" connectable="0" vertex="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-14" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#4285F4;strokeWidth=1.5;dashed=1;dashPattern=6 3;endArrow=block;endFill=1;exitX=1;exitY=0.25;entryX=0;entryY=0.5;" parent="1" source="claude" target="gcal" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e2-label" value="② gcal_list_events" style="edgeLabel;fontSize=16;fontColor=#232F3E;fontStyle=1;fontFamily=Arial;" parent="e2" connectable="0" vertex="1">
+                    <mxGeometry x="-0.3" relative="1" as="geometry">
+                        <mxPoint x="-65" y="-4" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#b0aea5;strokeWidth=1;dashed=1;dashPattern=6 3;endArrow=block;endFill=1;exitX=0.5;exitY=1;entryX=0.7;entryY=0;" parent="1" source="gmeet" target="gdrive" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e3-label" value="auto-generated" style="edgeLabel;fontSize=16;fontColor=#b0aea5;fontStyle=1;fontFamily=Arial;" parent="e3" connectable="0" vertex="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="15" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#F4B400;strokeWidth=1.5;dashed=1;dashPattern=6 3;endArrow=block;endFill=1;exitX=0.85;exitY=1;entryX=0;entryY=0.5;" parent="1" source="claude" target="gdrive" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e4-label" value="③ google_drive_fetch" style="edgeLabel;fontSize=16;fontColor=#232F3E;fontStyle=1;fontFamily=Arial;" parent="e4" connectable="0" vertex="1">
+                    <mxGeometry x="0.3" relative="1" as="geometry">
+                        <mxPoint x="-51" y="-12" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#545B64;strokeWidth=1.5;dashed=1;dashPattern=6 3;endArrow=block;endFill=1;exitX=0.69;exitY=1.002;entryX=0;entryY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="claude" target="template" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="333" y="120"/>
+                            <mxPoint x="333" y="438"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e5-label" value="④ Read" style="edgeLabel;fontSize=16;fontColor=#232F3E;fontStyle=1;fontFamily=Arial;" parent="e5" connectable="0" vertex="1">
+                    <mxGeometry x="0.3" relative="1" as="geometry">
+                        <mxPoint y="-12" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#788c5d;strokeWidth=1.5;dashed=1;dashPattern=6 3;endArrow=block;endFill=1;exitX=0.203;exitY=0.996;entryX=0;entryY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="claude" target="output" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="225" y="545"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e6-label" value="⑤ Write .md" style="edgeLabel;fontSize=16;fontColor=#232F3E;fontStyle=1;fontFamily=Arial;" parent="e6" connectable="0" vertex="1">
+                    <mxGeometry x="0.3" relative="1" as="geometry">
+                        <mxPoint x="69" y="-12" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#D97757;strokeWidth=1.5;dashed=1;dashPattern=6 3;endArrow=block;endFill=1;exitX=0.5;exitY=1;entryX=0;entryY=0.5;" parent="1" source="user" target="feedback" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e7-label" value="⑥ Feedback" style="edgeLabel;fontSize=16;fontColor=#D97757;fontStyle=1;fontFamily=Arial;" parent="e7" connectable="0" vertex="1">
+                    <mxGeometry x="0.5" relative="1" as="geometry">
+                        <mxPoint x="15" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
 </mxfile>
