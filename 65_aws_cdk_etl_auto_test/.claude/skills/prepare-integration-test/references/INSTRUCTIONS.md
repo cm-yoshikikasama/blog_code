@@ -10,6 +10,10 @@ and generates a workflow.json for the `/run-integration-test` skill.
   questions as a numbered list in plain text and ask the user to reply
   directly. Do not retry AskUserQuestion.
 - STRICTLY PROHIBITED: assuming default values under any circumstances.
+- workflow.json prompt fields must never contain `$()` command
+  substitution patterns. `--permission-mode dontAsk` flags `$()` as dangerous
+  and prompts for confirmation, breaking automated execution. Instead,
+  instruct separate sequential Bash tool calls in the prompt.
 
 ## Prerequisites
 
@@ -20,7 +24,7 @@ and generates a workflow.json for the `/run-integration-test` skill.
 ## Workflow Overview
 
 This skill handles test preparation. Test execution is performed by the
-`/run-integration-test` skill in a separate `--dangerously-skip-permissions` session.
+`/run-integration-test` skill in a separate `--permission-mode dontAsk` session.
 
 ### Initial Test
 
@@ -219,7 +223,7 @@ After generating workflow.json, inform the user in the following format.
 ```text
 Test preparation is complete. To execute the tests, run the following in a separate terminal:
 
-claude --dangerously-skip-permissions
+claude --permission-mode dontAsk
 
 Then in that session, run:
 
@@ -228,7 +232,7 @@ Then in that session, run:
 workflow.json: (absolute path to the generated workflow.json)
 (aws_profile and poll_interval_seconds are recorded in workflow.json)
 
-To resume after interruption, start a new --dangerously-skip-permissions session and re-run /run-integration-test.
+To resume after interruption, start a new --permission-mode dontAsk session and re-run /run-integration-test.
 ```
 
 ## Step Prompt Templates
@@ -271,6 +275,11 @@ Verify the result of test case No.X "<test-name>" and create the evidence.
 2. Collect evidence
    Sequentially retrieve execution status (describe-execution, etc.) + S3 output (list-objects-v2) + CloudWatch Logs (filter-log-events)
    For S3 object checks, always use list-objects-v2 with --query exact match, never head-object (exit 254 on missing objects breaks workflow)
+   For Athena queries, use separate Bash calls (never $() substitution):
+     Call 1: aws athena start-query-execution ... --output text --query 'QueryExecutionId'
+     Call 2: sleep 5
+     Call 3: aws athena get-query-results --query-execution-id <id-from-call-1> ...
+   For Iceberg date columns, use DATE literal syntax (DATE '2025-12-01') instead of string literals to avoid TYPE_MISMATCH errors
 
 3. Record the evidence
    - Initial run: Record in <project-path>/test-outputs/evidences/XX-<test-name>.md

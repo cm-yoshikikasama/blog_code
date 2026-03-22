@@ -206,6 +206,14 @@ Create a subsection corresponding to each number in the check items table.
 Linking by number makes the basis for each check item immediately clear. Use
 commands appropriate to the type of job.
 
+Athena query execution rules
+
+- Never use `$()` command substitution to chain start-query-execution
+  and get-query-results. Use separate Bash tool calls instead.
+- For Iceberg date columns, use `DATE '2025-12-01'` literal syntax
+  instead of string comparison (`= '2025-12-01'`). String literals
+  cause Athena TYPE_MISMATCH errors on Iceberg date columns.
+
 Service-specific status check commands
 
 | Service              | Execution command               | Status check command                                | Polling            |

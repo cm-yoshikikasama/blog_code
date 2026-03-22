@@ -144,7 +144,7 @@ The PreToolUse hook enforces a default-deny policy,
 allowing only the AWS CLI and shell commands required for test execution.
 
 ```bash
-claude --dangerously-skip-permissions
+claude --permission-mode dontAsk
 ```
 
 Then run `/run-integration-test <project-path>`.
@@ -166,7 +166,7 @@ If the summary reveals issues, fix the code and run
 ### Single-Session Execution Design
 
 Integration tests are executed within a single
-`--dangerously-skip-permissions` session.
+`--permission-mode dontAsk` session.
 This approach replaced the earlier Ralph Loop pattern
 (shell script + `claude -p` loop) for several reasons:
 
@@ -178,7 +178,7 @@ This approach replaced the earlier Ralph Loop pattern
 
 ### Safety Model: PreToolUse Hooks
 
-`--dangerously-skip-permissions` alone would allow all tool calls unconditionally.
+`--permission-mode dontAsk` alone would allow all tool calls unconditionally.
 Safety is restored by the combination of:
 
 1. Per-skill hooks defined in SKILL.md frontmatter,
@@ -223,11 +223,11 @@ Reference: [kawarimidoll -- Hooks でのコマンド制限](https://zenn.dev/kaw
 `workflow.json` serves as both task definition and state storage.
 The `status`, `output`, and `retry` fields are the source of truth.
 
-| Field | Role |
-| --- | --- |
+| Field    | Role                                               |
+| -------- | -------------------------------------------------- |
 | `status` | `pending` → `in_progress` → `completed` (per step) |
-| `output` | Step result (execution ARN, response JSON, etc.) |
-| `retry` | Current retry count for the step |
+| `output` | Step result (execution ARN, response JSON, etc.)   |
+| `retry`  | Current retry count for the step                   |
 
 Resume behavior on interruption:
 
@@ -240,20 +240,20 @@ Resume behavior on interruption:
 
 ### Skill and Phase Responsibilities
 
-| Phase | Environment | Owner | Actions |
-| --- | --- | --- | --- |
-| Phase 1 (initial) | Claude Code interactive | `/prepare-integration-test` | Generate test plan + workflow.json, user approval |
-| Phase 2 (initial) | Claude Code strict session | `/run-integration-test` | Execute steps, poll, record evidence, write summary |
-| Phase 1 (re-test) | Claude Code interactive | `/prepare-integration-test` | Check re-test targets, regenerate workflow.json |
-| Phase 2 (re-test) | Claude Code strict session | `/run-integration-test` | Re-run tests, record evidence, update summary |
+| Phase             | Environment                | Owner                       | Actions                                             |
+| ----------------- | -------------------------- | --------------------------- | --------------------------------------------------- |
+| Phase 1 (initial) | Claude Code interactive    | `/prepare-integration-test` | Generate test plan + workflow.json, user approval   |
+| Phase 2 (initial) | Claude Code strict session | `/run-integration-test`     | Execute steps, poll, record evidence, write summary |
+| Phase 1 (re-test) | Claude Code interactive    | `/prepare-integration-test` | Check re-test targets, regenerate workflow.json     |
+| Phase 2 (re-test) | Claude Code strict session | `/run-integration-test`     | Re-run tests, record evidence, update summary       |
 
 ### Component Mapping
 
-| Component | Path | Role |
-| --- | --- | --- |
-| Skill (Phase 1) | `.claude/skills/prepare-integration-test/` | Test preparation (test spec + prerequisites + workflow.json generation) |
-| Skill (Phase 2) | `.claude/skills/run-integration-test/` | Test execution orchestration |
-| PreToolUse Hook | `.claude/validate_commands.py` | Default-deny safety policy for Bash commands |
-| IAM Role | `cfn/claude-code-resources.yaml` | Server-side AWS API restrictions |
-| Settings | `.claude/settings.local.json.example` | Hook configuration and permissions template |
-| Credential Helper | aws-vault + 1Password CLI | MFA + assume-role via credential_process |
+| Component         | Path                                       | Role                                                                    |
+| ----------------- | ------------------------------------------ | ----------------------------------------------------------------------- |
+| Skill (Phase 1)   | `.claude/skills/prepare-integration-test/` | Test preparation (test spec + prerequisites + workflow.json generation) |
+| Skill (Phase 2)   | `.claude/skills/run-integration-test/`     | Test execution orchestration                                            |
+| PreToolUse Hook   | `.claude/validate_commands.py`             | Default-deny safety policy for Bash commands                            |
+| IAM Role          | `cfn/claude-code-resources.yaml`           | Server-side AWS API restrictions                                        |
+| Settings          | `.claude/settings.local.json.example`      | Hook configuration and permissions template                             |
+| Credential Helper | aws-vault + 1Password CLI                  | MFA + assume-role via credential_process                                |
