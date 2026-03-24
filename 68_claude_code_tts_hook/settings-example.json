@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ \"$CLAUDE_VOICE\" = \"1\" ] && uv run --directory ~/.claude/hooks/kokoro-tts python ~/.claude/hooks/say-response.py || true",
+            "async": true
+          }
+        ]
+      }
+    ]
+  }
+}
