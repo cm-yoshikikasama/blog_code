@@ -64,6 +64,7 @@ CUSTOM = {
     "vLLM": "ブイエルエルエム",
     "TF": "ティーエフ",
     "BS": "ビーエス",
+    "Anthropic": "アンソロピック",
 }
 _CUSTOM_SORTED = sorted(CUSTOM.items(), key=lambda x: -len(x[0]))
 
