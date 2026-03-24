@@ -17,7 +17,7 @@ warnings.filterwarnings("ignore")
 
 MODEL_ID = "mlx-community/Kokoro-82M-bf16"
 VOICE = "jm_kumo"
-SPEED = 1.1
+SPEED = 1.2
 LANG = "j"
 MAX_TEXT_LENGTH = 600
 
