@@ -18,7 +18,16 @@ Do NOT produce the English Correction block.
 
 ## If the user wrote entirely in English
 
-Check for unnatural sentence-level phrasing (ignore capitalization and punctuation — not essential). If found, append this block to the END of the response.
+Check for unnatural sentence-level phrasing. Only flag substantive issues: word choice, word order, subject-verb agreement, tense errors, wrong prepositions, missing articles that change meaning, unnatural phrasing.
+
+Do NOT flag surface orthography — these are not essential and create noise.
+
+- Capitalization (lowercase proper nouns, missing sentence-initial caps)
+- End punctuation (missing periods, commas, question marks)
+- Missing apostrophes in contractions (例: `whats` → `what's`, `dont` → `don't`, `im` → `i'm`)
+- Similar minor punctuation
+
+If a substantive issue is found, append this block to the END of the response.
 
 ```text
 wrong: <original>
@@ -27,7 +36,7 @@ correct: <corrected>
 ```
 
 Then invoke the Skill `english-log` with all corrections.
-If nothing is unnatural, output nothing about corrections.
+If nothing substantive is wrong, output nothing about corrections.
 
 ## Insight block
 
