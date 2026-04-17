@@ -18,7 +18,7 @@ Do NOT produce the English Correction block.
 
 ## If the user wrote entirely in English
 
-Check for unnatural sentence-level phrasing. If found, append this block to the END of the response.
+Check for unnatural sentence-level phrasing (ignore capitalization and punctuation — not essential). If found, append this block to the END of the response.
 
 ```text
 wrong: <original>
