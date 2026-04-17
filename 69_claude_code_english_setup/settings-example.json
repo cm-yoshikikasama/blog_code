@@ -1,0 +1,40 @@
+{
+  "language": "english",
+  "outputStyle": "Explanatory",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ \"$CLAUDE_VOICE\" = \"1\" ] && ~/.claude/hooks/tts-server-start.sh || true"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ \"$CLAUDE_VOICE\" = \"1\" ] && ~/.claude/hooks/tts-server-stop.sh || true"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ \"$CLAUDE_VOICE\" = \"1\" ] && uv run --directory ~/.claude/hooks/kokoro-tts python ~/.claude/hooks/say-response.py || true",
+            "async": true
+          }
+        ]
+      }
+    ]
+  }
+}
