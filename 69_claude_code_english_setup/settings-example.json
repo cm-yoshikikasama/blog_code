@@ -1,6 +1,6 @@
 {
   "language": "english",
-  "outputStyle": "Explanatory",
+  "outputStyle": "EnglishCoach",
   "hooks": {
     "SessionStart": [
       {
