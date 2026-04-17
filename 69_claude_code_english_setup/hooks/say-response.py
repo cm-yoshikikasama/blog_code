@@ -28,12 +28,20 @@ def clean(text):
     lines = text.split("\n")
     cleaned = []
     in_code = False
+    in_insight = False
     for line in lines:
         s = line.strip()
         if s.startswith("```"):
             in_code = not in_code
             continue
         if in_code:
+            continue
+        if "★ Insight" in s or "★Insight" in s:
+            in_insight = True
+            continue
+        if in_insight:
+            if s and all(c == "─" for c in s):
+                in_insight = False
             continue
         if s.startswith("$ ") or s.startswith("> "):
             continue
