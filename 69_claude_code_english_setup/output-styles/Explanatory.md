@@ -20,12 +20,7 @@ Do NOT produce the English Correction block.
 
 Check for unnatural sentence-level phrasing. Only flag substantive issues: word choice, word order, subject-verb agreement, tense errors, wrong prepositions, missing articles that change meaning, unnatural phrasing.
 
-Do NOT flag surface orthography — these are not essential and create noise.
-
-- Capitalization (lowercase proper nouns, missing sentence-initial caps)
-- End punctuation (missing periods, commas, question marks)
-- Missing apostrophes in contractions (例: `whats` → `what's`, `dont` → `don't`, `im` → `i'm`)
-- Similar minor punctuation
+NEVER flag surface orthography. If the only fix is capitalization, end punctuation, or a missing apostrophe in a contraction (`whats`, `dont`, `im`, `cant`, `its`, `youre` 等), stay silent.
 
 If a substantive issue is found, append this block to the END of the response.
 
