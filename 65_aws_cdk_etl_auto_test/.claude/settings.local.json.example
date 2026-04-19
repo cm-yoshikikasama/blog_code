@@ -51,8 +51,14 @@
       "Bash(rm -rf *)",
       "Bash(rm /*)",
       "Bash(sudo *)",
+      "Bash(cdk deploy *)",
+      "Bash(cdk destroy *)",
       "Bash(* cdk deploy *)",
-      "Bash(* cdk destroy *)"
+      "Bash(* cdk destroy *)",
+      "Bash(aws s3 rm *)",
+      "Bash(aws s3 mv *)",
+      "Bash(* aws s3 rm *)",
+      "Bash(* aws s3 mv *)"
     ]
   }
 }

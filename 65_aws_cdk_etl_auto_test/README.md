@@ -68,6 +68,103 @@ Authentication is handled by aws-vault's `credential_process` mechanism.
 See the [environment setup guide](https://github.com/classmethod-da-bs/claude-code-plugins/blob/main/docs/01-env-setup.md)
 for aws-vault + 1Password CLI configuration.
 
+## Development Environment (DevContainer)
+
+A DevContainer config is provided under `.devcontainer/`
+for a consistent environment with AWS CLI, Node.js (LTS),
+GitHub CLI, and Claude Code pre-installed.
+
+### Files
+
+- `.devcontainer/devcontainer.json` — Base image, Features
+  (aws-cli, node LTS, github-cli), mounts, and VS Code extensions
+- `.devcontainer/install-tools.sh` — Installs Claude Code
+  (native installer) via `postCreateCommand`
+
+### Why aws-vault cannot run inside the container
+
+The host uses aws-vault with 1Password CLI for `credential_process`.
+On the host this works because:
+
+- aws-vault reads credentials from macOS Keychain
+  (a macOS-only API backed by hardware)
+- `op` (1Password CLI) talks to the 1Password desktop app
+  via macOS-specific IPC and reaches biometric unlock in the GUI context
+
+The container is a Linux namespace and cannot reach any of these.
+macOS Keychain is not exposed to Linux,
+the 1Password desktop IPC lives in macOS-specific paths,
+and biometric unlock is bound to the macOS GUI.
+So running `aws-vault exec` or `op run` inside the container
+has nothing to resolve against.
+This is an OS-boundary constraint, not a configuration issue.
+
+### Credential passing: launch VS Code via aws-vault
+
+Instead of running aws-vault inside the container,
+run it on the host once when launching VS Code.
+aws-vault resolves credentials on the host
+(1Password and MFA prompts appear in your terminal),
+exports `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` / `AWS_SESSION_TOKEN`
+into the VS Code process,
+and `devcontainer.json` forwards them into the container
+via `containerEnv` with `${localEnv:...}` expansion.
+
+Quit any running VS Code first
+(`Cmd+Q`, not just closing the window —
+otherwise `code .` signals the existing instance
+and the new env is not picked up).
+
+Then from a terminal, change to this project's directory
+and launch VS Code.
+
+```bash
+cd 65_aws_cdk_etl_auto_test
+aws-vault exec <your-profile> -- code .
+```
+
+In VS Code, open the command palette (`Cmd+Shift+P`) and run
+`Dev Containers: Rebuild and Reopen in Container`.
+The container starts with short-term assumed-role credentials
+from the AWS_* variables. No credentials ever sit on disk.
+
+Verify inside the container.
+
+```bash
+aws sts get-caller-identity
+```
+
+### Credential expiry
+
+Credentials expire after 1 hour
+(per the IAM role's `MaxSessionDuration`).
+To refresh, fully quit VS Code (`Cmd+Q`),
+then re-launch from the project directory.
+
+```bash
+cd 65_aws_cdk_etl_auto_test
+aws-vault exec <your-profile> -- code .
+```
+
+In VS Code, rebuild the container from the command palette.
+
+### Claude Code config persistence
+
+The host `~/.claude` directory is bind-mounted
+into the container at `/home/vscode/.claude`,
+so Claude Code authentication and config
+survive container rebuilds.
+
+### Network egress
+
+This DevContainer does not restrict outbound network traffic.
+The safety story for `claude --permission-mode dontAsk` relies on
+the PreToolUse hook allowlist and the IAM role's server-side permissions.
+For environments that need egress allowlisting as an additional
+defense layer, see the official
+[anthropics/claude-code `.devcontainer`](https://github.com/anthropics/claude-code/tree/main/.devcontainer)
+reference implementation (iptables + ipset, default DROP, domain allowlist).
+
 ## Setup
 
 ### 1. Deploy Shared Resources
