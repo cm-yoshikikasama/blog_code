@@ -1,16 +1,10 @@
 ---
 name: run-integration-test
-description: Execute integration tests from workflow.json. Must run in --permission-mode dontAsk session. PreToolUse hooks enforce safety via default-deny policy.
+description: Execute integration tests from workflow.json. Runs in --permission-mode dontAsk inside devcontainer. permissions.allow in settings.local.json enforces the safety policy.
 argument-hint: "[project-path]"
 model: sonnet
 allowed-tools: Read, Write, Edit, Bash, Glob, Grep
 disable-model-invocation: true
-hooks:
-  PreToolUse:
-    - matcher: Bash
-      hooks:
-        - type: command
-          command: python3 .claude/validate_commands.py
 ---
 
 The project directory path is: $ARGUMENTS

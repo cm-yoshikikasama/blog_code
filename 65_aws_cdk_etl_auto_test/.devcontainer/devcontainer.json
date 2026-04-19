@@ -1,0 +1,41 @@
+{
+  "name": "integration-test",
+  "image": "mcr.microsoft.com/devcontainers/base:bookworm",
+  "features": {
+    "ghcr.io/devcontainers/features/aws-cli:1": {},
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "lts"
+    },
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+  "hostRequirements": {
+    "memory": "7gb"
+  },
+  "containerEnv": {
+    "AWS_ACCESS_KEY_ID": "${localEnv:AWS_ACCESS_KEY_ID}",
+    "AWS_SECRET_ACCESS_KEY": "${localEnv:AWS_SECRET_ACCESS_KEY}",
+    "AWS_SESSION_TOKEN": "${localEnv:AWS_SESSION_TOKEN}",
+    "CLAUDE_CONFIG_DIR": "/home/vscode/.claude",
+    "DEVCONTAINER": "true",
+    "TZ": "Asia/Tokyo",
+    "NODE_OPTIONS": "--max-old-space-size=4096"
+  },
+  "mounts": [
+    "source=${localEnv:HOME}/.claude,target=/home/vscode/.claude,type=bind,consistency=cached"
+  ],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "amazonwebservices.aws-toolkit-vscode",
+        "ms-python.python",
+        "ms-python.vscode-pylance"
+      ],
+      "settings": {
+        "security.workspace.trust.enabled": false,
+        "files.insertFinalNewline": true
+      }
+    }
+  },
+  "postCreateCommand": "bash .devcontainer/install-tools.sh",
+  "waitFor": "postCreateCommand"
+}
