@@ -99,6 +99,30 @@ So running `aws-vault exec` or `op run` inside the container
 has nothing to resolve against.
 This is an OS-boundary constraint, not a configuration issue.
 
+### Why not use aws-vault's file backend
+
+aws-vault supports a `file` backend that encrypts credentials
+into `~/.awsvault/keys/` instead of the OS keystore.
+This would technically run inside a Linux container,
+but this project intentionally does not use it.
+
+- Long-term IAM User access keys would sit inside the container filesystem
+  (even when encrypted), breaking the design goal of keeping
+  no credentials on disk
+- The `--prompt=osascript` setting in `~/.aws/config` is macOS-specific
+  and would need per-environment config changes to work in a Linux container
+- 1Password `op read` for MFA TOTP requires the macOS desktop app
+  and biometric unlock, which cannot run inside a Linux container
+  without switching to service account tokens
+  (extra infra and secret management overhead)
+
+The `file` backend is a reasonable choice for environments
+where the host OS keystore is unavailable
+(non-macOS hosts, CI runners that must hold long-term keys).
+On macOS with Keychain already configured,
+using it would place long-term credentials inside the container
+and downgrade the overall security posture.
+
 ### Credential passing: launch VS Code via aws-vault
 
 Instead of running aws-vault inside the container,
@@ -117,10 +141,12 @@ and the new env is not picked up).
 
 Then from a terminal, change to this project's directory
 and launch VS Code.
+`--duration=2h` matches the IAM role's `MaxSessionDuration`
+so a single VS Code launch covers a typical working session.
 
 ```bash
 cd 65_aws_cdk_etl_auto_test
-aws-vault exec <your-profile> -- code .
+aws-vault exec --duration=2h <your-profile> -- code .
 ```
 
 In VS Code, open the command palette (`Cmd+Shift+P`) and run
@@ -136,14 +162,14 @@ aws sts get-caller-identity
 
 ### Credential expiry
 
-Credentials expire after 1 hour
-(per the IAM role's `MaxSessionDuration`).
+Credentials expire after 2 hours
+(per the IAM role's `MaxSessionDuration: 7200`).
 To refresh, fully quit VS Code (`Cmd+Q`),
 then re-launch from the project directory.
 
 ```bash
 cd 65_aws_cdk_etl_auto_test
-aws-vault exec <your-profile> -- code .
+aws-vault exec --duration=2h <your-profile> -- code .
 ```
 
 In VS Code, rebuild the container from the command palette.
