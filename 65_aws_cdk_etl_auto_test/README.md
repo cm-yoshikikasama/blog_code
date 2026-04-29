@@ -27,8 +27,7 @@ Two skills work together to automate the full test lifecycle:
 ```text
 .
 ├── .claude/                                 # Claude Code config (copy to your project root)
-│   ├── validate_commands.py                #   PreToolUse hook (default-deny policy)
-│   ├── settings.local.json.example         #   Hook/env config template
+│   ├── settings.local.json.example         #   Permissions and env config template
 │   └── skills/                             #   Claude Code skills
 │       ├── prepare-integration-test/       #     Test preparation
 │       │   ├── SKILL.md
@@ -299,30 +298,29 @@ This approach replaced the earlier Ralph Loop pattern
 - `workflow.json` still serves as the state store,
   so resume-on-interruption works identically
 
-### Safety Model: PreToolUse Hooks
+### Safety Model: settings.local.json Allow/Deny
 
 `--permission-mode dontAsk` alone would allow all tool calls unconditionally.
-Safety is restored by the combination of:
+Safety is restored by Claude Code's built-in `permissions.allow` /
+`permissions.deny` lists in `.claude/settings.local.json`.
+An earlier revision relied on a custom Python PreToolUse hook
+(`validate_commands.py`) for the same purpose;
+that hook was removed in favor of the standard schema
+to drop the Python runtime dependency
+and keep the safety policy declarative.
 
-1. Per-skill hooks defined in SKILL.md frontmatter,
-   which activate the PreToolUse hook only during skill execution
-2. `validate_commands.py` hook script,
-   which enforces a default-deny policy on Bash commands
+The settings enforce an allow-list for every Bash invocation:
 
-The hook validates every Bash tool call against allow-lists:
+- AWS CLI: only the subcommands required for test execution
+  (`aws s3`, `aws s3api`, `aws stepfunctions`, `aws athena`,
+  `aws glue`, `aws events`, `aws logs`)
+- Shell commands: safe, non-destructive utilities
+  (`ls`, `cat`, `jq`, `sleep`, `cp`, `python3`, etc.)
 
-- AWS CLI: read-only prefixes (`describe-`, `list-`, `get-`, `head-`, `filter-`)
-  are always allowed; specific write commands
-  (`start-execution`, `start-query-execution`, `put-object`, etc.)
-  are explicitly permitted
-- Shell commands: only safe, non-destructive commands
-  (`ls`, `cat`, `jq`, `sleep`, `cp`, etc.)
-
-Commands not on the allow-list are blocked with an error message.
-This provides defense-in-depth alongside the IAM role's server-side restrictions.
-
-In normal mode, per-skill hooks are not active,
-and `permissions.deny` in `settings.local.json` handles safety instead.
+Destructive operations (`rm -rf`, `sudo`, `cdk destroy`,
+`aws s3 rm`, `aws s3 mv`) are explicitly blocked via `permissions.deny`.
+This provides defense-in-depth alongside the IAM role's server-side
+restrictions.
 
 ### AWS Operations Design
 
@@ -333,13 +331,12 @@ provides server-side guardrails:
 - Minimal write permissions for test execution
   (Step Functions start, Athena queries, S3 test data upload, etc.)
 - MFA required for assume-role
-- 1-hour session limit
+- 2-hour session limit (`MaxSessionDuration: 7200`)
 
 For environments where the IAM role has broader permissions,
-the PreToolUse hook provides an additional client-side safety layer
-by restricting which AWS CLI subcommands Claude Code can invoke.
-
-Reference: [kawarimidoll -- Hooks でのコマンド制限](https://zenn.dev/kawarimidoll/articles/7da5fd40f19fb1)
+`permissions.allow` in `.claude/settings.local.json` provides
+an additional client-side safety layer by restricting which
+AWS CLI subcommands Claude Code can invoke.
 
 ### State Management and Resume
 
@@ -376,7 +373,7 @@ Resume behavior on interruption:
 | ----------------- | ------------------------------------------ | ----------------------------------------------------------------------- |
 | Skill (Phase 1)   | `.claude/skills/prepare-integration-test/` | Test preparation (test spec + prerequisites + workflow.json generation) |
 | Skill (Phase 2)   | `.claude/skills/run-integration-test/`     | Test execution orchestration                                            |
-| PreToolUse Hook   | `.claude/validate_commands.py`             | Default-deny safety policy for Bash commands                            |
+| Permissions       | `.claude/settings.local.json.example`      | Allow/deny policy for Bash and tool invocations                         |
 | IAM Role          | `cfn/claude-code-resources.yaml`           | Server-side AWS API restrictions                                        |
-| Settings          | `.claude/settings.local.json.example`      | Hook configuration and permissions template                             |
+| DevContainer      | `.devcontainer/devcontainer.json`          | Reproducible execution environment with credential isolation            |
 | Credential Helper | aws-vault + 1Password CLI                  | MFA + assume-role via credential_process                                |
