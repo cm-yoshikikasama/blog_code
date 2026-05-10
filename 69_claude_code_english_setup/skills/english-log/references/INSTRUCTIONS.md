@@ -1,26 +1,24 @@
 # english-log Instructions
 
-Log file: `./samples/english_log.md`
+Log file: `./samples/english_log.md` (override with `ENGLISH_LOG_FILE` env var)
+Appender: `${CLAUDE_SKILL_DIR}/bin/append.sh`
 
-The file has two Markdown tables under `## Grammar` and `## Vocab` sections.
+Append silently via the shell appender. Do **not** use Edit (its diff display is noisy).
 
 ## Input Parsing
 
-When arguments are provided, auto-detect the type using the following rules:
+Auto-detect from the arguments:
 
 - Contains `wrong:` (auto-trigger pattern) → `grammar`
-  - After `wrong:` = original (incorrect expression)
-  - After `correct:` = corrected (correct expression)
-  - Example: `wrong: I have went / correct: I have gone` → type=grammar, original=I have went, corrected=I have gone, meaning=""
-- Contains `→` or `->` (manual input pattern) → `grammar`
-  - Left of `→` = original (incorrect expression)
-  - Right of `→` = corrected (correct expression)
-  - Text in parentheses or after = meaning (grammar rule explanation)
-- Contains neither → `vocab`
-  - First word/phrase = original
-  - After `—` or `-` = meaning (definition)
+  - After `wrong:` = original
+  - After `correct:` = corrected
+- Contains `→` or `->` (manual input) → `grammar`
+  - Left of `→` = original; right = corrected
+  - Text in parentheses or after = meaning
+- Otherwise → `vocab`
+  - First word/phrase = original; after `—` or `-` = meaning
 
-When no arguments are provided, use AskUserQuestion (single call):
+If no arguments are provided, ask once via AskUserQuestion (single call):
 
 ```text
 header: "Type"
@@ -28,46 +26,28 @@ question: "Is this a vocabulary word (vocab) or a grammar mistake (grammar)?"
 options: ["vocab", "grammar"]
 ```
 
-For vocab:
-
-```text
-header: "Word"
-question: "Enter the word/phrase and its meaning (e.g., ephemeral — temporary)"
-```
-
-For grammar:
-
-```text
-header: "Grammar"
-question: "Enter: incorrect expression → correct expression (explanation) (e.g., I have went → I have gone (past participle))"
-```
-
 ## Example Generation
 
-Generate one concise example sentence from the meaning. Use the user's context if available.
+Generate one concise example sentence from the meaning. Reuse the user's context if obvious.
 
-## Markdown Table Write
+## Append (silent)
 
-1. Read the log file.
-2. Find the last id in the target section (Grammar or Vocab).
-3. Use Edit to append a new row at the end of the corresponding table.
+Run the appender script via Bash. The script handles id assignment, JST date, and insertion at the correct table position.
 
-### Grammar table columns
-
-`| id | original | corrected | meaning | example | registered_at |`
-
-### Vocab table columns
-
-`| id | original | meaning | example | registered_at |`
-
-### Date
-
-Use today's date in `YYYY-MM-DD` format (JST).
-
-## Completion Message
-
-Display the logged entry concisely:
-
-```text
-Logged: [type] "original" → "corrected" — meaning
+For grammar:
+```bash
+bash ${CLAUDE_SKILL_DIR}/bin/append.sh grammar "<original>" "<corrected>" "<meaning>" "<example>"
 ```
+
+For vocab:
+```bash
+bash ${CLAUDE_SKILL_DIR}/bin/append.sh vocab "<original>" "<meaning>" "<example>"
+```
+
+Quote each argument. Embedded `|` characters in the text are fine — the script does not parse them. The script does not echo on success; on error it prints to stderr and exits non-zero.
+
+## Output discipline (mandatory)
+
+- Do not Read the log file before appending. The script handles id and position.
+- Do not Read it after either. Trust the script's exit code.
+- Return an empty final message. Do not write "Logged: ...". The parent should see no confirmation line.
