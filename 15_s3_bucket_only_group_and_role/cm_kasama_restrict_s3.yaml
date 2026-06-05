@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: "2010-09-09"
-Description:  S3 Bucket
+Description: S3 Bucket
 Parameters:
   Env:
     Type: String
@@ -22,8 +22,8 @@ Resources:
       AccessControl: Private
       BucketEncryption:
         ServerSideEncryptionConfiguration:
-        - ServerSideEncryptionByDefault:
-            SSEAlgorithm: aws:kms
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: aws:kms
       VersioningConfiguration:
         Status: Enabled
       PublicAccessBlockConfiguration:
@@ -31,9 +31,9 @@ Resources:
         BlockPublicPolicy: true
         IgnorePublicAcls: true
         RestrictPublicBuckets: true
-      NotificationConfiguration:  # 通知設定
+      NotificationConfiguration: # 通知設定
         LambdaConfigurations:
-          - Event: 's3:ObjectCreated:Put'
+          - Event: "s3:ObjectCreated:Put"
             Function: !FindInMap [LambdaFunctionMapping, !Ref Env, FunctionArn]
             Filter:
               S3Key:
@@ -42,8 +42,8 @@ Resources:
                     Value: csv_list/kasama_test
                   - Name: suffix
                     Value: .csv
-          - Event: 's3:ObjectCreated:Post'
-            Function: !Sub 'arn:aws:lambda:us-east-1:${AWS::AccountId}:function:kasama-tmp'
+          - Event: "s3:ObjectCreated:Post"
+            Function: !Sub "arn:aws:lambda:us-east-1:${AWS::AccountId}:function:kasama-tmp"
             Filter:
               S3Key:
                 Rules:
@@ -51,8 +51,8 @@ Resources:
                     Value: csv_list/kasama_test
                   - Name: suffix
                     Value: .csv
-          - Event: 's3:ObjectCreated:CompleteMultipartUpload'
-            Function: !Sub 'arn:aws:lambda:us-east-1:${AWS::AccountId}:function:kasama-tmp'
+          - Event: "s3:ObjectCreated:CompleteMultipartUpload"
+            Function: !Sub "arn:aws:lambda:us-east-1:${AWS::AccountId}:function:kasama-tmp"
             Filter:
               S3Key:
                 Rules:
@@ -83,4 +83,4 @@ Resources:
   #               "aws:PrincipalArn":
   #                 - !Sub arn:aws:iam::${AWS::AccountId}:role/cm-kasama-lambda-${Env}-Role
   #                 - !Sub arn:aws:iam::${AWS::AccountId}:role/aws-service-role/access-analyzer.amazonaws.com/AWSServiceRoleForAccessAnalyzer
-  #                 - !Sub arn:aws:iam::123456789012:role/service-role/kasama-tmp-role-wfhpo91f
+  #                 - !Sub arn:aws:iam::${AWS::AccountId}:role/service-role/kasama-tmp-role-wfhpo91f

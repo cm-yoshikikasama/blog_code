@@ -1,5 +1,56 @@
+# gitleaks configuration
+# - useDefault keeps gitleaks' built-in secret rules (API keys, tokens, private keys, ...)
+# - custom rules below add AWS-identifier detection (account IDs / network resource IDs)
+#   so we never re-leak a real account ID or VPC/subnet into this public repo.
+# NOTE: never hardcode a real account ID here — for samples use 123456789012 / ${AWS::AccountId}.
+
 [extend]
 useDefault = true
 
+# --- Custom rule: hardcoded AWS account ID inside an ARN ---------------------
+[[rules]]
+id = "aws-account-id-in-arn"
+description = "Hardcoded AWS account ID in an ARN (use 123456789012 or AWS::AccountId in samples)"
+regex = '''arn:(?:aws|aws-cn|aws-us-gov):[a-z0-9-]+:[a-z0-9-]*:([0-9]{12}):'''
+secretGroup = 1
+tags = ["AWS", "account-id"]
+
+  [rules.allowlist]
+  # Match against the captured account ID (the secret group)
+  regexes = [
+    '''^123456789012$''',          # AWS docs placeholder
+    # repeated-digit placeholders (000000000000, 111111111111, ... 999999999999)
+    # RE2 has no backreferences, so enumerate explicitly:
+    '''^(?:0{12}|1{12}|2{12}|3{12}|4{12}|5{12}|6{12}|7{12}|8{12}|9{12})$''',
+    '''^336392948345$''',          # public AWS-managed: AWSSDKPandas Lambda layer
+    '''^580247275435$''',          # public AWS-managed: CloudWatch Lambda Insights layer
+  ]
+
+# --- Custom rule: AWS network / resource IDs --------------------------------
+[[rules]]
+id = "aws-network-resource-id"
+description = "AWS network resource ID (vpc/subnet/sg/igw/...) — likely a real environment identifier"
+regex = '''\b(?:vpc|subnet|sg|igw|nat|acl|eni|rtb|dopt|vpce)-(?:[0-9a-f]{8}|[0-9a-f]{17})\b'''
+tags = ["AWS", "network-id"]
+
+  [rules.allowlist]
+  regexTarget = "match"
+  regexes = [
+    '''-0{8}\b''',                            # all-zero short id
+    '''-0{17}\b''',                           # all-zero long id
+    '''-(?:12345678|1234567890abcdef0)\b''',  # common doc placeholders
+  ]
+
+# --- Global allowlist -------------------------------------------------------
 [allowlist]
-paths = ["cdk\\.out/", "__snapshots__/"]
+description = "Generated artifacts, vendored deps, and lockfiles (noise / not source)"
+paths = [
+  '''cdk\.out/''',
+  '''__snapshots__/''',
+  '''node_modules/''',
+  '''cdk\.context\.json''',   # CDK-generated cache; gitignored, but exclude from scans too
+  '''package-lock\.json''',
+  '''.*\.lock''',
+  '''go\.mod''',
+  '''go\.sum''',
+]
