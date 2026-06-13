@@ -1,0 +1,195 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Claude Code OTel logs sink to CloudWatch Logs. Creates IAM user, log group, and dashboard.
+
+Parameters:
+  ProjectName:
+    Type: String
+    Description: Project name in kebab-case (e.g. demo-team). Used as resource name prefix.
+    AllowedPattern: "^[a-z0-9][a-z0-9-]*[a-z0-9]$"
+
+  LogRetentionDays:
+    Type: Number
+    Default: 90
+    AllowedValues: [7, 14, 30, 60, 90, 180, 365]
+    Description: Sanitized log group retention in days. Default 90 keeps a full previous + current calendar month visible even at month-end (worst case two 31-day months needs ~62-day lookback; allowed values skip 62, so 90 is the next safe step).
+
+  RawLogRetentionDays:
+    Type: Number
+    Default: 1
+    AllowedValues: [1, 3]
+    Description: Raw log group retention (short). Sanitizer Lambda strips sensitive content to the sanitized group within seconds; raw is kept only briefly for failure recovery. Longer values defeat the design.
+
+Resources:
+  # Raw OTel sink. Sanitizer Lambda (SAM stack) forwards allowlist-filtered
+  # events to the sanitized group within seconds; raw retention is short so
+  # sensitive content does not persist. BearerTokenAuthenticationEnabled is
+  # enabled manually via console (CFn property fails with "security token
+  # invalid" bug as of 2026-04).
+  ClaudeOtelLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /${ProjectName}/claude-otel
+      RetentionInDays: !Ref RawLogRetentionDays
+
+  ClaudeOtelLogStreamCode:
+    Type: AWS::Logs::LogStream
+    Properties:
+      LogGroupName: !Ref ClaudeOtelLogGroup
+      LogStreamName: code
+
+  # Sanitized sink. Lambda (sam/claude-otel-sanitizer/) writes here.
+  # Dashboard reads from this group.
+  ClaudeOtelSanitizedLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /${ProjectName}/claude-otel-sanitized
+      RetentionInDays: !Ref LogRetentionDays
+
+  ClaudeOtelWriteUser:
+    Type: AWS::IAM::User
+    Properties:
+      UserName: !Sub ${ProjectName}-claude-otel-writer
+      Policies:
+        - PolicyName: ClaudeOtelLogsWrite
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Sid: CallWithBearerToken
+                Effect: Allow
+                Action:
+                  - logs:CallWithBearerToken
+                Resource: "*"
+              - Sid: WriteLogs
+                Effect: Allow
+                Action:
+                  - logs:PutLogEvents
+                  - logs:CreateLogStream
+                Resource:
+                  - !GetAtt ClaudeOtelLogGroup.Arn
+                  - !Sub "${ClaudeOtelLogGroup.Arn}:*"
+
+  ClaudeOtelDashboard:
+    Type: AWS::CloudWatch::Dashboard
+    Properties:
+      DashboardName: !Sub ${ProjectName}-claude-otel
+      DashboardBody: !Sub |
+        {
+          "start": "-P31D",
+          "periodOverride": "auto",
+          "variables": [
+            {
+              "type": "pattern",
+              "pattern": "sort cost_usd desc",
+              "inputType": "select",
+              "id": "sort_by",
+              "label": "Per-user sort",
+              "defaultValue": "sort cost_usd desc",
+              "visible": true,
+              "values": [
+                { "label": "Cost (high to low)",      "value": "sort cost_usd desc" },
+                { "label": "Cost (low to high)",      "value": "sort cost_usd asc" },
+                { "label": "Messages (high to low)",  "value": "sort messages desc" },
+                { "label": "Messages (low to high)",  "value": "sort messages asc" },
+                { "label": "Skills (high to low)",    "value": "sort skills desc" },
+                { "label": "Skills (low to high)",    "value": "sort skills asc" },
+                { "label": "Subagents (high to low)", "value": "sort subagents desc" },
+                { "label": "Subagents (low to high)", "value": "sort subagents asc" },
+                { "label": "MCPs (high to low)",      "value": "sort mcps desc" },
+                { "label": "MCPs (low to high)",      "value": "sort mcps asc" }
+              ]
+            }
+          ],
+          "widgets": [
+            {
+              "type": "text",
+              "x": 0, "y": 0, "width": 24, "height": 14,
+              "properties": {
+                "markdown": "## Claude Code OTel — team usage\n\nチームの Claude Code 利用状況。Sanitized ログのみ参照（プロンプト本文・コマンド・ファイルパスは除去済み、回数とコストだけが残る）。\n\n前月を見たいときは右上の時間範囲を **Custom** で当該月（例: 5/1〜5/31）に変更すると、各表がその月の集計に切り替わる。\n\n### ウィジェットの見方\n\n- **Team totals**: チーム全体の合計（コスト・メッセージ・スキル/サブエージェント/MCP 利用回数）\n- **Daily cost per user**: ユーザー別の日次コスト推移。可読性のため表示期間内のコスト上位10名のみ表示\n- **Per-user activity**: ユーザー別の利用サマリ（カラムの意味は下記）\n- **Top skills / subagents / MCP servers**: 何が・誰に使われているか（名前 × user 単位、チーム合算ではない）\n- **Top models**: モデル別の呼び出し回数\n\n### カラムの意味\n\n- **cost_usd**: 期間内の API コスト（USD）。Claude が算出した実額（出力・キャッシュ込み）\n- **sessions / messages**: 会話セッション数 / ユーザーが送ったメッセージ数\n- **skills / subagents / mcps**: スキル発火 / サブエージェント呼び出し / MCP 呼び出しの回数。0 が並ぶ人は素のチャット中心でツールを使えていない\n- **cost_per_msg_usd**: cost_usd ÷ messages。1 メッセージあたりの平均コスト。高い＝重いタスク（長い文脈やサブエージェント多用）、低い＝軽いやり取り中心。良し悪しではなく作業スタイルの違い\n- **cache_pct**: 入力トークンのうちキャッシュ読みの割合。高いほど安く速い。通常 97〜100%（プロンプトキャッシュが効いていれば正常）。全員ほぼ高く差がつかないので、異常を見つける健全性チェック用\n\n### ランキングの集計単位\n\n- Top skills / subagents / MCP servers は `名前 × user` の組み合わせ（同じスキルでもユーザーが違えば別行、チーム合算ではない）\n- `claude_code.skill_activated` はユーザーグローバル `~/.claude/skills/`・プラグイン・ビルトインのみ発火。プロジェクトローカル `<repo>/.claude/skills/{name}/` は出ない"
+              }
+            },
+            {
+              "type": "log",
+              "x": 0, "y": 14, "width": 24, "height": 3,
+              "properties": {
+                "title": "Team totals",
+                "region": "${AWS::Region}",
+                "view": "table",
+                "query": "SOURCE '/${ProjectName}/claude-otel-sanitized' | stats floor(sum(coalesce(attributes.cost_usd, 0)) * 100 + 0.5) / 100 as cost_usd, sum(if(body = \"claude_code.user_prompt\", 1, 0)) as messages, sum(if(body = \"claude_code.skill_activated\", 1, 0)) as skills, sum(if(body = \"claude_code.tool_result\" and attributes.tool_name = \"Agent\", 1, 0)) as subagents, sum(if(body = \"claude_code.tool_result\" and attributes.tool_name = \"mcp_tool\", 1, 0)) as mcps"
+              }
+            },
+            {
+              "type": "log",
+              "x": 0, "y": 17, "width": 24, "height": 7,
+              "properties": {
+                "title": "Daily cost per user (USD, top 10 by cost)",
+                "region": "${AWS::Region}",
+                "view": "timeSeries",
+                "stacked": false,
+                "query": "SOURCE '/${ProjectName}/claude-otel-sanitized' | filter attributes.user.email in (SOURCE '/${ProjectName}/claude-otel-sanitized' | filter ispresent(attributes.user.email) | stats sum(coalesce(attributes.cost_usd, 0)) as total by attributes.user.email | sort total desc | limit 10 | fields attributes.user.email) | parse attributes.user.email /(?<user>[^@]+)/ | stats sum(coalesce(attributes.cost_usd, 0)) as cost_usd by bin(1d), user"
+              }
+            },
+            {
+              "type": "log",
+              "x": 0, "y": 24, "width": 24, "height": 8,
+              "properties": {
+                "title": "Per-user activity",
+                "region": "${AWS::Region}",
+                "view": "table",
+                "query": "SOURCE '/${ProjectName}/claude-otel-sanitized' | filter ispresent(attributes.user.email) | fields attributes.user.email, attributes.cost_usd, body, attributes.tool_name, attributes.session.id, attributes.input_tokens, attributes.cache_read_tokens, attributes.model, coalesce(resource.attributes.user.plan, \"unset\") as plan_raw | parse attributes.user.email /(?<user>[^@]+)/ | stats sum(coalesce(attributes.cost_usd, 0)) as cost, count_distinct(attributes.session.id) as sessions, sum(if(body = \"claude_code.user_prompt\", 1, 0)) as messages, sum(if(body = \"claude_code.skill_activated\", 1, 0)) as skills, sum(if(body = \"claude_code.tool_result\" and attributes.tool_name = \"Agent\", 1, 0)) as subagents, sum(if(body = \"claude_code.tool_result\" and attributes.tool_name = \"mcp_tool\", 1, 0)) as mcps, sum(if(body = \"claude_code.api_request\" and strcontains(attributes.model, \"claude-opus\"), 1, 0)) as opus_calls, sum(if(body = \"claude_code.api_request\" and strcontains(attributes.model, \"claude-sonnet\"), 1, 0)) as sonnet_calls, sum(if(body = \"claude_code.api_request\" and strcontains(attributes.model, \"claude-haiku\"), 1, 0)) as haiku_calls, sum(coalesce(attributes.input_tokens, 0)) as in_tok, sum(coalesce(attributes.cache_read_tokens, 0)) as cache_tok, latest(plan_raw) as plan by user | display user, plan, floor(cost * 100 + 0.5) / 100 as cost_usd, sessions, messages, skills, subagents, mcps, opus_calls, sonnet_calls, haiku_calls, floor(if(messages > 0, cost / messages, 0) * 10000 + 0.5) / 10000 as cost_per_msg_usd, floor(if(in_tok + cache_tok > 0, 100 * cache_tok / (in_tok + cache_tok), 0) * 10 + 0.5) / 10 as cache_pct | sort cost_usd desc"
+              }
+            },
+            {
+              "type": "log",
+              "x": 0, "y": 32, "width": 12, "height": 6,
+              "properties": {
+                "title": "Top skills",
+                "region": "${AWS::Region}",
+                "view": "table",
+                "query": "SOURCE '/${ProjectName}/claude-otel-sanitized' | filter body = \"claude_code.skill_activated\" | fields attributes.skill.name as skill | parse attributes.user.email /(?<user>[^@]+)/ | stats count() as activations by skill, user | display skill, activations, user | sort activations desc | limit 20"
+              }
+            },
+            {
+              "type": "log",
+              "x": 12, "y": 32, "width": 12, "height": 6,
+              "properties": {
+                "title": "Top subagents",
+                "region": "${AWS::Region}",
+                "view": "table",
+                "query": "SOURCE '/${ProjectName}/claude-otel-sanitized' | filter body = \"claude_code.tool_result\" and attributes.tool_name = \"Agent\" | parse attributes.tool_parameters /\"subagent_type\":\\s*\"(?<subagent_type_raw>[^\"]+)\"/ | parse attributes.user.email /(?<user>[^@]+)/ | fields coalesce(subagent_type_raw, \"general-purpose\") as subagent_type | stats count() as calls by subagent_type, user | display subagent_type, calls, user | sort calls desc | limit 20"
+              }
+            },
+            {
+              "type": "log",
+              "x": 0, "y": 38, "width": 12, "height": 6,
+              "properties": {
+                "title": "Top MCP servers",
+                "region": "${AWS::Region}",
+                "view": "table",
+                "query": "SOURCE '/${ProjectName}/claude-otel-sanitized' | filter body = \"claude_code.tool_result\" and attributes.tool_name = \"mcp_tool\" | parse attributes.tool_parameters /\"mcp_server_name\":\\s*\"(?<mcp_server>[^\"]+)\"/ | parse attributes.user.email /(?<user>[^@]+)/ | stats count() as calls by mcp_server, user | display mcp_server, calls, user | sort calls desc | limit 20"
+              }
+            },
+            {
+              "type": "log",
+              "x": 12, "y": 38, "width": 12, "height": 6,
+              "properties": {
+                "title": "Top models",
+                "region": "${AWS::Region}",
+                "view": "table",
+                "query": "SOURCE '/${ProjectName}/claude-otel-sanitized' | filter body = \"claude_code.api_request\" and ispresent(attributes.model) | stats count() as calls by attributes.model | sort calls desc | limit 10"
+              }
+            }
+          ]
+        }
+
+Outputs:
+  DashboardUrl:
+    Description: CloudWatch Dashboard URL.
+    Value: !Sub "https://${AWS::Region}.console.aws.amazon.com/cloudwatch/home?region=${AWS::Region}#dashboards:name=${ProjectName}-claude-otel"
+
+  OtlpHeadersTemplate:
+    Description: Template for OTEL_EXPORTER_OTLP_HEADERS (replace <BEARER_TOKEN>).
+    Value: !Sub "Authorization=Bearer <BEARER_TOKEN>,x-aws-log-group=/${ProjectName}/claude-otel,x-aws-log-stream=code"
+
+  NextStep:
+    Description: Manual steps after stack create.
+    Value: !Sub "1) IAM > Users > ${ProjectName}-claude-otel-writer > Create API key. 2) SSM > Create SecureString /${ProjectName}/claude-otel/bearer-token with the API key value."

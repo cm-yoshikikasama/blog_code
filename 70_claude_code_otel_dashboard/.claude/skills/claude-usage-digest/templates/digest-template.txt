@@ -1,0 +1,30 @@
+:bar_chart: 今週のClaude Code活用ダイジェスト（直近{{DAYS}}日）
+
+チームで{{active_users}}人が利用、{{sessions}}セッション・{{messages}}メッセージ。
+スキル発火{{skills}}回・サブエージェント{{subagents}}回・MCP{{mcps}}回と、自動化もよく使われています。
+
+▼ 誰が何のスキルを使ったか
+```
+{{skill_user_table}}
+```
+
+▼ 今週のヘビーユーザー
+{{heavy_user_lines}}
+
+▼ MCP利用（誰がどのMCPを）
+```
+{{mcp_user_table}}
+```
+
+▼ AI考察
+:sparkles: [すごい活用]
+{{praise}}
+
+[トレンド]
+{{trend}}
+
+[もっと活用するなら]
+{{suggestions}}
+
+自分の利用状況は [CloudWatch ダッシュボード](<DASHBOARD_URL>) で見られます。
+OTel未設定の方はセットアップ手順を参照してください。

@@ -37,6 +37,8 @@ memo.md
 !66_aws_cost_analysis_skill/.claude/
 66_aws_cost_analysis_skill/.claude/skills/aws-cost-analysis/config.yaml
 !67_cowork_create_minutes/.claude/
+!70_claude_code_otel_dashboard/.claude/
+70_claude_code_otel_dashboard/.claude/skills/claude-usage-digest/custom/
 .tmp/
 .workflow-log
 workflow.json

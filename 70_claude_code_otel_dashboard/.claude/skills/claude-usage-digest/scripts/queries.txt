@@ -1,0 +1,98 @@
+### totals
+stats floor(sum(coalesce(attributes.cost_usd, 0)) * 100 + 0.5) / 100 as cost_usd,
+      sum(if(body = "claude_code.user_prompt", 1, 0)) as messages,
+      sum(if(body = "claude_code.skill_activated", 1, 0)) as skills,
+      sum(if(body = "claude_code.tool_result" and attributes.tool_name = "Agent", 1, 0)) as subagents,
+      sum(if(body = "claude_code.tool_result" and attributes.tool_name = "mcp_tool", 1, 0)) as mcps
+
+### daily_per_user
+filter ispresent(attributes.user.email)
+| parse attributes.user.email /(?<user>[^@]+)/
+| stats sum(coalesce(attributes.cost_usd, 0)) as cost_usd by bin(1d) as day, user
+| sort day asc, cost_usd desc
+
+### per_user
+filter ispresent(attributes.user.email)
+| fields attributes.user.email, attributes.cost_usd, body, attributes.tool_name,
+         attributes.session.id, attributes.input_tokens, attributes.cache_read_tokens,
+         attributes.model, coalesce(resource.attributes.user.plan, "unset") as plan_raw
+| parse attributes.user.email /(?<user>[^@]+)/
+| stats sum(coalesce(attributes.cost_usd, 0)) as cost,
+        count_distinct(attributes.session.id) as sessions,
+        sum(if(body = "claude_code.user_prompt", 1, 0)) as messages,
+        sum(if(body = "claude_code.skill_activated", 1, 0)) as skills,
+        sum(if(body = "claude_code.tool_result" and attributes.tool_name = "Agent", 1, 0)) as subagents,
+        sum(if(body = "claude_code.tool_result" and attributes.tool_name = "mcp_tool", 1, 0)) as mcps,
+        sum(if(body = "claude_code.api_request" and strcontains(attributes.model, "claude-opus"), 1, 0)) as opus_calls,
+        sum(if(body = "claude_code.api_request" and strcontains(attributes.model, "claude-sonnet"), 1, 0)) as sonnet_calls,
+        sum(if(body = "claude_code.api_request" and strcontains(attributes.model, "claude-haiku"), 1, 0)) as haiku_calls,
+        sum(coalesce(attributes.input_tokens, 0)) as in_tok,
+        sum(coalesce(attributes.cache_read_tokens, 0)) as cache_tok,
+        latest(plan_raw) as plan
+        by user
+| display user, plan,
+          floor(cost * 100 + 0.5) / 100 as cost_usd,
+          sessions, messages, skills, subagents, mcps,
+          opus_calls, sonnet_calls, haiku_calls,
+          floor(if(messages > 0, cost / messages, 0) * 10000 + 0.5) / 10000 as cost_per_msg_usd,
+          floor(if(in_tok + cache_tok > 0, 100 * cache_tok / (in_tok + cache_tok), 0) * 10 + 0.5) / 10 as cache_pct
+| sort cost_usd desc
+
+### top_skills
+filter body = "claude_code.skill_activated"
+| fields attributes.skill.name as skill
+| parse attributes.user.email /(?<user>[^@]+)/
+| stats count() as activations by skill, user
+| display skill, activations, user
+| sort activations desc
+| limit 20
+
+### top_subagents
+filter body = "claude_code.tool_result" and attributes.tool_name = "Agent"
+| parse attributes.tool_parameters /"subagent_type":\s*"(?<subagent_type_raw>[^"]+)"/
+| parse attributes.user.email /(?<user>[^@]+)/
+| fields coalesce(subagent_type_raw, "general-purpose") as subagent_type
+| stats count() as calls by subagent_type, user
+| display subagent_type, calls, user
+| sort calls desc
+| limit 20
+
+### top_mcps
+filter body = "claude_code.tool_result" and attributes.tool_name = "mcp_tool"
+| parse attributes.tool_parameters /"mcp_server_name":\s*"(?<mcp_server>[^"]+)"/
+| parse attributes.user.email /(?<user>[^@]+)/
+| stats count() as calls by mcp_server, user
+| display mcp_server, calls, user
+| sort calls desc
+| limit 20
+
+### top_models
+filter body = "claude_code.api_request" and ispresent(attributes.model)
+| stats count() as calls by attributes.model
+| sort calls desc
+| limit 10
+
+### digest_totals
+stats count_distinct(attributes.user.email) as active_users,
+      count_distinct(attributes.session.id) as sessions,
+      sum(if(body = "claude_code.user_prompt", 1, 0)) as messages,
+      sum(if(body = "claude_code.skill_activated", 1, 0)) as skills,
+      sum(if(body = "claude_code.tool_result" and attributes.tool_name = "Agent", 1, 0)) as subagents,
+      sum(if(body = "claude_code.tool_result" and attributes.tool_name = "mcp_tool", 1, 0)) as mcps,
+      floor(sum(coalesce(attributes.cost_usd, 0)) * 100 + 0.5) / 100 as cost_usd
+
+### heavy_users
+filter ispresent(attributes.user.email)
+| parse attributes.user.email /(?<user>[^@]+)/
+| stats count_distinct(attributes.session.id) as sessions,
+        sum(if(body = "claude_code.user_prompt", 1, 0)) as messages,
+        sum(if(body = "claude_code.skill_activated", 1, 0)) as skills
+        by user
+| sort sessions desc
+| limit 3
+
+### cost_drivers_template
+relevantfields attributes.user.email, attributes.skill.name, attributes.model, attributes.tool_name, body where attributes.cost_usd > 0.1
+
+### token_drivers_template
+relevantfields attributes.user.email, attributes.skill.name, attributes.model, attributes.tool_name where attributes.input_tokens > 50000

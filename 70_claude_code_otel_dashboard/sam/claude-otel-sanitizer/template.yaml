@@ -1,0 +1,55 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: |
+  Claude Code OTel log sanitizer Lambda. Subscribes to the raw OTel log
+  group (created by cfn/claude-otel-logs.yml), strips everything outside
+  an allowlist, and writes to the sanitized log group for dashboard
+  consumption. Raw retention is short (1 day) so sensitive content does
+  not persist; sanitized retention is longer (dashboard window).
+
+Parameters:
+  ProjectName:
+    Type: String
+    Description: Same value as the claude-otel-logs CFn stack (e.g. demo-team). Used to derive log group names.
+    AllowedPattern: "^[a-z0-9][a-z0-9-]*[a-z0-9]$"
+
+Resources:
+  SanitizerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${ProjectName}-claude-otel-sanitizer
+      CodeUri: src/
+      Handler: handler.handler
+      Runtime: python3.13
+      MemorySize: 256
+      Timeout: 30
+      Environment:
+        Variables:
+          SANITIZED_LOG_GROUP: !Sub /${ProjectName}/claude-otel-sanitized
+      # Inline policy gives write-only access to the sanitized log group.
+      # Lambda does not need read permission on the raw group because CWL
+      # delivers events via the subscription filter (push model).
+      Policies:
+        - Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Action:
+                - logs:CreateLogStream
+                - logs:PutLogEvents
+              Resource: !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/${ProjectName}/claude-otel-sanitized:*
+      Events:
+        # CloudWatchLogs event source auto-creates the subscription filter on
+        # the raw log group and grants CWL the lambda:InvokeFunction permission.
+        RawLogTrigger:
+          Type: CloudWatchLogs
+          Properties:
+            LogGroupName: !Sub /${ProjectName}/claude-otel
+            FilterPattern: ""
+
+Outputs:
+  FunctionArn:
+    Description: Sanitizer Lambda ARN.
+    Value: !GetAtt SanitizerFunction.Arn
+  FunctionName:
+    Description: Sanitizer Lambda function name (for CloudWatch Logs inspection).
+    Value: !Ref SanitizerFunction
