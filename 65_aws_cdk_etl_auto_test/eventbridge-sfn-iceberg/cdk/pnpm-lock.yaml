@@ -10,10 +10,10 @@ importers:
     dependencies:
       '@aws-cdk/aws-lambda-python-alpha':
         specifier: ^2.200.0-alpha.0
-        version: 2.200.0-alpha.0(aws-cdk-lib@2.239.0(constructs@10.5.1))(constructs@10.5.1)
+        version: 2.200.0-alpha.0(aws-cdk-lib@2.246.0(constructs@10.5.1))(constructs@10.5.1)
       aws-cdk-lib:
-        specifier: ^2.200.0
-        version: 2.239.0(constructs@10.5.1)
+        specifier: ^2.246.0
+        version: 2.246.0(constructs@10.5.1)
       constructs:
         specifier: ^10.4.2
         version: 10.5.1
@@ -48,8 +48,8 @@ packages:
   '@aws-cdk/asset-awscli-v1@2.2.263':
     resolution: {integrity: sha512-X9JvcJhYcb7PHs8R7m4zMablO5C9PGb/hYfLnxds9h/rKJu6l7MiXE/SabCibuehxPnuO/vk+sVVJiUWrccarQ==}
 
-  '@aws-cdk/asset-node-proxy-agent-v6@2.1.0':
-    resolution: {integrity: sha512-7bY3J8GCVxLupn/kNmpPc5VJz8grx+4RKfnnJiO1LG+uxkZfANZG3RMHhE+qQxxwkyQ9/MfPtTpf748UhR425A==}
+  '@aws-cdk/asset-node-proxy-agent-v6@2.1.2':
+    resolution: {integrity: sha512-pDiuqH+qY3zM9lhhLjbKJ1tnKOHzQ2V4Wr/3qsxyKeKAkuPMI/BVGvZG1PbrikUw949cGVTfVEt4ETKKYnrj0Q==}
 
   '@aws-cdk/aws-lambda-python-alpha@2.200.0-alpha.0':
     resolution: {integrity: sha512-2u31LxmwyeKGChzBNAInTthLSPyUkFQNYo0U8a2E317LYm7m3ez4lXa/aUQoIcO+SU8m0wA7Wd3EyDKrJ+WF+A==}
@@ -58,8 +58,8 @@ packages:
       aws-cdk-lib: ^2.200.0
       constructs: ^10.0.0
 
-  '@aws-cdk/cloud-assembly-schema@50.4.0':
-    resolution: {integrity: sha512-9Cplwc5C+SNe3hMfqZET7gXeM68tiH2ytQytCi+zz31Bn7O3GAgAnC2dYe+HWnZAgVH788ZkkBwnYXkeqx7v4g==}
+  '@aws-cdk/cloud-assembly-schema@53.28.0':
+    resolution: {integrity: sha512-pZS+9bLGv2tCqcgxfA0WD3XjcqT3yE4ICvKeJEicw6aTdCxBl8FQ/AUsorY/6f2JrMS3kUQgvhXxA30MWcji0A==}
     engines: {node: '>= 18.0.0'}
     bundledDependencies:
       - jsonschema
@@ -422,9 +422,9 @@ packages:
   argparse@1.0.10:
     resolution: {integrity: sha512-o5Roy6tNG4SL/FOkCAN6RzjiakZS25RLYFrcMttJqbdd8BWrnA+fGz57iN5Pb06pvBGvl5gQ0B48dJlslXvoTg==}
 
-  aws-cdk-lib@2.239.0:
-    resolution: {integrity: sha512-0qpYrE4HL6yRaQriRukfX7m82vNj3otce6v4Y5qK859ILdZBCaz/wqqYgdTnFh6LcA11GAg/Y8l8a+j/VtczyA==}
-    engines: {node: '>= 18.0.0'}
+  aws-cdk-lib@2.246.0:
+    resolution: {integrity: sha512-7OtF95mss9dWohopCNQKAlNFrMJwgOIvNTNgoOWWcKhULBf6UxKCaf6ATlnuysIWRGf2DHgcval/4+yySOKRBw==}
+    engines: {node: '>= 20.0.0'}
     peerDependencies:
       constructs: ^10.5.0
     bundledDependencies:
@@ -1306,14 +1306,14 @@ snapshots:
 
   '@aws-cdk/asset-awscli-v1@2.2.263': {}
 
-  '@aws-cdk/asset-node-proxy-agent-v6@2.1.0': {}
+  '@aws-cdk/asset-node-proxy-agent-v6@2.1.2': {}
 
-  '@aws-cdk/aws-lambda-python-alpha@2.200.0-alpha.0(aws-cdk-lib@2.239.0(constructs@10.5.1))(constructs@10.5.1)':
+  '@aws-cdk/aws-lambda-python-alpha@2.200.0-alpha.0(aws-cdk-lib@2.246.0(constructs@10.5.1))(constructs@10.5.1)':
     dependencies:
-      aws-cdk-lib: 2.239.0(constructs@10.5.1)
+      aws-cdk-lib: 2.246.0(constructs@10.5.1)
       constructs: 10.5.1
 
-  '@aws-cdk/cloud-assembly-schema@50.4.0': {}
+  '@aws-cdk/cloud-assembly-schema@53.28.0': {}
 
   '@babel/code-frame@7.29.0':
     dependencies:
@@ -1803,11 +1803,11 @@ snapshots:
     dependencies:
       sprintf-js: 1.0.3
 
-  aws-cdk-lib@2.239.0(constructs@10.5.1):
+  aws-cdk-lib@2.246.0(constructs@10.5.1):
     dependencies:
       '@aws-cdk/asset-awscli-v1': 2.2.263
-      '@aws-cdk/asset-node-proxy-agent-v6': 2.1.0
-      '@aws-cdk/cloud-assembly-schema': 50.4.0
+      '@aws-cdk/asset-node-proxy-agent-v6': 2.1.2
+      '@aws-cdk/cloud-assembly-schema': 53.28.0
       constructs: 10.5.1
 
   aws-cdk@2.1106.1: {}
