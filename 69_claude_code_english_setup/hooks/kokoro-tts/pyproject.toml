@@ -15,6 +15,6 @@ dependencies = [
     "uvicorn",
     "fastapi",
     "webrtcvad",
-    "setuptools<82",
+    "setuptools<84",
     "python-multipart",
 ]
