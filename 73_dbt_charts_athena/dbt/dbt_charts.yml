@@ -1,0 +1,6 @@
+sources:
+  athena:
+    type: dbt_profile
+    profile: jaffle_shop_athena
+    target: dev
+    profiles_dir: .

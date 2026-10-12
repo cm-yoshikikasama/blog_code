@@ -1,0 +1,68 @@
+# Board heading
+title: 注文状況
+# Default connection for every query: a source name defined in dbt_charts.yml
+source: athena
+
+# Named queries. Charts reference them by name with query:
+# dct replaces {{ ref('model') }} with the table name from target/manifest.json
+queries:
+  total_orders: SELECT SUM(order_count) AS order_count FROM {{ ref('order_status_summary') }}
+  total_customers: SELECT COUNT(*) AS customer_count FROM {{ ref('customer_orders') }} WHERE order_count > 0
+  daily_orders: SELECT order_date, COUNT(*) AS order_count FROM {{ ref('stg_orders') }} GROUP BY order_date ORDER BY order_date
+  by_status: SELECT status, order_count FROM {{ ref('order_status_summary') }} ORDER BY order_count DESC
+  by_customer: SELECT first_name || ' ' || last_name AS customer_name, order_count, first_order_date, last_order_date FROM {{ ref('customer_orders') }} ORDER BY order_count DESC, customer_name
+
+# Named charts. type sets the chart type; columns from the query result are mapped to it
+charts:
+  # kpi shows one number as a large card. It errors if the query returns more than one row
+  # value is the column to show; label is the heading
+  kpi_orders:
+    type: kpi
+    query: total_orders
+    value: order_count
+    label: 総注文数
+  kpi_customers:
+    type: kpi
+    query: total_customers
+    value: customer_count
+    label: 注文した顧客数
+  # line is a line chart, bar is a bar chart. x takes a category or date column, y a numeric column
+  orders_by_day:
+    type: line
+    query: daily_orders
+    x: order_date
+    y: order_count
+    title: 日別注文数
+    x_label: 注文日
+    y_label: 注文数
+  orders_by_status:
+    type: bar
+    query: by_status
+    x: status
+    y: order_count
+    title: ステータス別件数
+    x_label: ステータス
+    y_label: 注文数
+  # table shows every query column in query order
+  # Column headings go under style.columns, keyed by column name
+  orders_by_customer:
+    type: table
+    query: by_customer
+    title: 顧客別の注文
+    style:
+      columns:
+        customer_name:
+          label: 顧客名
+        order_count:
+          label: 注文数
+        first_order_date:
+          label: 初回注文日
+        last_order_date:
+          label: 最終注文日
+
+# Layout: rows stacks entries top to bottom; cols places charts side by side within a row
+# A row with just a chart name holds that one chart
+rows:
+  - cols: [kpi_orders, kpi_customers]
+  - cols: [orders_by_day, orders_by_status]
+  - orders_by_customer

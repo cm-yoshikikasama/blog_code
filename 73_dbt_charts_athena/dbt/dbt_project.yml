@@ -1,0 +1,14 @@
+name: jaffle_shop_athena
+version: "1.0.0"
+profile: jaffle_shop_athena
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+
+models:
+  jaffle_shop_athena:
+    staging:
+      +materialized: view
+    marts:
+      +materialized: table
+      +table_type: iceberg

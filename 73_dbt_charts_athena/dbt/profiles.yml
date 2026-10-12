@@ -1,0 +1,12 @@
+jaffle_shop_athena:
+  target: dev
+  outputs:
+    dev:
+      type: athena
+      region_name: ap-northeast-1
+      database: awsdatacatalog
+      schema: cm_kasama_jaffle_shop_dev
+      s3_staging_dir: "s3://{{ env_var('DBT_S3_BUCKET') }}/athena-results/"
+      s3_data_dir: "s3://{{ env_var('DBT_S3_BUCKET') }}/data/"
+      s3_data_naming: schema_table_unique
+      threads: 4

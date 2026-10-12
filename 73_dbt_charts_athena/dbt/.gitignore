@@ -1,0 +1,6 @@
+.venv/
+target/
+logs/
+renders/
+uv.lock
+.user.yml
