@@ -42,3 +42,6 @@ memo.md
 .tmp/
 .workflow-log
 workflow.json
+
+# playwright-cli の画面記録(画面に表示した値がそのまま残る)
+.playwright-cli/
