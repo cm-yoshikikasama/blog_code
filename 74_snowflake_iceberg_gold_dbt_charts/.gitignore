@@ -2,4 +2,3 @@ terraform/*/terraform.tfstate*
 terraform/*/.terraform.lock.hcl
 terraform/*/tfplan
 terraform/**/.terraform/
-blog.md
