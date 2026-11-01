@@ -1,4 +1,4 @@
-# Warehouse。使わないときは60秒で停止する
+# Warehouse. Suspends after 60 seconds of inactivity
 resource "snowflake_warehouse" "this" {
   name                = var.warehouse_name
   warehouse_size      = var.warehouse_size

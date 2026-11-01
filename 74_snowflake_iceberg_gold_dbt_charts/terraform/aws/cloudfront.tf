@@ -11,6 +11,6 @@ module "dashboard_site" {
   bucket_regional_domain_name = module.html.bucket_regional_domain_name
   allowed_cidrs               = var.allowed_cidrs
 
-  # パブリックアクセスブロックを設定してからバケットポリシーを付ける
+  # Attach the bucket policy after the public access block is set
   depends_on = [module.html]
 }

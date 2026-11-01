@@ -1,8 +1,8 @@
-# goldのIcebergテーブルのファイルを置くExternal Volume。S3とIAMロールはaws層が作る
+# External volume for the gold Iceberg table files. The aws layer creates the S3 bucket and IAM role
 #
-# 適用順はsnow-infra → aws。External Volumeとservice userはIAMロールのARNを文字列で受け取り、
-# ロールの実在を使うときまで検証しない。そのため、この層がARNを組み立ててSnowflakeのオブジェクトを先に作り、
-# Snowflakeが生成するIAMユーザーとExternal IDをoutputでaws層の信頼ポリシーに渡す
+# Apply order: snow-infra, then aws. The external volume and service user take IAM role ARNs as strings
+# and do not check that the roles exist until use. So this layer builds the ARNs, creates the Snowflake objects first,
+# and passes the generated IAM user and external ID to the aws layer trust policy through outputs
 
 data "aws_caller_identity" "current" {}
 
@@ -10,8 +10,8 @@ locals {
   account_id = data.aws_caller_identity.current.account_id
   prefix     = "cm-kasama-iceberg-bi"
 
-  # AWS側のリソース名はこの層で決め、outputでaws層へ渡す
-  # (この層が組み立てるARNと、aws層が実際に作るIAMロール名のズレを防ぐ)
+  # This layer decides the AWS resource names and passes them to the aws layer through outputs
+  # (so the ARNs built here match the IAM roles the aws layer creates)
   gold_bucket_name = "${local.prefix}-gold-${local.account_id}"
   html_bucket_name = "${local.prefix}-html-${local.account_id}"
 
@@ -19,7 +19,7 @@ locals {
   lambda_role_name = "${local.prefix}-dashboard-lambda-role"
 }
 
-# goldのIcebergテーブルのデータとメタデータを置く場所。dbtのgoldモデルが指定する
+# Location of the gold Iceberg data and metadata. The dbt gold models refer to it
 module "external_volume" {
   source = "../modules/snow/external_volume"
 

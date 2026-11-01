@@ -11,15 +11,15 @@ from botocore.auth import SigV4Auth
 from botocore.awsrequest import AWSRequest
 
 DASHBOARD_SRC = os.path.join(os.environ.get("LAMBDA_TASK_ROOT", "."), "dashboard")
-# /var/task は読み取り専用のため、/tmp にコピーしてから dct を実行する
+# /var/task is read-only, so copy the files to /tmp before running dct
 WORK_DIR = "/tmp/dashboard"
 OUTPUT_HTML = "/tmp/index.html"
-# ビルド時に入れたDuckDBの拡張機能。HOME=/tmp のときの既定の場所(/tmp/.duckdb)へコピーする
+# DuckDB extensions installed at build time. Copied to the default location for HOME=/tmp (/tmp/.duckdb)
 DUCKDB_HOME_SRC = "/opt/duckdb_home/.duckdb"
 
 
 def get_horizon_token():
-    """Lambdaの実行ロールでGetCallerIdentityに署名し、Horizonのアクセストークンに交換する"""
+    """Sign GetCallerIdentity with the execution role and exchange it for a Horizon access token"""
     region = os.environ["AWS_REGION"]
     sts_host = f"sts.{region}.amazonaws.com"
     credentials = boto3.Session().get_credentials().get_frozen_credentials()
@@ -55,7 +55,7 @@ def get_horizon_token():
 def lambda_handler(_event, _context):
     shutil.copytree(DASHBOARD_SRC, WORK_DIR, dirs_exist_ok=True)
     shutil.copytree(DUCKDB_HOME_SRC, "/tmp/.duckdb", dirs_exist_ok=True)
-    # DO_NOT_TRACK=1でdctの利用統計(dbtlabs-vortex経由でdbt Labsへ送信)を止める
+    # DO_NOT_TRACK=1 stops dct usage stats (sent to dbt Labs through dbtlabs-vortex)
     env = {**os.environ, "HOME": "/tmp", "DO_NOT_TRACK": "1", "HORIZON_TOKEN": get_horizon_token()}
 
     subprocess.run(

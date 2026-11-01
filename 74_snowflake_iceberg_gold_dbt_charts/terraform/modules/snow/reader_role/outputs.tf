@@ -1,4 +1,4 @@
 output "role_name" {
-  description = "ロール名"
+  description = "Role name"
   value       = snowflake_account_role.this.name
 }

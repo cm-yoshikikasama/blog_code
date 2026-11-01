@@ -1,14 +1,14 @@
 variable "external_volume_name" {
-  description = "作成するExternal Volume"
+  description = "External volume to create"
   type        = string
 }
 
 variable "aws_iam_role_arn" {
-  description = "External Volumeが使うIAMロールのARN。ロールはaws層があとで作る"
+  description = "ARN of the IAM role used by the external volume. The aws layer creates the role later"
   type        = string
 }
 
 variable "s3_url" {
-  description = "Icebergのファイルを置くS3のURL(s3://<バケット>/)"
+  description = "S3 URL for the Iceberg files (s3://<bucket>/)"
   type        = string
 }

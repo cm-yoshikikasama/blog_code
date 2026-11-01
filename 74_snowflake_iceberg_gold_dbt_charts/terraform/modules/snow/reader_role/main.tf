@@ -1,9 +1,9 @@
-# 1つのスキーマのIcebergテーブルを読むだけのロール。Warehouseの権限は付けないので、このロールではWarehouseでクエリを実行できない
+# Role that only reads the Iceberg tables of one schema. It has no warehouse privilege, so it cannot run queries on a warehouse
 resource "snowflake_account_role" "this" {
   name = var.role_name
 }
 
-# スキーマのテーブルを参照するには、データベースとスキーマのUSAGEが必要
+# USAGE on the database and schema is required to read tables in the schema
 resource "snowflake_grant_privileges_to_account_role" "database" {
   account_role_name = snowflake_account_role.this.name
   privileges        = ["USAGE"]
@@ -23,7 +23,7 @@ resource "snowflake_grant_privileges_to_account_role" "schema" {
   }
 }
 
-# テーブルはapplyのあとにdbtが作る。そのため、これから作られるIcebergテーブルにSELECTを付けるfuture grantにする
+# dbt creates the tables after apply, so SELECT is granted with a future grant on Iceberg tables
 resource "snowflake_grant_privileges_to_account_role" "iceberg_tables" {
   account_role_name = snowflake_account_role.this.name
   privileges        = ["SELECT"]

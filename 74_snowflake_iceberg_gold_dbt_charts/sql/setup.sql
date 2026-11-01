@@ -1,18 +1,18 @@
--- 最初に1回だけACCOUNTADMINで実行する。TerraformとdbtがACCOUNTADMINを使わずに済むように、専用のロールとservice userを作る
--- snow sql -c <接続> --role ACCOUNTADMIN -D "public_key=<公開鍵>" -f sql/setup.sql
--- 自分のユーザーは変更しない
+-- Run once as ACCOUNTADMIN. Creates a dedicated role and service user so that Terraform and dbt do not use ACCOUNTADMIN
+-- snow sql -c <connection> --role ACCOUNTADMIN -D "public_key=<public-key>" -f sql/setup.sql
+-- Your own user is not changed
 use role ACCOUNTADMIN;
 
--- TerraformとdbtのロールとWarehouse以外の権限。デモなのでTerraformとdbtで同じロールを使う
+-- Role for Terraform and dbt. This demo uses the same role for both
 create role if not exists CM_KASAMA_ICEBERG_BI_DEPLOY_ROLE
-  comment = 'Terraformとdbtが使うロール';
+  comment = 'Role used by Terraform and dbt';
 grant create database, create warehouse, create external volume, create role, create user
   on account to role CM_KASAMA_ICEBERG_BI_DEPLOY_ROLE;
 
--- キーペアでログインするservice user。パスワードもPATも持たない
+-- Service user that logs in with a key pair. It has no password and no PAT
 create user if not exists CM_KASAMA_ICEBERG_BI_DEPLOY_SVC
   type = service
   default_role = CM_KASAMA_ICEBERG_BI_DEPLOY_ROLE
   rsa_public_key = '<% public_key %>'
-  comment = 'Terraformとdbtが使うservice user';
+  comment = 'Service user used by Terraform and dbt';
 grant role CM_KASAMA_ICEBERG_BI_DEPLOY_ROLE to user CM_KASAMA_ICEBERG_BI_DEPLOY_SVC;

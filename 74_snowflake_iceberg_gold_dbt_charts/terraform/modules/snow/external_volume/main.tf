@@ -1,5 +1,5 @@
-# Snowflake-managed Icebergテーブルのデータとメタデータを置く場所
-# Storage Integrationと同じく、IAMロールARNを文字列で受け取るので、ロールより先に作れる
+# Location of the data and metadata of Snowflake-managed Iceberg tables
+# It takes the IAM role ARN as a string, so it can be created before the role exists
 resource "snowflake_external_volume" "this" {
   name         = var.external_volume_name
   allow_writes = "true"

@@ -1,4 +1,4 @@
-# dct renderでダッシュボードのHTMLを作るLambda
+# Lambda that renders the dashboard HTML with dct render
 module "dashboard_lambda" {
   source = "../modules/aws/lambda_container"
 

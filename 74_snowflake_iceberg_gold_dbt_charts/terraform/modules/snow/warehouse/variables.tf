@@ -1,10 +1,10 @@
 variable "warehouse_name" {
-  description = "作成するWarehouse"
+  description = "Warehouse to create"
   type        = string
 }
 
 variable "warehouse_size" {
-  description = "Warehouseのサイズ"
+  description = "Warehouse size"
   type        = string
   default     = "XSMALL"
 }

@@ -7,12 +7,12 @@ seed-paths: ["seeds"]
 macro-paths: ["macros"]
 
 flags:
-  # dbtの利用統計をdbt Labsへ送信しない
+  # Do not send dbt usage stats to dbt Labs
   send_anonymous_usage_stats: false
 
 seeds:
   iceberg_bi:
-    # CSVを通常のテーブルとして読み込む。goldのモデルの入力に使う
+    # Load the CSVs as regular tables. The gold models read them
     +schema: SEED
 
 models:

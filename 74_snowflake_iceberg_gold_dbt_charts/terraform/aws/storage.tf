@@ -1,4 +1,4 @@
-# gold: goldのIcebergファイル。SnowflakeはExternal Volumeで書き込む
+# gold: Iceberg files of the gold tables. Snowflake writes them through the external volume
 module "gold" {
   source = "../modules/aws/storage"
 
@@ -11,7 +11,7 @@ module "gold" {
   }
 }
 
-# html: ダッシュボード。Lambdaが書き込み、CloudFrontが配信する
+# html: dashboard. Lambda writes it and CloudFront serves it
 module "html" {
   source = "../modules/aws/storage"
 

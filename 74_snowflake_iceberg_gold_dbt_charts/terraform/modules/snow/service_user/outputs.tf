@@ -1,4 +1,4 @@
 output "user_name" {
-  description = "service user名"
+  description = "Service user name"
   value       = snowflake_service_user.this.name
 }

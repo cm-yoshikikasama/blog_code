@@ -1,4 +1,4 @@
 output "warehouse_name" {
-  description = "Warehouse名"
+  description = "Warehouse name"
   value       = snowflake_warehouse.this.name
 }

@@ -1,5 +1,5 @@
-# パスワードもPATも持たないservice user
-# AWSのIAMロールのARNを登録しておき、そのロールの認証情報(GetCallerIdentityの署名)でログインする
+# Service user with no password and no PAT
+# Registers an AWS IAM role ARN and logs in with that role's credentials (a signed GetCallerIdentity request)
 resource "snowflake_service_user" "this" {
   name         = var.user_name
   default_role = var.role_name

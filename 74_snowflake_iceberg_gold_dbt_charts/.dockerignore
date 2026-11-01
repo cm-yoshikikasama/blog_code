@@ -1,0 +1,6 @@
+# Send only the files the Lambda image needs (the build context is this directory)
+*
+!lambda/requirements.txt
+!lambda/handler.py
+!dbt/dbt_charts.yml
+!dbt/charts

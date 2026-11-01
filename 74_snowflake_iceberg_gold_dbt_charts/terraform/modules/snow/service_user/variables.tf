@@ -1,14 +1,14 @@
 variable "user_name" {
-  description = "作成するservice user"
+  description = "Service user to create"
   type        = string
 }
 
 variable "role_name" {
-  description = "service userに付けるロール(デフォルトロールにもする)"
+  description = "Role granted to the service user (also its default role)"
   type        = string
 }
 
 variable "aws_iam_role_arn" {
-  description = "service userとしてログインするIAMロールのARN。ロールはaws層があとで作る"
+  description = "ARN of the IAM role that logs in as the service user. The aws layer creates the role later"
   type        = string
 }

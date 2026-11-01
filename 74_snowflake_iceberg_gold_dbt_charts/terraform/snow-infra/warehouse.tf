@@ -1,4 +1,4 @@
-# dbtでseedとgoldを作るWarehouse。ダッシュボードの参照には使わない
+# Warehouse for dbt to build seeds and gold. Not used to read the dashboard data
 module "warehouse" {
   source = "../modules/snow/warehouse"
 

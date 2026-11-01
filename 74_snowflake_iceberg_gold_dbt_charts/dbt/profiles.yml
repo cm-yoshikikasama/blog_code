@@ -5,7 +5,7 @@ iceberg_bi:
       type: snowflake
       account: "{{ env_var('SNOWFLAKE_ORGANIZATION_NAME', '') }}-{{ env_var('SNOWFLAKE_ACCOUNT_NAME', '') }}"
       user: "{{ env_var('SNOWFLAKE_USER', '') }}"
-      # Terraformと同じservice userとキーペアで接続する
+      # Connect with the same service user and key pair as Terraform
       private_key_path: "{{ env_var('SNOWFLAKE_PRIVATE_KEY_PATH', '') }}"
       private_key_passphrase: "{{ env_var('SNOWFLAKE_PRIVATE_KEY_PASSPHRASE', '') }}"
       role: CM_KASAMA_ICEBERG_BI_DEPLOY_ROLE

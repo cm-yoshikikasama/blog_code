@@ -1,10 +1,10 @@
 variable "aws_s3_bucket_name" {
-  description = "作成するS3バケット"
+  description = "S3 bucket to create"
   type        = string
 }
 
 variable "snowflake_access" {
-  description = "Snowflakeがこのバケットにアクセスするときに使うIAMロール。aws_iam_role_nameはsnow-infra層がARNを組み立てたロール名と一致させる"
+  description = "IAM role that Snowflake uses to access this bucket. aws_iam_role_name must match the name snow-infra used to build the ARN"
   type = object({
     aws_iam_role_name      = string
     snowflake_iam_user_arn = string

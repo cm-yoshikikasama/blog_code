@@ -25,7 +25,7 @@ The dashboard reads only GOLD, through Horizon, and the Iceberg files are read d
 | `dbt/` | Seeds (sample CSVs) and the gold models (Iceberg tables): order count by status, revenue by payment method, revenue by customer |
 | `lambda/handler.py` | Gets a Horizon access token with the execution role, runs `dct render`, and uploads the HTML to S3 |
 | `lambda/Dockerfile` | Lambda image with dbt Charts and the DuckDB extensions (`iceberg`, `httpfs`, `avro`) preinstalled |
-| `lambda/dashboard/` | dbt Charts source definition and board |
+| `dbt/dbt_charts.yml`, `dbt/charts/` | dbt Charts source definition and board, at the dbt project root. Copied into the Lambda image |
 | `sql/setup.sql` | Creates the role and the key-pair service user (run as ACCOUNTADMIN) |
 
 Terraform is split into two root modules (layers) with separate state, and the resources are defined in `terraform/modules/`. Apply them in the order snow-infra, aws. The external volume and service user accept IAM role ARNs as strings and do not check that the roles exist until they are used. snow-infra builds those ARNs from the role names, creates the Snowflake objects first, and exports the names and the generated IAM user ARN and external ID. aws reads them with `terraform_remote_state`. Each layer stores its state locally in `terraform/<layer>/terraform.tfstate` (excluded by `.gitignore`).
@@ -77,7 +77,7 @@ The Lambda function needs the image to exist, so the ECR repository is created f
 ```bash
 ECR_URL=$(terraform -chdir=terraform/aws output -raw ecr_repository_url)
 aws ecr get-login-password --region ap-northeast-1 | docker login --username AWS --password-stdin "${ECR_URL%%/*}"
-docker build --platform linux/arm64 -t "${ECR_URL}:latest" lambda
+docker build --platform linux/arm64 -f lambda/Dockerfile -t "${ECR_URL}:latest" .
 docker push "${ECR_URL}:latest"
 ```
 

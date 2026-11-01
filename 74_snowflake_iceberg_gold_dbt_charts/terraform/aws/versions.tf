@@ -1,4 +1,4 @@
-# 3層のstateのaws層。AWSのリソースだけを管理し、snowflake providerを持たない
+# aws layer of the two-layer state. Manages only AWS resources and has no Snowflake provider
 terraform {
   required_version = ">= 1.10"
 
@@ -14,7 +14,7 @@ provider "aws" {
   region = "ap-northeast-1"
 }
 
-# CloudFrontに付けるWAFはus-east-1にしか作れない
+# WAF for CloudFront can be created only in us-east-1
 provider "aws" {
   alias  = "us_east_1"
   region = "us-east-1"

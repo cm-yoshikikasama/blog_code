@@ -1,5 +1,5 @@
-# 2層のstate(snow-infra / aws)のsnow-infra層。stateはこのディレクトリのterraform.tfstateに置く
-# 適用順: snow-infra → aws(aws層がこの層の出力を使うため)
+# snow-infra layer of the two-layer state (snow-infra / aws). State is stored in terraform.tfstate in this directory
+# Apply order: snow-infra, then aws (the aws layer uses this layer's outputs)
 terraform {
   required_version = ">= 1.10"
 
@@ -16,20 +16,20 @@ terraform {
 }
 
 provider "snowflake" {
-  # 組織名・アカウント名・ユーザー・秘密鍵はSNOWFLAKE_*環境変数で渡す(キーペア認証)
-  # ロールはsql/setup.sqlで作るロール
+  # Organization, account, user, and private key come from SNOWFLAKE_* environment variables (key-pair auth)
+  # The role is created by sql/setup.sql
   role = var.snowflake_role
 
-  # service userのWORKLOAD_IDENTITYはexperimental扱い
+  # WORKLOAD_IDENTITY on service users is experimental
   experimental_features_enabled = ["USER_ENABLE_DEFAULT_WORKLOAD_IDENTITY"]
 
-  # Snowflakeのドライバーが送る利用統計を止める
+  # Stop usage stats sent by the Snowflake driver
   params = {
     CLIENT_TELEMETRY_ENABLED = "false"
   }
 }
 
-# AWSのアカウントIDを取得するためだけに使う。この層ではAWSのリソースを作らない
+# Used only to get the AWS account ID. This layer creates no AWS resources
 provider "aws" {
   region = "ap-northeast-1"
 }

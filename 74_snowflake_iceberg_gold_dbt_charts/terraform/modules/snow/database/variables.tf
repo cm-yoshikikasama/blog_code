@@ -1,16 +1,16 @@
 variable "database_name" {
-  description = "作成するデータベース"
+  description = "Database to create"
   type        = string
 }
 
 variable "schemas" {
-  description = "データベースに作成するスキーマ"
+  description = "Schemas to create in the database"
   type        = list(string)
   default     = []
 }
 
 variable "with_managed_access" {
-  description = "スキーマをmanaged accessにするか。trueにすると、スキーマ内のオブジェクトへの権限はスキーマのownerだけが付けられる"
+  description = "Whether the schemas use managed access. When true, only the schema owner can grant privileges on objects in the schema"
   type        = bool
   default     = false
 }

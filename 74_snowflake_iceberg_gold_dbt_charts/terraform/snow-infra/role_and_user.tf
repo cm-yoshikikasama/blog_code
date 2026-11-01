@@ -1,6 +1,6 @@
-# ロールとユーザー。Lambdaがgoldを読むときに使う
+# Role and user that Lambda uses to read gold
 
-# goldのIcebergテーブルのSELECTだけを持つロール
+# Role with only SELECT on the gold Iceberg tables
 module "reader_role" {
   source = "../modules/snow/reader_role"
 
@@ -9,7 +9,7 @@ module "reader_role" {
   schema_fully_qualified_name = module.database.schema_fully_qualified_names["GOLD"]
 }
 
-# Lambdaが使うSnowflakeのユーザー。Lambdaは実行ロールの認証情報でログインする
+# Snowflake user for Lambda. Lambda logs in with its execution role credentials
 module "dashboard_user" {
   source = "../modules/snow/service_user"
 

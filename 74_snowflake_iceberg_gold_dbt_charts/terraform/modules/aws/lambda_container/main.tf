@@ -1,5 +1,5 @@
-# コンテナイメージのLambda。ECRリポジトリ・実行ロール・関数を作る
-# force_deleteはサンプルをdestroyでイメージごと消すため。本番ではfalseにする
+# Container image Lambda: ECR repository, execution role, and function
+# force_delete lets destroy remove the images in this sample. Set it to false in production
 resource "aws_ecr_repository" "this" {
   name         = var.function_name
   force_delete = true
@@ -9,14 +9,14 @@ resource "aws_ecr_repository" "this" {
   }
 }
 
-# pushしたlatestのdigestを取得し、Lambdaはタグではなくdigestでイメージを指定する
-# 新しいイメージをpushしてからapplyすると、digestが変わるのでLambdaのイメージも更新される
+# Look up the digest of the pushed latest tag. Lambda refers to the image by digest, not by tag
+# Applying after a new push changes the digest, so the function image is updated
 data "aws_ecr_image" "latest" {
   repository_name = aws_ecr_repository.this.name
   image_tag       = "latest"
 }
 
-# ロール名はsnow-infra層が決める。snow-infra層はこのロールのARNをservice userに登録する
+# snow-infra decides the role name and registers this role's ARN on the service user
 resource "aws_iam_role" "this" {
   name = var.aws_iam_role_name
 
@@ -35,7 +35,7 @@ resource "aws_iam_role_policy_attachment" "logs" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
-# 出力先のバケットへの書き込みだけを許可する。goldバケットへの権限は付けない。goldはHorizonが払い出す一時的な認証情報で読む
+# Allow only writes to the output bucket. No access to the gold bucket: gold is read with temporary credentials vended by Horizon
 resource "aws_iam_role_policy" "output" {
   name = "${var.aws_iam_role_name}-output"
   role = aws_iam_role.this.id

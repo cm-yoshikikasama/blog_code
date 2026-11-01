@@ -1,4 +1,4 @@
 variable "allowed_cidrs" {
-  description = "ダッシュボードを閲覧できるIPv4のCIDR"
+  description = "IPv4 CIDRs allowed to view the dashboard"
   type        = list(string)
 }

@@ -1,9 +1,9 @@
-# AWSマネージドのキャッシュポリシー。名前で参照する
+# AWS managed cache policy, referenced by name
 data "aws_cloudfront_cache_policy" "caching_disabled" {
   name = "Managed-CachingDisabled"
 }
 
-# S3バケットのファイルをCloudFrontで配信する。WAFで許可したIPアドレス以外からのリクエストには403を返す
+# Serves the S3 bucket through CloudFront. WAF returns 403 to IP addresses that are not allowed
 resource "aws_cloudfront_origin_access_control" "this" {
   name                              = "${var.name}-oac"
   origin_access_control_origin_type = "s3"
@@ -28,7 +28,7 @@ resource "aws_cloudfront_distribution" "this" {
     viewer_protocol_policy = "redirect-to-https"
     allowed_methods        = ["GET", "HEAD"]
     cached_methods         = ["GET", "HEAD"]
-    # HTMLを作り直したらすぐに反映するため、キャッシュしない
+    # Do not cache, so a re-rendered HTML is served immediately
     cache_policy_id = data.aws_cloudfront_cache_policy.caching_disabled.id
   }
 
@@ -43,7 +43,7 @@ resource "aws_cloudfront_distribution" "this" {
   }
 }
 
-# バケットを読めるのは、このディストリビューションだけ
+# Only this distribution can read the bucket
 resource "aws_s3_bucket_policy" "this" {
   bucket = var.bucket_name
 
@@ -59,7 +59,7 @@ resource "aws_s3_bucket_policy" "this" {
   })
 }
 
-# CloudFrontに付けるWAFはus-east-1にしか作れない
+# WAF for CloudFront can be created only in us-east-1
 resource "aws_wafv2_ip_set" "allowed" {
   provider = aws.us_east_1
 
@@ -69,7 +69,7 @@ resource "aws_wafv2_ip_set" "allowed" {
   addresses          = var.allowed_cidrs
 }
 
-# IPセットに含まれるIPアドレスだけを許可し、それ以外はブロック(403)する
+# Allow only the IP addresses in the IP set and block (403) the rest
 resource "aws_wafv2_web_acl" "this" {
   provider = aws.us_east_1
 

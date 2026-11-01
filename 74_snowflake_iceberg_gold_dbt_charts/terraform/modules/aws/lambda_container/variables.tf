@@ -1,19 +1,19 @@
 variable "function_name" {
-  description = "Lambda関数名。ECRのリポジトリ名にも使う"
+  description = "Lambda function name. Also used as the ECR repository name"
   type        = string
 }
 
 variable "aws_iam_role_name" {
-  description = "Lambdaの実行ロール名。snow-infra層がARNを組み立てたロール名と一致させる"
+  description = "Execution role name. Must match the name snow-infra used to build the ARN"
   type        = string
 }
 
 variable "output_bucket_arn" {
-  description = "Lambdaが書き込むバケットのARN"
+  description = "ARN of the bucket that Lambda writes to"
   type        = string
 }
 
 variable "environment_variables" {
-  description = "Lambdaの環境変数"
+  description = "Lambda environment variables"
   type        = map(string)
 }
