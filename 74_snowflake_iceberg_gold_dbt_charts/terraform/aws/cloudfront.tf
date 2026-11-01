@@ -10,7 +10,4 @@ module "dashboard_site" {
   bucket_arn                  = module.html.bucket_arn
   bucket_regional_domain_name = module.html.bucket_regional_domain_name
   allowed_cidrs               = var.allowed_cidrs
-
-  # Attach the bucket policy after the public access block is set
-  depends_on = [module.html]
 }

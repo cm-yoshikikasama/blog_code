@@ -1,6 +1,8 @@
 output "bucket_name" {
   description = "Bucket name"
   value       = aws_s3_bucket.this.id
+  # A bucket policy that uses this name is attached only after the public access block is set
+  depends_on = [aws_s3_bucket_public_access_block.this]
 }
 
 output "bucket_arn" {

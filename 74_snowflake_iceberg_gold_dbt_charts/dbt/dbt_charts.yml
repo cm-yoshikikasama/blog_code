@@ -19,5 +19,5 @@ sources:
         alias: horizon
         secret: horizon
         options:
-          endpoint: "{{ env_var('HORIZON_URL') }}"
+          uri: "{{ env_var('HORIZON_URL') }}"
           access_delegation_mode: vended_credentials
