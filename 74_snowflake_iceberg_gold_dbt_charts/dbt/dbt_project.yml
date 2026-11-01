@@ -1,0 +1,24 @@
+name: iceberg_bi
+version: "1.0.0"
+profile: iceberg_bi
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+
+flags:
+  # dbtの利用統計をdbt Labsへ送信しない
+  send_anonymous_usage_stats: false
+
+seeds:
+  iceberg_bi:
+    # CSVを通常のテーブルとして読み込む。goldのモデルの入力に使う
+    +schema: SEED
+
+models:
+  iceberg_bi:
+    gold:
+      +materialized: table
+      +schema: GOLD
+      +table_format: iceberg
+      +external_volume: CM_KASAMA_ICEBERG_BI_GOLD_VOL

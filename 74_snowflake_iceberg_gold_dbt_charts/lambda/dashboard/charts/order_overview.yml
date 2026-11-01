@@ -1,0 +1,92 @@
+# Board heading
+title: Jaffle Shop 注文ダッシュボード
+# Default connection for every query: a source name defined in dbt_charts.yml
+source: gold
+# Add space between the chart cards
+card_gap: true
+
+# Named queries. Tables are read from the attached Horizon catalog (horizon."GOLD"."<TABLE>")
+# Snowflake stores identifiers in upper case, so columns are quoted and aliased to lower case
+queries:
+  totals: >-
+    SELECT r.revenue, o.order_count, r.revenue / o.order_count AS avg_order_value
+    FROM (SELECT SUM("AMOUNT") AS revenue FROM horizon."GOLD"."PAYMENT_METHOD_SUMMARY") AS r
+    CROSS JOIN (SELECT SUM("ORDER_COUNT") AS order_count FROM horizon."GOLD"."ORDER_STATUS_SUMMARY") AS o
+  by_payment: SELECT "PAYMENT_METHOD" AS payment_method, "AMOUNT" AS amount FROM horizon."GOLD"."PAYMENT_METHOD_SUMMARY" ORDER BY amount DESC
+  by_status: SELECT "STATUS" AS status, "ORDER_COUNT" AS order_count FROM horizon."GOLD"."ORDER_STATUS_SUMMARY" ORDER BY order_count DESC
+  by_customer: >-
+    SELECT "FIRST_NAME" || ' ' || "LAST_NAME" AS customer_name, "TOTAL_AMOUNT" AS total_amount,
+    "LAST_ORDER_DATE" AS last_order_date
+    FROM horizon."GOLD"."CUSTOMER_ORDERS" WHERE "ORDER_COUNT" > 0
+    ORDER BY total_amount DESC, customer_name
+
+# Named charts. type sets the chart type; columns from the query result are mapped to it
+charts:
+  kpi_revenue:
+    type: kpi
+    query: totals
+    value: revenue
+    label: 売上
+    style:
+      value:
+        format: currency_whole
+  kpi_orders:
+    type: kpi
+    query: totals
+    value: order_count
+    label: 注文数
+    style:
+      value:
+        format: integer
+  kpi_aov:
+    type: kpi
+    query: totals
+    value: avg_order_value
+    label: 平均注文額
+    style:
+      value:
+        format: currency_full
+  payment_mix:
+    type: donut
+    query: by_payment
+    theta: amount
+    color: payment_method
+    title: 支払方法別の売上
+    total:
+      label: 売上
+    style:
+      total:
+        value:
+          format: currency_whole
+  orders_by_status:
+    type: bar
+    query: by_status
+    x: status
+    y: order_count
+    title: ステータス別の注文数
+    x_label: ステータス
+    y_label: 注文数
+  orders_by_customer:
+    type: table
+    query: by_customer
+    title: 顧客別の売上
+    style:
+      columns:
+        customer_name:
+          label: 顧客名
+        total_amount:
+          label: 売上
+          format: currency_full
+          align: right
+          scale:
+            background:
+              palette: dbt-seq-blue
+              domain: data
+        last_order_date:
+          label: 最終注文日
+
+# Layout: rows stacks entries top to bottom; cols places charts side by side within a row
+rows:
+  - cols: [kpi_revenue, kpi_orders, kpi_aov]
+  - cols: [payment_mix, orders_by_status]
+  - orders_by_customer

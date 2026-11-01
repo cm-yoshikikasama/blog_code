@@ -1,0 +1,35 @@
+seeds:
+  - name: raw_orders
+    description: Orders (jaffle_shop sample)
+    columns:
+      - name: id
+        description: Order ID
+        data_tests: [not_null, unique]
+      - name: user_id
+        description: Customer ID
+      - name: order_date
+        description: Order date
+      - name: status
+        description: Order status
+  - name: raw_customers
+    description: Customers (jaffle_shop sample)
+    columns:
+      - name: id
+        description: Customer ID
+        data_tests: [not_null, unique]
+      - name: first_name
+        description: First name
+      - name: last_name
+        description: Last name
+  - name: raw_payments
+    description: Payments (jaffle_shop sample). amount is in cents
+    columns:
+      - name: id
+        description: Payment ID
+        data_tests: [not_null, unique]
+      - name: order_id
+        description: Order ID
+      - name: payment_method
+        description: Payment method
+      - name: amount
+        description: Amount in cents

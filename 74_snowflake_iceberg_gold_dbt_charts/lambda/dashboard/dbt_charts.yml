@@ -1,0 +1,23 @@
+sources:
+  gold:
+    type: duckdb
+    path: ":memory:"
+    # Preinstalled in the image and copied to $HOME/.duckdb by handler.py, so no download at run time
+    extensions: [iceberg, httpfs]
+    # Never download extensions at run time; use only the ones preinstalled in the image
+    settings:
+      autoinstall_known_extensions: false
+    # HORIZON_TOKEN is the access token handler.py gets with the Lambda execution role
+    secrets:
+      - type: iceberg
+        name: horizon
+        token: "{{ env_var('HORIZON_TOKEN') }}"
+    # Attach the Horizon Iceberg REST catalog. The Snowflake database is the catalog name
+    attach:
+      - path: "{{ env_var('HORIZON_CATALOG') }}"
+        type: iceberg
+        alias: horizon
+        secret: horizon
+        options:
+          endpoint: "{{ env_var('HORIZON_URL') }}"
+          access_delegation_mode: vended_credentials
