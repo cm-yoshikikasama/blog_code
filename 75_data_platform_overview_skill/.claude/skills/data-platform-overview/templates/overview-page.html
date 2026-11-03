@@ -2,8 +2,8 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<!-- no external requests: the CSP blocks network access, and the diagram is embedded as a data URI -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'">
+<!-- the CSP blocks network access and runs only the tooltip script below (by hash); editing that script requires updating the hash -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-zd+5Cf4LpP0h8HxEVTOzI1JSfbAL/H0Wc/bKersuNRQ='; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{TITLE}}</title>
 <style>

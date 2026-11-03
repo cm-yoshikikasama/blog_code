@@ -46,6 +46,3 @@ workflow.json
 
 # playwright-cli の画面記録(画面に表示した値がそのまま残る)
 .playwright-cli/
-
-75_data_platform_overview_skill/blog.md
-75_data_platform_overview_skill/screenshots/
