@@ -2,6 +2,17 @@
 name: data-platform-overview
 description: Builds an HTML overview of the data platform (screen image, architecture, tables, schedule and next steps) from a filled-in requirements sheet (HTML). Use when planning a data platform from requirements.
 disable-model-invocation: true
+allowed-tools:
+  - WebFetch(domain:docs.snowflake.com)
+  - WebFetch(domain:docs.databricks.com)
+  - WebFetch(domain:docs.getdbt.com)
+  - WebFetch(domain:cloud.google.com)
+  - WebFetch(domain:docs.aws.amazon.com)
+  - WebFetch(domain:aws.amazon.com)
+  - WebFetch(domain:dev.classmethod.jp)
+  - mcp__awsknowledge__*
+  - mcp__dbt__*
+  - Bash(drawio -x *)
 argument-hint: "{記入済みの要件シートの HTML のパス}"
 ---
 

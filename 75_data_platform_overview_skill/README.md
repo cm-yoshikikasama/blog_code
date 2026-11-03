@@ -57,6 +57,7 @@ A Claude Code skill that reads a filled-in data platform requirements sheet (HTM
 
 ## Key Design Decisions
 
+- `allowed-tools` pre-approves only fetching official docs by domain, the `drawio -x` export and headless Chrome; `disallowed-tools: AskUserQuestion` keeps blanks going to 「次にやること」 instead of asking back
 - The sheet is a standalone HTML file, so answers can be exchanged without a server
 - Product names are not fixed in the skill, because services are added and renamed; each run checks release notes and docs from the run date
 - Vendor logos are not used in diagrams; only the AWS and Google Cloud icons bundled with draw.io, plus generic line icons
