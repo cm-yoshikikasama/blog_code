@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>データ基盤の要件シート</title>
+<!-- no external requests: fonts, scripts and images are local or inline, and the CSP blocks network access -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'">
+<style>
+/* layout: a printed Japanese 記入用紙 with ruled label/answer rows, Q numbers the interviewer can cite, square corners, no cards */
+:root {
+  --paper: #faf9f5;
+  --desk: #e8e6dc;
+  --ink: #141413;
+  --sub: #4f4e49;
+  --rule: #b0aea5;
+  --rule-soft: #dcd9ce;
+  --cell: #f0eee6;
+  --accent: #d97757;
+  --on-accent: #141413;
+  --ok: #5f7248;
+  --err: #b5523a;
+  --font-body: system-ui, -apple-system, "Hiragino Sans", "Yu Gothic", "Noto Sans JP", sans-serif;
+  --font-head: var(--font-body);
+  color-scheme: light;
+}
+body {
+  background: var(--desk); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.7;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 24px 0;
+}
+.sheet {
+  max-width: 880px; margin: 0 auto; background: var(--paper); border: 1px solid var(--rule);
+  padding-block: 28px 8px; padding-inline: clamp(16px, 4vw, 40px); display: grid; gap: 28px; min-width: 0;
+}
+.doc-head { display: grid; grid-template-columns: 1fr auto; gap: 16px 24px; align-items: end; border-bottom: 3px double var(--ink); padding-bottom: 14px; }
+@media (max-width: 640px) { .doc-head { grid-template-columns: 1fr; } }
+h1 { font-family: var(--font-head); font-size: 1.7rem; letter-spacing: .12em; margin: 0; text-wrap: balance; }
+.meta { display: grid; grid-template-columns: auto minmax(0, 14em); border: 1px solid var(--rule); font-size: .88rem; }
+.meta label { background: var(--cell); padding: 4px 10px; border-bottom: 1px solid var(--rule-soft); border-right: 1px solid var(--rule); white-space: nowrap; }
+.meta input { border: none; border-bottom: 1px solid var(--rule-soft); border-radius: 0; background: var(--paper); }
+.meta > :nth-last-child(-n+2) { border-bottom: none; }
+.lead { margin: 0; color: var(--sub); max-width: 62ch; }
+.lead em { font-style: normal; color: var(--ink); border-bottom: 1px solid var(--ink); }
+.block { display: grid; min-width: 0; }
+.block + .block { margin-top: 28px; }
+.block > h2 {
+  font-family: var(--font-head); font-size: 1.05rem; letter-spacing: .06em; margin: 0;
+  padding: 6px 0; border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); text-wrap: balance;
+}
+.block > h2 span { color: var(--sub); font-family: var(--font-body); font-weight: 400; font-size: .85rem; margin-right: 10px; }
+.row { display: grid; grid-template-columns: 15em minmax(0, 1fr); border-bottom: 1px solid var(--rule-soft); }
+.row > .k { background: var(--cell); padding: 10px 12px; border-right: 1px solid var(--rule-soft); font-weight: 700; font-size: .92rem; }
+.row > .k .qn { display: block; font-weight: 400; font-size: .75rem; color: var(--sub); letter-spacing: .04em; }
+.row > .v { padding: 10px 12px; display: grid; gap: 6px; min-width: 0; }
+@media (max-width: 640px) {
+  .row { grid-template-columns: 1fr; }
+  .row > .k { border-right: none; border-bottom: 1px solid var(--rule-soft); }
+}
+.hint { font-size: .82rem; color: var(--sub); margin: 0; }
+.block > .hint { padding-block: 8px; }
+input[type="text"], input[type="date"], textarea, select {
+  font: inherit; color: var(--ink); background: var(--paper); border: 1px solid var(--rule); border-radius: 2px;
+  padding: 6px 8px; width: 100%; box-sizing: border-box; min-width: 0;
+}
+input::placeholder, textarea::placeholder { color: var(--sub); opacity: .75; }
+textarea { min-height: 76px; resize: vertical; }
+input:focus-visible, textarea:focus-visible, select:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.choices { display: flex; flex-wrap: wrap; gap: 4px 20px; }
+.choices label { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+.v > .choices { display: grid; gap: 6px; }
+table.grid { border-collapse: collapse; font-size: .88rem; width: max-content; max-width: 100%; }
+table.grid th, table.grid td { border: 1px solid var(--rule-soft); padding: 4px 12px; }
+table.grid thead th { background: var(--cell); font-size: .8rem; }
+table.grid tbody th { text-align: left; font-weight: 400; }
+table.grid td { text-align: center; }
+table.grid input[type="text"] { width: 12em; }
+table.grid input[type="checkbox"] { accent-color: var(--accent); width: 16px; height: 16px; margin: 0; }
+.choices input { accent-color: var(--accent); margin: 0; width: 16px; height: 16px; }
+.scroll { overflow-x: auto; }
+table.src { border-collapse: collapse; width: max-content; font-size: .88rem; }
+table.src td input { min-width: 9em; }
+table.src td select { min-width: 10.5em; }
+table.src th { background: var(--cell); font-weight: 700; font-size: .8rem; text-align: left; padding: 6px 8px; border: 1px solid var(--rule-soft); white-space: nowrap; }
+table.src td { border: 1px solid var(--rule-soft); padding: 4px; vertical-align: top; }
+table.src td:first-child { text-align: center; color: var(--sub); width: 2.5em; font-variant-numeric: tabular-nums; }
+table.src td input, table.src td select { border-color: transparent; }
+table.src td input:hover, table.src td select:hover { border-color: var(--rule-soft); }
+.src-actions { padding-top: 8px; }
+button { font: inherit; cursor: pointer; border-radius: 2px; padding: 7px 16px; border: 1px solid var(--rule); background: var(--paper); color: var(--ink); }
+button.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); font-weight: 700; }
+button.plain { border: none; background: none; color: var(--ink); padding: 4px 0; text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: 4px; }
+button.remove { border: none; background: none; color: var(--sub); padding: 4px 6px; font-size: .8rem; }
+button:disabled { opacity: .45; cursor: not-allowed; }
+.bar {
+  position: sticky; bottom: 0; max-width: 880px; margin: 0 auto; background: var(--desk); border-top: 1px solid var(--rule);
+  padding-block: 10px calc(10px + env(safe-area-inset-bottom, 0px));
+  display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+}
+.status { font-size: .85rem; color: var(--sub); flex: 1 1 220px; min-width: 0; }
+.status.ok { color: var(--ok); }
+.status.err { color: var(--err); }
+#copy-fallback { width: 100%; min-height: 160px; font-size: .8rem; }
+.foot { font-size: .78rem; color: var(--sub); text-align: right; border-top: 1px solid var(--rule-soft); padding-top: 6px; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+<div class="sheet">
+  <div class="doc-head">
+    <h1>データ基盤の要件シート</h1>
+    <div class="meta">
+      <label for="project">プロジェクト名</label><input type="text" id="project" name="project">
+      <label for="respondent">記入者</label><input type="text" id="respondent" name="respondent">
+    </div>
+  </div>
+
+  <p class="lead">データ基盤で何を作るかを決めるための質問です。所要時間は15分ほどです。<em>分からない項目は「不明」を選ぶか空欄のまま</em>で構いません。この回答をもとに、テーブル構成や使う製品の案を Skill で作ります。<em>実際の数値・取引先名・個人情報を書いてよいかは、組織の決まりに従ってください。</em></p>
+
+  <form id="form" novalidate>
+    <div class="block">
+      <h2><span>1</span>分析で決めたいこと</h2>
+      <div class="row">
+        <label class="k" for="decision"><span class="qn">Q1-1</span>決めたいこと</label>
+        <div class="v">
+          <p class="hint">誰が・どの頻度で・何を見て、何を決めたいかを書いてください。<br>例：営業部長が毎週月曜に店舗別の売上と目標の差を見て、テコ入れする店舗を決める</p>
+          <textarea id="decision" name="decision"></textarea>
+        </div>
+      </div>
+      <div class="row">
+        <label class="k" for="viewers"><span class="qn">Q1-2</span>見る人</label>
+        <div class="v"><input type="text" id="viewers" name="viewers" placeholder="例：営業企画部 5名、各エリア長 8名"></div>
+      </div>
+      <div class="row">
+        <div class="k"><span class="qn">Q1-3</span>分析の種類<span class="qn">複数選択可</span></div>
+        <div class="v choices" data-name="analysis">
+          <label><input type="checkbox" value="定型レポート">決まった表やグラフを定期的に見る</label>
+          <label><input type="checkbox" value="ドリルダウン">気になった数値を条件を変えて掘り下げる</label>
+          <label><input type="checkbox" value="予実管理">予算や目標と実績を比べる</label>
+          <label><input type="checkbox" value="予測">需要や売上の将来を予測する</label>
+          <label><input type="checkbox" value="グルーピング">顧客や商品を似たもの同士に分ける</label>
+          <label><input type="checkbox" value="AIチャット">AI チャットに質問して分析する</label>
+          <label><input type="checkbox" value="未定">まだ決まっていない</label>
+        </div>
+      </div>
+      <div class="row">
+        <label class="k" for="current"><span class="qn">Q1-4</span>今の数値の出し方</label>
+        <div class="v"><textarea id="current" name="current" placeholder="例：基幹システムから CSV を出し、Excel のマクロで集計して PDF で配布している"></textarea></div>
+      </div>
+      <div class="row">
+        <label class="k" for="pain"><span class="qn">Q1-5</span>今のやり方で困っていること</label>
+        <div class="v"><textarea id="pain" name="pain" placeholder="例：集計に毎週半日かかる。部署ごとに数値が合わない"></textarea></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <h2><span>2</span>使いたいデータ</h2>
+      <p class="hint">分析に使いたいデータが入っているシステムやファイルを、分かる範囲で1行ずつ選んでください。一覧にないものは入力できます。</p>
+      <div class="scroll">
+        <table class="src">
+          <thead><tr>
+            <th>No.</th><th>システムの種類</th><th>主なデータ</th><th>置き場所</th><th>DB の製品</th><th>件数（明細の行数）</th><th>取り出し方</th><th>更新のタイミング</th><th>出力される範囲</th><th>変わった行を見分ける列</th><th>データの単位</th><th>管理部署</th><th></th>
+          </tr></thead>
+          <tbody id="sources"></tbody>
+        </table>
+      </div>
+      <div class="src-actions"><button type="button" class="plain" id="add-source">行を追加</button></div>
+    </div>
+
+    <div class="block">
+      <h2><span>3</span>データの新しさと期間</h2>
+      <div class="row">
+        <div class="k"><span class="qn">Q3-1</span>何時点までのデータが必要か</div>
+        <div class="v choices" data-name="freshness" data-single>
+          <label><input type="radio" name="freshness" value="前日まで">前日まで</label>
+          <label><input type="radio" name="freshness" value="数時間前まで">数時間前まで</label>
+          <label><input type="radio" name="freshness" value="ほぼリアルタイム">ほぼリアルタイム</label>
+          <label><input type="radio" name="freshness" value="不明">不明</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="k"><span class="qn">Q3-2</span>見る頻度</div>
+        <div class="v choices" data-name="frequency" data-single>
+          <label><input type="radio" name="frequency" value="毎日">毎日</label>
+          <label><input type="radio" name="frequency" value="毎週">毎週</label>
+          <label><input type="radio" name="frequency" value="毎月">毎月</label>
+          <label><input type="radio" name="frequency" value="不定期">不定期</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="k"><span class="qn">Q3-3</span>遡って見たい期間</div>
+        <div class="v choices" data-name="history" data-single>
+          <label><input type="radio" name="history" value="1年以内">1年以内</label>
+          <label><input type="radio" name="history" value="2〜3年">2〜3年</label>
+          <label><input type="radio" name="history" value="5年以上">5年以上</label>
+          <label><input type="radio" name="history" value="不明">不明</label>
+        </div>
+      </div>
+      <div class="row">
+        <label class="k" for="deadline"><span class="qn">Q3-4</span>見られるようになってほしい時刻</label>
+        <div class="v"><input type="text" id="deadline" name="deadline" placeholder="例：毎朝 9 時までに前日分を見たい"></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <h2><span>4</span>今の環境と体制</h2>
+      <div class="row">
+        <div class="k"><span class="qn">Q4-1</span>利用中のクラウド<span class="qn">複数選択可</span></div>
+        <div class="v choices" data-name="cloud">
+          <label><input type="checkbox" value="AWS">AWS</label>
+          <label><input type="checkbox" value="Google Cloud">Google Cloud</label>
+          <label><input type="checkbox" value="Azure">Azure</label>
+          <label><input type="checkbox" value="利用なし">利用なし</label>
+          <label><input type="checkbox" value="不明">不明</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="k"><span class="qn">Q4-2</span>利用中の BI ツール<span class="qn">複数選択可</span></div>
+        <div class="v">
+          <div class="choices" data-name="bi">
+          <label><input type="checkbox" value="Tableau">Tableau</label>
+          <label><input type="checkbox" value="Power BI">Power BI</label>
+          <label><input type="checkbox" value="Looker Studio">Looker Studio</label>
+          <label><input type="checkbox" value="Amazon QuickSight">Amazon QuickSight</label>
+          <label><input type="checkbox" value="Excel のみ">Excel のみ</label>
+          <label><input type="checkbox" value="未導入">未導入</label>
+          </div>
+          <input type="text" id="biother" name="biother" placeholder="その他のツール名" aria-label="その他の BI ツール名">
+        </div>
+      </div>
+      <div class="row">
+        <div class="k"><span class="qn">Q4-3</span>集計の作り方</div>
+        <div class="v">
+          <p class="hint">データ基盤を作ったあとに、自社で集計を作ったり直したりするときの方法を選んでください。</p>
+          <div class="choices" data-name="sql" data-single>
+          <label><input type="radio" name="sql" value="SQL を書いて作りたい">SQL を書いて作りたい</label>
+          <label><input type="radio" name="sql" value="画面で操作して作りたい">画面で操作して作りたい</label>
+          <label><input type="radio" name="sql" value="未定">未定</label>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="k"><span class="qn">Q4-4</span>個人情報の有無</div>
+        <div class="v choices" data-name="pii" data-single>
+          <label><input type="radio" name="pii" value="含む">含む</label>
+          <label><input type="radio" name="pii" value="含まない">含まない</label>
+          <label><input type="radio" name="pii" value="不明">不明</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="k"><span class="qn">Q4-5</span>データ基盤に接続できる場所の制限</div>
+        <div class="v">
+          <p class="hint">社員や BI ツールがクラウドのデータ基盤に接続するときに、接続元を限る社内の決まりがあれば選んでください。</p>
+          <div class="choices" data-name="network" data-single>
+          <label><input type="radio" name="network" value="社内のネットワークからだけ許す">社内のネットワーク（決まった IP アドレス）からだけ許す</label>
+          <label><input type="radio" name="network" value="閉域網からだけ許す">インターネットを通らない専用の経路（閉域網）からだけ許す</label>
+          <label><input type="radio" name="network" value="制限はない">制限はない</label>
+          <label><input type="radio" name="network" value="不明">不明</label>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="k"><span class="qn">Q4-6</span>社内とクラウドをつなぐ経路</div>
+        <div class="v">
+          <p class="hint">社内のサーバーにある DB からクラウドへデータを取り出すときに使える経路を選んでください。</p>
+          <div class="choices" data-name="route" data-single>
+          <label><input type="radio" name="route" value="VPN がある">VPN がある</label>
+          <label><input type="radio" name="route" value="専用線がある">専用線がある</label>
+          <label><input type="radio" name="route" value="ない">ない</label>
+          <label><input type="radio" name="route" value="不明">不明</label>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="k"><span class="qn">Q4-7</span>DWH・データ基盤製品の利用状況</div>
+        <div class="v">
+          <p class="hint">当てはまる欄にチェックを入れてください。どれにも当てはまらない製品は空欄のままで構いません。</p>
+          <table class="grid">
+            <thead><tr><th></th><th>契約・利用中</th><th>導入を検討中</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Snowflake</th><td><input type="checkbox" data-group="dwh" value="Snowflake" aria-label="Snowflake 契約・利用中"></td><td><input type="checkbox" data-group="dwhplanned" value="Snowflake" aria-label="Snowflake 導入を検討中"></td></tr>
+              <tr><th scope="row">Databricks</th><td><input type="checkbox" data-group="dwh" value="Databricks" aria-label="Databricks 契約・利用中"></td><td><input type="checkbox" data-group="dwhplanned" value="Databricks" aria-label="Databricks 導入を検討中"></td></tr>
+              <tr><th scope="row">BigQuery</th><td><input type="checkbox" data-group="dwh" value="BigQuery" aria-label="BigQuery 契約・利用中"></td><td><input type="checkbox" data-group="dwhplanned" value="BigQuery" aria-label="BigQuery 導入を検討中"></td></tr>
+              <tr><th scope="row">Amazon Redshift</th><td><input type="checkbox" data-group="dwh" value="Amazon Redshift" aria-label="Amazon Redshift 契約・利用中"></td><td><input type="checkbox" data-group="dwhplanned" value="Amazon Redshift" aria-label="Amazon Redshift 導入を検討中"></td></tr>
+              <tr><th scope="row">Microsoft Fabric</th><td><input type="checkbox" data-group="dwh" value="Microsoft Fabric" aria-label="Microsoft Fabric 契約・利用中"></td><td><input type="checkbox" data-group="dwhplanned" value="Microsoft Fabric" aria-label="Microsoft Fabric 導入を検討中"></td></tr>
+              <tr><th scope="row"><input type="text" id="dwhother" name="dwhother" placeholder="その他（製品名）" aria-label="その他の製品名"></th><td><input type="checkbox" data-group="dwh" value="その他" aria-label="その他 契約・利用中"></td><td><input type="checkbox" data-group="dwhplanned" value="その他" aria-label="その他 導入を検討中"></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="row">
+        <div class="k"><span class="qn">Q4-8</span>データ連携・変換ツールの利用状況</div>
+        <div class="v">
+          <p class="hint">dbt は無償の OSS 版と有償のクラウド版で行を分けています。</p>
+          <table class="grid">
+            <thead><tr><th></th><th>契約・利用中</th><th>導入を検討中</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">dbt Core（OSS 版）</th><td><input type="checkbox" data-group="etl" value="dbt Core（OSS 版）" aria-label="dbt Core（OSS 版） 契約・利用中"></td><td><input type="checkbox" data-group="etlplanned" value="dbt Core（OSS 版）" aria-label="dbt Core（OSS 版） 導入を検討中"></td></tr>
+              <tr><th scope="row">dbt platform（旧 dbt Cloud）</th><td><input type="checkbox" data-group="etl" value="dbt platform（旧 dbt Cloud）" aria-label="dbt platform（旧 dbt Cloud） 契約・利用中"></td><td><input type="checkbox" data-group="etlplanned" value="dbt platform（旧 dbt Cloud）" aria-label="dbt platform（旧 dbt Cloud） 導入を検討中"></td></tr>
+              <tr><th scope="row">Fivetran</th><td><input type="checkbox" data-group="etl" value="Fivetran" aria-label="Fivetran 契約・利用中"></td><td><input type="checkbox" data-group="etlplanned" value="Fivetran" aria-label="Fivetran 導入を検討中"></td></tr>
+              <tr><th scope="row">TROCCO</th><td><input type="checkbox" data-group="etl" value="TROCCO" aria-label="TROCCO 契約・利用中"></td><td><input type="checkbox" data-group="etlplanned" value="TROCCO" aria-label="TROCCO 導入を検討中"></td></tr>
+              <tr><th scope="row">AWS Glue</th><td><input type="checkbox" data-group="etl" value="AWS Glue" aria-label="AWS Glue 契約・利用中"></td><td><input type="checkbox" data-group="etlplanned" value="AWS Glue" aria-label="AWS Glue 導入を検討中"></td></tr>
+              <tr><th scope="row"><input type="text" id="etlother" name="etlother" placeholder="その他（製品名）" aria-label="その他の製品名"></th><td><input type="checkbox" data-group="etl" value="その他" aria-label="その他 契約・利用中"></td><td><input type="checkbox" data-group="etlplanned" value="その他" aria-label="その他 導入を検討中"></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <div id="fallback-wrap" hidden>
+    <p class="hint">クリップボードにコピーできなかったため、回答を下の欄に表示しました。全文を選択してコピーしてください。</p>
+    <textarea id="copy-fallback" readonly></textarea>
+  </div>
+
+  <div class="foot">以上です。</div>
+</div>
+
+<div class="bar">
+  <button type="button" class="primary" id="save">回答を保存</button>
+  <button type="button" id="copy">回答をテキストでコピー</button>
+  <span class="status" id="status" role="status">「回答を保存」を押すと、回答を書き込んだこのシートのファイルをダウンロードします</span>
+</div>
+
+<script type="application/json" id="answers">{}</script>
+
+<datalist id="dl-name"><option value="販売管理・POS"><option value="EC サイト"><option value="顧客管理（CRM・SFA）"><option value="在庫・生産管理"><option value="会計"><option value="人事・勤怠"><option value="Web アクセス解析"><option value="広告"><option value="Excel・CSV のファイル"></datalist>
+<datalist id="dl-content"><option value="売上・受注"><option value="仕入・発注"><option value="在庫"><option value="顧客"><option value="商品"><option value="予算・目標"><option value="会計"><option value="人員・勤怠"><option value="アクセス・行動ログ"><option value="広告の実績"></datalist>
+<datalist id="dl-owner"><option value="情報システム部門"><option value="データを使う事業部門"><option value="外部の委託先"><option value="不明"></datalist>
+
+<template id="source-tpl">
+  <tr>
+    <td></td>
+    <td><input type="text" data-k="name" list="dl-name" aria-label="システムの種類" placeholder="選択・入力"></td>
+    <td><input type="text" data-k="content" list="dl-content" aria-label="主なデータ" placeholder="選択・入力"></td>
+    <td><select data-k="kind" aria-label="置き場所"><option value="">選択</option><option>業務システムの DB（社内サーバー）</option><option>業務システムの DB（クラウド）</option><option>SaaS</option><option>Excel・CSV</option><option>その他</option><option>不明</option></select></td>
+    <td><select data-k="dbms" aria-label="DB の製品"><option value="">選択</option><option>Oracle</option><option>SQL Server</option><option>MySQL</option><option>PostgreSQL</option><option>その他の DB</option><option>DB ではない</option><option>不明</option></select></td>
+    <td><select data-k="volume" aria-label="件数"><option value="">選択</option><option>1万行未満</option><option>1万〜100万行</option><option>100万〜1億行</option><option>1億行以上</option><option>不明</option></select></td>
+    <td><select data-k="access" aria-label="取り出し方"><option value="">選択</option><option>DB に直接接続できる</option><option>API がある</option><option>ファイルを自動で出力できる</option><option>手作業でしか出せない</option><option>不明</option></select></td>
+    <td><select data-k="update" aria-label="更新のタイミング"><option value="">選択</option><option>1日1回</option><option>1時間に1回程度</option><option>随時</option><option>不明</option></select></td>
+    <td><select data-k="scope" aria-label="出力される範囲"><option value="">選択</option><option>毎回すべてのデータ</option><option>変わった分だけ</option><option>不明</option></select></td>
+    <td><select data-k="diffcol" aria-label="変わった行を見分ける列"><option value="">選択</option><option>更新日時の列がある</option><option>増え続ける番号の列がある</option><option>ない</option><option>不明</option></select></td>
+    <td><select data-k="grain" aria-label="データの単位"><option value="">選択</option><option>明細（1件ごと）</option><option>日ごと</option><option>週ごと</option><option>月ごと</option><option>不明</option></select></td>
+    <td><input type="text" data-k="owner" list="dl-owner" aria-label="管理している部署" placeholder="選択・入力"></td>
+    <td><button type="button" class="remove">削除</button></td>
+  </tr>
+</template>
+
+<script>
+// captured before any input so the saved file is the blank sheet plus the answers JSON
+const PRISTINE = "<!doctype html>\n" + document.documentElement.outerHTML;
+const form = document.getElementById("form");
+const sourcesEl = document.getElementById("sources");
+const tpl = document.getElementById("source-tpl");
+const statusEl = document.getElementById("status");
+const saveBtn = document.getElementById("save");
+const FIELDS = ["project", "respondent", "decision", "viewers", "current", "pain", "deadline", "biother", "dwhother", "etlother"];
+const CHOICES = ["analysis", "freshness", "frequency", "history", "cloud", "bi", "sql", "pii", "network", "dwh", "dwhplanned", "etl", "etlplanned", "route"];
+
+function setStatus(text, kind) {
+  statusEl.textContent = text;
+  statusEl.className = "status" + (kind ? " " + kind : "");
+}
+
+function renumber() {
+  [...sourcesEl.children].forEach((tr, i) => { tr.firstElementChild.textContent = i + 1; });
+}
+
+let srcSeq = 0;
+function addSource(values = {}) {
+  const tr = tpl.content.firstElementChild.cloneNode(true);
+  const n = ++srcSeq;
+  tr.querySelectorAll("[data-k]").forEach(input => {
+    input.id = `src-${n}-${input.dataset.k}`;
+    input.value = values[input.dataset.k] || "";
+  });
+  tr.querySelector(".remove").addEventListener("click", () => { tr.remove(); renumber(); });
+  sourcesEl.append(tr);
+  renumber();
+}
+
+// Q4-7 and Q4-8 are product grids, so its checkboxes are grouped by data-group instead of a data-name container
+const choiceInputs = c => form.querySelectorAll(`[data-name="${c}"] input, input[data-group="${c}"]`);
+
+function collect() {
+  const out = {};
+  for (const f of FIELDS) out[f] = document.getElementById(f).value.trim();
+  for (const c of CHOICES) {
+    const box = form.querySelector(`[data-name="${c}"]`);
+    const picked = [...choiceInputs(c)].filter(i => i.checked).map(i => i.value);
+    out[c] = box && box.hasAttribute("data-single") ? (picked[0] || "") : picked;
+  }
+  out.sources = [...sourcesEl.children].map(tr => {
+    const s = {};
+    tr.querySelectorAll("[data-k]").forEach(i => { s[i.dataset.k] = i.value.trim(); });
+    return s;
+  }).filter(s => Object.values(s).some(Boolean));
+  return out;
+}
+
+function fill(data) {
+  for (const f of FIELDS) document.getElementById(f).value = data[f] || "";
+  for (const c of CHOICES) {
+    const vals = [].concat(data[c] || []);
+    choiceInputs(c).forEach(i => { i.checked = vals.includes(i.value); });
+  }
+  sourcesEl.replaceChildren();
+  srcSeq = 0;
+  const rows = data.sources && data.sources.length ? data.sources : [{}, {}, {}];
+  rows.forEach(s => addSource(s));
+}
+
+function asText(d) {
+  const list = v => (Array.isArray(v) ? v.join("、") : v) || "（未回答）";
+  const lines = [
+    "# データ基盤の要件シート 回答",
+    "プロジェクト名: " + list(d.project), "記入者: " + list(d.respondent),
+    "", "## 1 分析で決めたいこと",
+    "Q1-1 決めたいこと: " + list(d.decision), "Q1-2 見る人: " + list(d.viewers), "Q1-3 分析の種類: " + list(d.analysis),
+    "Q1-4 今の数値の出し方: " + list(d.current), "Q1-5 困っていること: " + list(d.pain),
+    "", "## 2 使いたいデータ"
+  ];
+  if (!d.sources.length) lines.push("（未回答）");
+  d.sources.forEach((s, i) => lines.push(
+    `- No.${i + 1}: ${s.name || "-"} / ${s.content || "-"} / ${s.kind || "-"} / ${s.dbms || "-"} / ${s.volume || "-"} / ${s.access || "-"} / ${s.update || "-"} / ${s.scope || "-"} / ${s.diffcol || "-"} / ${s.grain || "-"} / ${s.owner || "-"}`));
+  lines.push("", "## 3 データの新しさと期間",
+    "Q3-1 必要な鮮度: " + list(d.freshness), "Q3-2 見る頻度: " + list(d.frequency), "Q3-3 遡る期間: " + list(d.history), "Q3-4 見たい時刻: " + list(d.deadline),
+    "", "## 4 今の環境と体制",
+    "Q4-1 クラウド: " + list(d.cloud), "Q4-2 BI: " + list(d.bi) + (d.biother ? "（その他: " + d.biother + "）" : ""), "Q4-3 集計の作り方: " + list(d.sql),
+    "Q4-4 個人情報: " + list(d.pii), "Q4-5 接続できる場所の制限: " + list(d.network), "Q4-6 社内とクラウドをつなぐ経路: " + list(d.route),
+    "Q4-7 契約・利用中の DWH: " + list(d.dwh), "Q4-7 導入を検討中の DWH: " + list(d.dwhplanned), "Q4-7 その他の製品名: " + list(d.dwhother),
+    "Q4-8 契約・利用中のツール: " + list(d.etl), "Q4-8 導入を検討中のツール: " + list(d.etlplanned), "Q4-8 その他のツール名: " + list(d.etlother));
+  return lines.join("\n");
+}
+
+fill({});
+document.getElementById("add-source").addEventListener("click", () => addSource());
+
+document.getElementById("copy").addEventListener("click", async () => {
+  const text = asText(collect());
+  try {
+    await navigator.clipboard.writeText(text);
+    setStatus("回答をクリップボードにコピーしました", "ok");
+  } catch {
+    const fb = document.getElementById("copy-fallback");
+    fb.value = text;
+    document.getElementById("fallback-wrap").hidden = false;
+    fb.focus(); fb.select();
+    setStatus("下の欄の全文を選択してコピーしてください");
+  }
+});
+
+try {
+  const saved = JSON.parse(document.getElementById("answers").textContent || "{}");
+  if (saved.answers) {
+    fill(saved.answers);
+    setStatus("保存済みの回答を読み込みました（" + new Date(saved.savedAt).toLocaleString("ja-JP") + "）");
+  }
+} catch {
+  setStatus("保存済みの回答を読み込めませんでした", "err");
+}
+
+saveBtn.addEventListener("click", () => {
+  const answers = collect();
+  const now = new Date();
+  // "<" is escaped so an answer containing a closing script tag cannot end the JSON block
+  const json = JSON.stringify({ answers, savedAt: now.toISOString() }).replace(/</g, "\\u003c");
+  const html = PRISTINE.replace(/(<script type="application\/json" id="answers">)[\s\S]*?(<\/script>)/, (_, open, close) => open + json + close);
+  const pad = n => String(n).padStart(2, "0");
+  // local date and time, so two saves on the same day get different names
+  const stamp = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}_${pad(now.getHours())}${pad(now.getMinutes())}`;
+  // the project name is optional; characters that are invalid in file names are removed
+  const project = (answers.project || "").replace(/[\\/:*?"<>|\s]/g, "");
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([html], { type: "text/html" }));
+  a.download = project ? `要件シート_${project}_${stamp}.html` : `要件シート_${stamp}.html`;
+  document.body.append(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  setStatus("回答を書き込んだファイルをダウンロードしました。Claude Code にこのファイルのパスを渡すと、全体像を作ります", "ok");
+});
+</script>
+</body>
+</html>

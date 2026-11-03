@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "awsknowledge": {
+      "type": "http",
+      "url": "https://knowledge-mcp.global.api.aws"
+    },
+    "dbt": {
+      "command": "uvx",
+      "args": ["dbt-mcp==2.7.0"],
+      "env": {
+        "DBT_MCP_ENABLE_TOOLS": "search_product_docs,get_product_doc_pages"
+      }
+    }
+  }
+}
